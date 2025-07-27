@@ -1,4 +1,2 @@
 src/pages/*
 !src/pages/user-authentication-pages/
-!src/pages/user-authentication-pages/ResetPasswordAdmin.jsx
-!src/pages/user-authentication-pages/ResetPasswordCustomer.jsx

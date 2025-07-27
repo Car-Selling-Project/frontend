@@ -5,25 +5,24 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Check user from localStorage
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     const token = localStorage.getItem("token");
     if (storedUser && token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       setUser(storedUser);
-      setIsLoading(false);
     }
+    setIsLoading(false);
   }, []);
 
-  const login = async ({ email, password }) => {
+  // 👤 CUSTOMER AUTH
+  const loginCustomer = async ({ email, password }) => {
     try {
       const res = await axios.post("/customers/login", { email, password });
       const { token, ...userData } = res.data;
 
-      // Save to local
       localStorage.setItem("user", JSON.stringify(userData));
       localStorage.setItem("token", token);
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -33,7 +32,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async ({ name, email, phone, password, dob, gender }) => {
+  const registerCustomer = async ({ name, email, phone, password, dob, gender, confirmPassword }) => {
     try {
       const res = await axios.post("/customers/register", {
         name,
@@ -41,12 +40,50 @@ export const AuthProvider = ({ children }) => {
         phone,
         password,
         dob,
-        gender
+        gender,
+        confirmPassword,
       });
 
       const { token, ...userData } = res.data;
 
-      // Save to local
+      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("token", token);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      setUser(userData);
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  // 🧑‍💼 ADMIN AUTH
+  const loginAdmin = async ({ employeeCode, password }) => {
+    try {
+      const res = await axios.post("/admins/login", { employeeCode, password });
+      const { token, ...userData } = res.data;
+
+      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("token", token);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      setUser(userData);
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  const registerAdmin = async ({ name, email, phone, password, dob, gender, confirmPassword }) => {
+    try {
+      const res = await axios.post("/admins/register", {
+        name,
+        email,
+        phone,
+        password,
+        dob,
+        gender,
+        confirmPassword,
+      });
+
+      const { token, ...userData } = res.data;
+
       localStorage.setItem("user", JSON.stringify(userData));
       localStorage.setItem("token", token);
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -64,7 +101,17 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isLoading,
+        loginCustomer,
+        registerCustomer,
+        loginAdmin,
+        registerAdmin,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
