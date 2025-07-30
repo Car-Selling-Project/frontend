@@ -48,7 +48,7 @@ const ResetPWAdmin = () => {
       await axios.patch("/admins/reset-password", {
         password,
         confirmPassword,
-      });
+      }, { withCredentials: true });
 
       setSuccessMessage("Password reset successfully! Redirecting to login...");
       setLoading(false);
@@ -80,7 +80,7 @@ const ResetPWAdmin = () => {
           <form onSubmit={handleResetPassword} noValidate>
             {/* Password */}
             <label className="block dark:text-gray-400 text-maintext mb-2">
-              Password
+              New Password
             </label>
             <div className="relative my-3">
               <input
@@ -110,7 +110,7 @@ const ResetPWAdmin = () => {
 
             {/* Confirm Password */}
             <label className="block dark:text-gray-400 text-maintext mb-2">
-              Confirm Password
+              Confirm New Password
             </label>
             <div className="relative my-3">
               <input

@@ -32,7 +32,7 @@ const ForgotPasswordCustomer = () => {
       setErrors({});
       setSuccessMessage("");
 
-      const res = await axios.post("/customers/forgot-password", { email });
+      const res = await axios.post("/customers/forgot-password", { email }, { withCredentials: true });
 
       setSuccessMessage(res.data.message || "Email verified. Redirecting...");
       setLoading(false);

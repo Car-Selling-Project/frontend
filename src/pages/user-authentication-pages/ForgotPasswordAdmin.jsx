@@ -30,7 +30,7 @@ const ForgotPasswordAdmin = () => {
       setErrors({});
       setSuccessMessage("");
 
-      const res = await axios.post("/admins/forgot-password", { employeeCode });
+      const res = await axios.post("/admins/forgot-password", { employeeCode }, { withCredentials: true });
 
       setSuccessMessage(res.data.message || "Employee Code is verified. Redirecting...");
       setLoading(false);
@@ -87,7 +87,7 @@ const ForgotPasswordAdmin = () => {
           <div className="border border-blue-600 py-24 px-10 rounded-lg text-center">
             <h2 className="text-blue-500 text-6xl font-bold">CAR HUNT</h2>
             <p className="dark:text-white text-lg my-4">Welcome to CAR HUNT</p>
-            <h2 className="dark:text-white text-primary text-2xl font-semibold mt-4">Admin Portal Sign Up</h2>
+            <h2 className="dark:text-white text-primary text-2xl font-semibold mt-4">Admin Portal</h2>
             <FormStatus
             successMessage={successMessage}
           />
