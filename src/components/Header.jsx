@@ -9,10 +9,10 @@ import { useAuth } from "../hooks/useAuth";
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredCars, setFilteredCars] = useState([]);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); 
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const dropdownRef = useRef(null); // Ref for dropdown
+  const dropdownRef = useRef(null); 
 
   // Search Function
   const { cars } = useCarData();
@@ -154,7 +154,7 @@ const Header = () => {
               onClick={toggleDropdown}
             >
               <UserOutlined className="text-xl mr-1" />
-              <span className="text-sm">Welcome, {user.fullName}</span>
+              <span className="text-sm">Welcome, {user.name}</span>
             </div>
           ) : (
             <div
