@@ -1,2 +1,3 @@
 src/pages/*
 !src/pages/user-authentication-pages/
+node_modules
