@@ -57,7 +57,7 @@ const ResetPWCustomer = () => {
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <form onSubmit={handleResetPassword} noValidate>
             <label className="block dark:text-gray-400 text-maintext mb-2">Password</label>
-            <div className="relative">
+            <div className="relative my-3">
                 <input
                     type={showPassword ? "text" : "password"}
                     value={password}
@@ -75,7 +75,7 @@ const ResetPWCustomer = () => {
             </div>
 
             <label className="block dark:text-gray-400 text-maintext mb-2">Confirm Password</label>
-            <div className="relative">
+            <div className="relative my-3">
                 <input
                     type={showPassword ? "text" : "password"}
                     value={confirmPassword}

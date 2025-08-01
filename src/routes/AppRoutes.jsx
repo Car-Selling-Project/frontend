@@ -2,15 +2,19 @@ import { Routes, Route, Navigate } from "react-router-dom";
 // Customer Authentication routes
 // import Login from "../pages/user-authentication-pages/Login";
 // import Register from "../pages/user-authentication-pages/Register";
+import ForgotPWCustomer from "../pages/user-authentication-pages/ForgotPasswordCustomer";
 import ResetPWCustomer from "../pages/user-authentication-pages/ResetPasswordCustomer";
+
 // Admin Authentication routes
 // import AdminLogin from "../pages/user-authentication-pages/AdminLogin";
 // import AdminRegister from "../pages/user-authentication-pages/AdminRegister";
+import ForgotPWAdmin from "../pages/user-authentication-pages/ForgotPasswordAdmin";
 import ResetPWAdmin from "../pages/user-authentication-pages/ResetPasswordAdmin";
 
 // import Homepage from "../pages/car-browsing-pages/Homepage";
 // import Category from "../pages/car-browsing-pages/Category";
-// import Details from "../pages/car-browsing-pages/Details";
+import Details from "../pages/car-browsing-pages/Details";
+import Comparison from "../pages/car-browsing-pages/Comparison";
 import MainLayout from "/src/MainLayout";
 // import Payment from "../pages/car-checkout-pages/payment-pages/Payment";
 // import Favorites from "../pages/car-browsing-pages/Favorites";
@@ -31,16 +35,19 @@ const AppRoutes = () => {
       <Routes>
         {/* <Route path="/customers/login" element={<Login />} /> */}
         {/* <Route path="/customers/register" element={<Register />} /> */}
+        <Route path="/customers/forgot-password" element={<ForgotPWCustomer />} />
         <Route path="/customers/reset-password" element={<ResetPWCustomer />} />
 
         {/* <Route path="/admins/login" element={<AdminLogin />} /> */}
         {/* <Route path="/admins/register" element={<AdminRegister />} /> */}
+        <Route path="/admins/forgot-password" element={<ForgotPWAdmin />} />
         <Route path="/admins/reset-password" element={<ResetPWAdmin />} />
 
         {/* <Route path="/" element={<Homepage />} /> */}
         {/* <Route path="/category" element={<Category />} /> */}
-        {/* <Route path="/car/:id" element={<Details />} /> */}
-        
+        <Route path="/car" element={<Details />} />
+        <Route path="/comparison" element={<Comparison />} />
+      
         {/* <Route path="/checkout" element={<ProtectedRoute><Payment /></ProtectedRoute>} /> */}
         {/* <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} /> */}
         {/* <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} /> */}
