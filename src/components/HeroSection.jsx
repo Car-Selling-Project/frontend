@@ -6,13 +6,13 @@ const HeroSection = () => {
       {/* Text Content */}
       <div className="absolute top-10 left-10 max-w-lg">
         <h1 className="text-2xl lg:text-5xl font-bold  leading-tight">
-          The Best Platform for Car Rental
+          The Best Platform for Car Hunting
         </h1>
         <p className=" mt-4 mr-2 text-lg">
-          Ease of doing a car rental safely and reliably. 
+          Ease of doing a car buying safely and reliably. 
         </p>
         <p className="text-lg">
-          Of course at a low price.
+          Of course at a <span className="underline font-bold"> low price</span>.
         </p>
       </div>
 

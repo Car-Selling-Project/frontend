@@ -10,3 +10,9 @@
 .dark .ant-checkbox-label {
   color: #fff;
 }
+.ant-tabs {
+  margin-bottom: -1.25rem;
+}
+.custom-tabs .ant-tabs-tab-active .ant-tabs-tab-btn span {
+  color: #1890ff !important;
+}

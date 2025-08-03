@@ -1,63 +1,93 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import GasolineIcon from "../assets/icons/gas-station.svg";
 import SteeringIcon from "../assets/icons/Car.svg";
 import CapacityIcon from "../assets/icons/profile-2user.svg";
 import { useFavorites } from "../hooks/useFavorites";
+import api from "../api/axiosInstance";
 
 const CarCard = ({ car }) => {
   const navigate = useNavigate();
   const { favorites, toggleFavorite } = useFavorites();
   const isFavorite = favorites.some((fav) => fav._id === car._id);
 
+  const [fullCar, setFullCar] = useState(car);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchCarDetails = async () => {
+      if (car._id && (typeof car.brandId === "string" || !car.brandId?.name)) {
+        setLoading(true);
+        try {
+          const response = await api.get(`/customers/cars/${car._id}`); 
+          setFullCar(response.data.car || response.data); 
+        } catch (error) {
+          console.error("❌ Failed to fetch car details:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    fetchCarDetails();
+  }, [car._id, car.brandId]);
+
+  const brandName = fullCar.brandId?.name || (typeof fullCar.brandId === "string" ? "Loading Brand..." : "Unknown Brand");
+
   return (
     <div className="bg-white dark:bg-gray-700 rounded-xl shadow-md p-4 max-w-xs h-fit relative">
       {/* Favorite Button */}
       <button
-        onClick={() => toggleFavorite(car)}
+        onClick={() => toggleFavorite(fullCar)}
         className="absolute top-4 right-4 text-xl text-gray-500 hover:text-red-500 transition"
       >
         {isFavorite ? <HeartFilled style={{ color: "#ff4d4f" }} /> : <HeartOutlined />}
       </button>
 
-      {/* Car Image */}
-      <img src={car.image} alt={car.name} className="w-full h-40 mx-auto object-contain" />
-
       {/* Car Info */}
-      <h2 className="text-lg font-bold mt-3 dark:text-white">{car.name}</h2>
-      <p className="text-sm text-gray-500 dark:text-white">{car.type}</p>
+      <h2 className="text-xl mb-1 font-bold dark:text-white">{fullCar.title}</h2>
+      <p className="text-base text-gray-500 dark:text-white">
+        {loading ? "Loading Brand..." : brandName}
+      </p>
+
+      {/* Car Image */}
+      <img
+        src={fullCar.images && fullCar.images.length > 0 ? fullCar.images[0] : "default-image-url.jpg"}
+        alt={fullCar.title}
+        className="w-full h-40 mx-auto object-contain"
+      />
 
       {/* Car Specs */}
-      <div className="flex justify-between items-center mt-3 text-gray-700 dark:text-white text-sm">
+      <div className="flex justify-between items-center mt-3 mb-3 text-gray-700 dark:text-white text-sm">
         <div className="flex items-center gap-1">
-          <img src={GasolineIcon} alt="Fuel" className="w-4 h-4" />
-          {car.gasoline}
+          <img src={GasolineIcon} alt="Fuel" className="w-5 h-5" />
+          {fullCar.fuelType || "N/A"}
         </div>
         <div className="flex items-center gap-1">
-          <img src={SteeringIcon} alt="Transmission" className="w-4 h-4" />
-          {car.steering}
+          <img src={SteeringIcon} alt="Transmission" className="w-5 h-5" />
+          {fullCar.tranmission || "N/A"}
         </div>
         <div className="flex items-center gap-1">
-          <img src={CapacityIcon} alt="Capacity" className="w-4 h-4" />
-          {car.capacity} People
+          <img src={CapacityIcon} alt="Capacity" className="w-5 h-5" />
+          {fullCar.seat ? `${fullCar.seat} People` : "N/A"}
         </div>
       </div>
 
       {/* Price */}
       <div className="flex justify-between items-center mt-4">
         <div>
-            <p className="dark:text-white">
-            <span className="text-black dark:text-white font-bold">${car.price.discounted.toFixed(2)}</span> / day
-            </p>
-            <p className="text-gray-400 line-through">${car.price.original.toFixed(2)}</p>
+          <p className="dark:text-white">
+            <span className="text-primary dark:text-white font-bold text-2xl">
+              ${fullCar.price || "0"}
+            </span>
+          </p>
         </div>
-        {/* Rent Now Button */}
+        {/* Buy Now Button */}
         <button
-          onClick={() => navigate(`/car/${car._id}`)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition"
+          onClick={() => navigate(`/customers/cars/${fullCar._id}`)}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg text-base font-semibold hover:bg-blue-700 transition"
         >
-          Rent Now
+          Buy Now
         </button>
       </div>
     </div>

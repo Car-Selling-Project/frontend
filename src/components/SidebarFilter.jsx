@@ -1,104 +1,170 @@
-import React, { useState } from "react";
-import { Checkbox, Slider } from "antd";
+import React, { useState, useEffect } from "react";
+import { Checkbox } from "antd";
+import { useSearchParams } from "react-router-dom";
 
-const SidebarFilter = ({ onFilterChange }) => {
-  const [selectedTypes, setSelectedTypes] = useState([]);
-  const [selectedCapacities, setSelectedCapacities] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 250]);
+import CarTypeFilter from "./filters/CarTypeFilter.jsx";
+import PriceRangeFilter from "./filters/PriceRangeFilter";
+import FuelTypeFilter from "./filters/FuelTypeFilter";
+import TransmissionFilter from "./filters/TransmissionFilter";
+import SeatFilter from "./filters/SeatFilter";
+import RegistrationYearFilter from "./filters/RegistrationYearFilter";
+import StockFilter from "./filters/StockFilter";
+import RatingFilter from "./filters/RatingFilter.jsx";
+import ModelFilter from "../components/filters/ModelFilter";
+import BrandFilter from "../components/filters/BrandFilter";
+import LocationFilter from "../components/filters/LocationFilter";
+import useCarData from "../hooks/useCarData.js";
 
-  const carTypes = ["SUV", "Electric SUV", "Sedan", "Coupe"];
-  const capacities = [2, 4, 5, 7, 8];
+const SidebarFilter = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { cars } = useCarData();
 
-  // Handle Type filter
-  const handleTypeChange = (checkedValues) => {
-    setSelectedTypes(checkedValues);
-    if (onFilterChange) {
-      onFilterChange({
-        types: checkedValues,
-        capacities: selectedCapacities,
-        priceRange,
-      });
+  const [selectedTypes, setSelectedTypes] = useState(searchParams.getAll("carTypes") || []);
+  const [minPrice, setMinPrice] = useState(Number(searchParams.get("minPrice")) || 0);
+  const [maxPrice, setMaxPrice] = useState(Number(searchParams.get("maxPrice")) || 3000000);
+  const [fuelType, setFuelType] = useState(searchParams.get("fuelType") || "");
+  const [transmission, setTransmission] = useState(searchParams.get("tranmission") || "");
+  const [seat, setSeat] = useState(searchParams.get("seat") ? Number(searchParams.get("seat")) : null);
+  const [registrationYear, setRegistrationYear] = useState(
+    searchParams.get("minRegistrationYear") && searchParams.get("maxRegistrationYear")
+      ? [Number(searchParams.get("minRegistrationYear")), Number(searchParams.get("maxRegistrationYear"))]
+      : [1986, new Date().getFullYear()]
+  );
+  const [inStockOnly, setInStockOnly] = useState(searchParams.get("inStockOnly") === "true");
+  const [minRating, setMinRating] = useState(Number(searchParams.get("minRating")) || 0);
+  const [model, setModel] = useState(searchParams.get("model") || "");
+  const [brandId, setBrandId] = useState(searchParams.get("brandIds") || "");
+  const [locationId, setLocationId] = useState(searchParams.get("locationIds") || "");
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (selectedTypes.length) selectedTypes.forEach((type) => params.append("carTypes", type));
+    if (minPrice) params.set("minPrice", minPrice);
+    if (maxPrice) params.set("maxPrice", maxPrice);
+    if (fuelType) params.set("fuelType", fuelType);
+    if (transmission) params.set("tranmission", transmission);
+    if (seat) params.set("seat", seat);
+    if (registrationYear) {
+      params.set("minRegistrationYear", registrationYear[0]);
+      params.set("maxRegistrationYear", registrationYear[1]);
     }
-  };
+    if (inStockOnly) params.set("inStockOnly", inStockOnly);
+    if (minRating) params.set("minRating", minRating);
+    if (model) params.set("model", model);
+    if (brandId) params.set("brandIds", brandId);
+    if (locationId) params.set("locationIds", locationId);
 
-  // Handle Capacity filter
-  const handleCapacityChange = (checkedValues) => {
-    setSelectedCapacities(checkedValues);
-    if (onFilterChange) {
-      onFilterChange({
-        types: selectedTypes,
-        capacities: checkedValues,
-        priceRange,
-      });
-      console.log("Applied capacities filter:", { types: selectedTypes, capacities: checkedValues, priceRange }); // Debug
-    }
-  };
+    setSearchParams(params);
+  }, [
+    selectedTypes,
+    minPrice,
+    maxPrice,
+    fuelType,
+    transmission,
+    seat,
+    registrationYear,
+    inStockOnly,
+    minRating,
+    model,
+    brandId,
+    locationId,
+  ]);
 
-  // Handle Price filter
-  const handlePriceChange = (value) => {
-    setPriceRange(value);
-    if (onFilterChange) {
-      onFilterChange({
-        types: selectedTypes,
-        capacities: selectedCapacities,
-        priceRange: value,
-      });
-      console.log("Applied price filter:", { types: selectedTypes, capacities: selectedCapacities, priceRange: value }); // Debug
-    }
-  };
-
-  const typeOptions = carTypes.map((type) => ({
-    label: type,
-    value: type,
-  }));
-
-  const capacityOptions = capacities.map((capacity) => ({
-    label: `${capacity} People`,
-    value: capacity,
-  }));
+  const FilterBlock = ({ title, children }) => (
+    <div className="mb-5">
+      <h3 className="text-base font-semibold mb-2 text-gray-700 dark:text-white capitalized tracking-wide">
+        {title}
+      </h3>
+      {children}
+    </div>
+  );
 
   return (
-    <aside className="w-64 p-4 rounded-lg bg-white shadow-md dark:bg-gray-700">
-      <h2 className="text-xl font-bold mb-4 dark:text-white">Filters</h2>
+    <aside className="w-64 p-5 rounded-xl bg-white shadow-md dark:bg-gray-800 overflow-y-auto space-y-4">
+      <h2 className="text-xl font-bold text-gray-900 dark:text-white">Filters</h2>
 
-      {/* Type Filter */}
-      <div className="mb-6 dark:text-white">
-        <h3 className="text-lg font-semibold mb-2">Type</h3>
-        <Checkbox.Group
-          options={typeOptions}
-          value={selectedTypes}
-          onChange={handleTypeChange}
-          className="flex flex-col gap-2 dark:text-white"
+      <FilterBlock title="Car Type">
+        <CarTypeFilter
+          selectedTypes={selectedTypes}
+          setSelectedTypes={setSelectedTypes}
         />
-      </div>
+      </FilterBlock>
 
-      {/* Capacity Filter */}
-      <div className="mb-6 dark:text-white">
-        <h3 className="text-lg font-semibold mb-2">Capacity</h3>
-        <Checkbox.Group
-          options={capacityOptions}
-          value={selectedCapacities}
-          onChange={handleCapacityChange}
-          className="flex flex-col gap-2 dark:text-white"
+      <FilterBlock title="Model">
+        <ModelFilter
+          cars={cars}
+          model={model}
+          setModel={setModel}
         />
-      </div>
+      </FilterBlock>
 
-      {/* Price Filter */}
-      <div className="mb-6 dark:text-white">
-        <h3 className="text-lg font-semibold mb-2">Price Range ($)</h3>
-        <Slider
-          range
-          min={0}
-          max={250}
-          value={priceRange}
-          onChange={handlePriceChange}
-          tooltip={{ formatter: (value) => `$${value}` }}
+      <FilterBlock title="Brand">
+        <BrandFilter
+          cars={cars}
+          brandId={brandId}
+          setBrandId={setBrandId}
         />
-        <div className="flex justify-between mt-2 text-sm text-gray-600 dark:text-white">
-          <span>${priceRange[0]}</span>
-          <span>${priceRange[1]}</span>
-        </div>
-      </div>
+      </FilterBlock>
+
+      <FilterBlock title="Location">
+        <LocationFilter
+          cars={cars}
+          locationId={locationId}
+          setLocationId={setLocationId}
+        />
+      </FilterBlock>
+
+      <FilterBlock title="">
+        <PriceRangeFilter
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+          setMinPrice={setMinPrice}
+          setMaxPrice={setMaxPrice}
+        />
+      </FilterBlock>
+
+      <FilterBlock title="Fuel Type">
+        <FuelTypeFilter
+          fuelType={fuelType}
+          setFuelType={setFuelType}
+        />
+      </FilterBlock>
+
+      <FilterBlock title="Transmission">
+        <TransmissionFilter
+          transmission={transmission}
+          setTransmission={setTransmission}
+        />
+      </FilterBlock>
+
+      <FilterBlock title="Seat">
+        <SeatFilter
+          selectedSeat={seat}
+          setSelectedSeat={setSeat}
+        />
+      </FilterBlock>
+
+      <FilterBlock title="Registration Year">
+        <RegistrationYearFilter
+          registrationYear={registrationYear}
+          setRegistrationYear={setRegistrationYear}
+        />
+      </FilterBlock>
+
+      <FilterBlock title="Availability">
+        <StockFilter
+          inStockOnly={inStockOnly}
+          setInStockOnly={setInStockOnly}
+        />
+      </FilterBlock>
+
+      <FilterBlock title="Rating">
+        <RatingFilter
+          minRating={minRating}
+          setMinRating={setMinRating}
+        />
+      </FilterBlock>
     </aside>
   );
 };

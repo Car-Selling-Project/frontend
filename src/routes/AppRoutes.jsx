@@ -43,12 +43,12 @@ const AppRoutes = () => {
         <Route path="/admins/reset-password" element={<ResetPWAdmin />} />
         <Route path="/admins/dashboard" element={<AdminDashboard />} /> */}
 
-        <Route path="/" element={<Homepage />} />
-        <Route path="/category" element={<Category />} />
-        <Route path="/car/:id" element={<Details />} />
+        <Route path="/customers" element={<Homepage />} />
+        <Route path="/customers/cars" element={<Category />} />
+        <Route path="/customers/cars/:id" element={<Details />} />
         
         {/* <Route path="/checkout" element={<ProtectedRoute><Payment /></ProtectedRoute>} /> */}
-        <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+        <Route path="/customers/favourites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
 
         {/* <Route path="/orders" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
         <Route path="/payment-success" element={<PaymentSuccess />} />

@@ -1,46 +1,62 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Input } from "antd";
-import useCarData from "../hooks/useCarData";
 import { useNavigate } from "react-router-dom";
+import useCarData from "../../hooks/useCarData";
 
-const SearchInput = ({ onSelectCar }) => {
+const SearchInput = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredCars, setFilteredCars] = useState([]);
   const navigate = useNavigate();
-
   const { cars } = useCarData();
 
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearchQuery(value);
 
-    if (value.trim() === "") {
+    const keyword = value.trim().toLowerCase();
+    if (!keyword) {
       setFilteredCars([]);
       return;
     }
 
     const results = cars.filter((car) =>
-      car.name.toLowerCase().includes(value.toLowerCase())
+      car.title?.toLowerCase().includes(keyword)
     );
+
     setFilteredCars(results);
   };
 
-  const handleSelectCar = (car) => {
+  const handleSelectCar = (carId) => {
     setSearchQuery("");
     setFilteredCars([]);
-    if (onSelectCar) {
-      onSelectCar(car);
-    } else {
-      navigate(`/car/${car._id}`);
+    navigate(`/customers/cars/${carId}`);
+  };
+
+  const handleSubmit = () => {
+    if (searchQuery.trim()) {
+      const matched = cars.find((car) =>
+        car.title?.toLowerCase().includes(searchQuery.trim().toLowerCase())
+      );
+
+      if (matched) {
+        navigate(`/customers/cars/${matched._id}`);
+      } else {
+        alert("No matching car found.");
+      }
     }
   };
 
   return (
-    <div className="relative w-1/3">
+    <div className="relative w-full">
       <Input
-        placeholder="Search something here"
-        prefix={
+        placeholder="Search car by name"
+        value={searchQuery}
+        onChange={handleSearch}
+        onPressEnter={handleSubmit}
+        suffix={
           <svg
+            onClick={handleSubmit}
+            className="cursor-pointer"
             width="20"
             height="20"
             viewBox="0 0 24 24"
@@ -52,26 +68,21 @@ const SearchInput = ({ onSelectCar }) => {
               stroke="#596780"
               strokeWidth="1.5"
             />
-            <path
-              d="M22 22L20 20"
-              stroke="#596780"
-              strokeWidth="1.5"
-            />
+            <path d="M22 22L20 20" stroke="#596780" strokeWidth="1.5" />
           </svg>
         }
         className="w-80 h-10 gap-2 !rounded-full shadow-sm"
-        onChange={handleSearch}
-        value={searchQuery}
       />
+
       {filteredCars.length > 0 && (
-        <ul className="absolute top-full mt-1 w-80 bg-white shadow-lg rounded-md border border-gray-200 z-10">
+        <ul className="absolute top-full mt-1 w-80 bg-white shadow-lg rounded-md border border-gray-200 z-10 max-h-60 overflow-y-auto">
           {filteredCars.map((car) => (
             <li
               key={car._id}
               className="p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleSelectCar(car)}
+              onClick={() => handleSelectCar(car._id)}
             >
-              {car.name}
+              {car.title}
             </li>
           ))}
         </ul>

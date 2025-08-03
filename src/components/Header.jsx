@@ -1,19 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
 import { HeartFilled, BellFilled, SettingFilled, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { Tabs } from "antd";
 import ThemeToggle from "./ThemeToggle";
 import { useAuth } from "../hooks/useAuth";
-import SearchInput from "./SearchInput";
+// import SearchInput from "./SearchInput";
+
+const { TabPane } = Tabs;
 
 const Header = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState(null);
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const dropdownRef = useRef(null); 
+  const dropdownRef = useRef(null);
 
-  const handleSelectCar = (car) => {
-    navigate(`/car/${car._id}`);
-  };
+  // const handleSelectCar = (car) => {
+  //   navigate(`/car/${car._id}`);
+  // };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -42,18 +46,44 @@ const Header = () => {
     };
   }, []);
 
+  // Handle tab click to navigate
+  const handleTabClick = (key) => {
+    const routes = {
+      "1": "/customers/cars",
+      "2": "/compare-cars",
+      "3": "/cost-estimation",
+      "4": "/book-test-drive",
+    };
+    if (routes[key]) {
+      navigate(routes[key]);
+      setActiveTab(key); 
+    }
+  };
+
   return (
     <header className="p-4 shadow-md flex items-center justify-between dark:bg-gray-800">
       {/* Logo */}
       <h1
         className="pl-8 text-2xl font-bold text-blue-600 cursor-pointer"
-        onClick={() => navigate("/")}
+        onClick={() => {navigate("/customers");  setActiveTab(null)}}
       >
         CAR HUNT
       </h1>
 
       {/* Search Box */}
-      <SearchInput onSelectCar={handleSelectCar} />
+      {/* <SearchInput onSelectCar={handleSelectCar} /> */}
+
+      {/* Navigation Tabs */}
+      <Tabs
+        onTabClick={handleTabClick}
+        activeKey={activeTab}
+        className="custom-tabs"
+      >
+        <TabPane tab={<span className="cursor-pointer text-base font-medium dark:text-gray-200">Product</span>} key="1" />
+        <TabPane tab={<span className="cursor-pointer text-base font-medium dark:text-gray-200">Compare Cars</span>} key="2" />
+        <TabPane tab={<span className="cursor-pointer text-base font-medium dark:text-gray-200">Cost Estimation</span>} key="3" />
+        <TabPane tab={<span className="cursor-pointer text-base font-medium dark:text-gray-200">Book Test Drive</span>} key="4" />
+      </Tabs>
 
       {/* Navigation Icons */}
       <div className="flex items-center space-x-4">
@@ -63,7 +93,7 @@ const Header = () => {
         <span className="w-10 h-10 rounded-full border flex items-center justify-center hover:text-red-500 dark:text-gray-400">
           <HeartFilled
             className="text-xl cursor-pointer"
-            onClick={() => navigate("/favorites")}
+            onClick={() => navigate("/customers/favourites")}
           />
         </span>
 
