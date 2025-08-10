@@ -56,7 +56,7 @@ const Header = () => {
     };
     if (routes[key]) {
       navigate(routes[key]);
-      setActiveTab(key); 
+      setActiveTab(key);
     }
   };
 
@@ -65,7 +65,7 @@ const Header = () => {
       {/* Logo */}
       <h1
         className="pl-8 text-2xl font-bold text-blue-600 cursor-pointer"
-        onClick={() => {navigate("/customers");  setActiveTab(null)}}
+        onClick={() => { navigate("/customers"); setActiveTab(null) }}
       >
         CAR HUNT
       </h1>
@@ -74,7 +74,7 @@ const Header = () => {
       {/* <SearchInput onSelectCar={handleSelectCar} /> */}
 
       {/* Navigation Tabs */}
-      <Tabs
+      {/* <Tabs
         onTabClick={handleTabClick}
         activeKey={activeTab}
         className="custom-tabs"
@@ -83,7 +83,16 @@ const Header = () => {
         <TabPane tab={<span className="cursor-pointer text-base font-medium dark:text-gray-200">Compare Cars</span>} key="2" />
         <TabPane tab={<span className="cursor-pointer text-base font-medium dark:text-gray-200">Cost Estimation</span>} key="3" />
         <TabPane tab={<span className="cursor-pointer text-base font-medium dark:text-gray-200">Book Test Drive</span>} key="4" />
-      </Tabs>
+      </Tabs> */}
+
+      <div className="flex items-center gap-4">
+        <input
+          type="text"
+          placeholder="Search something here"
+          className="px-4 py-2 rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-200"
+        />
+        {/* Add icons/user avatar here if needed */}
+      </div>
 
       {/* Navigation Icons */}
       <div className="flex items-center space-x-4">
