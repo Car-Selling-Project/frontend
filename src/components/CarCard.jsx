@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { HeartOutlined, HeartFilled } from "@ant-design/icons";
+import { HeartOutlined, HeartFilled, StarFilled, StarOutlined } from "@ant-design/icons";
 import GasolineIcon from "../assets/icons/gas-station.svg";
 import SteeringIcon from "../assets/icons/Car.svg";
 import CapacityIcon from "../assets/icons/profile-2user.svg";
 import { useFavorites } from "../hooks/useFavorites";
 import api from "../api/axiosInstance";
+
+const StarRating = ({ rating }) => {
+  const maxStars = 5;
+  return (
+    <div className="flex items-center">
+      {[...Array(maxStars)].map((_, index) =>
+        index < rating ? (
+          <StarFilled key={index} className="!text-yellow-500 text-base" />
+        ) : (
+          <StarOutlined key={index} className="!text-gray-400 text-base" />
+        )
+      )}
+    </div>
+  );
+};
 
 const CarCard = ({ car }) => {
   const navigate = useNavigate();
@@ -35,7 +50,7 @@ const CarCard = ({ car }) => {
   const brandName = fullCar.brandId?.name || (typeof fullCar.brandId === "string" ? "Loading Brand..." : "Unknown Brand");
 
   return (
-    <div className="bg-white dark:bg-gray-700 rounded-xl shadow-md p-4 max-w-xs h-fit relative">
+    <div className="bg-white dark:bg-gray-700 rounded-xl shadow-md p-4 max-w-sm h-fit relative">
       {/* Favorite Button */}
       <button
         onClick={() => toggleFavorite(fullCar)}
@@ -46,9 +61,10 @@ const CarCard = ({ car }) => {
 
       {/* Car Info */}
       <h2 className="text-xl mb-1 font-bold dark:text-white">{fullCar.title}</h2>
-      <p className="text-base text-gray-500 dark:text-white">
+      <p className="text-base text-gray-500 dark:text-white mb-2">
         {loading ? "Loading Brand..." : brandName}
       </p>
+      <StarRating rating={car.rating || 0} />
 
       {/* Car Image */}
       <img
@@ -58,7 +74,7 @@ const CarCard = ({ car }) => {
       />
 
       {/* Car Specs */}
-      <div className="flex justify-between items-center mt-3 mb-3 text-gray-700 dark:text-white text-sm">
+      <div className="flex justify-between items-center mt-3 mb-3 text-gray-700 dark:text-white text-base">
         <div className="flex items-center gap-1">
           <img src={GasolineIcon} alt="Fuel" className="w-5 h-5" />
           {fullCar.fuelType || "N/A"}
@@ -78,7 +94,7 @@ const CarCard = ({ car }) => {
         <div>
           <p className="dark:text-white">
             <span className="text-primary dark:text-white font-bold text-2xl">
-              ${fullCar.price || "0"}
+              ${fullCar.price.toLocaleString(2) || "0"}
             </span>
           </p>
         </div>

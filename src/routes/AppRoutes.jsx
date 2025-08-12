@@ -17,9 +17,10 @@ import Homepage from "../pages/car-browsing-pages/Homepage";
 import Category from "../pages/car-browsing-pages/Category";
 import Details from "../pages/car-browsing-pages/Details";
 import MainLayout from "/src/MainLayout";
-// import Payment from "../pages/car-checkout-pages/payment-pages/Payment";
 import Favorites from "../pages/car-browsing-pages/Favorites";
+import Comparison from "../pages/car-browsing-pages/Comparison"
 
+// import Payment from "../pages/car-checkout-pages/payment-pages/Payment";
 // import OrderTracking from "../pages/order-tracking/Order Tracking";
 // import PaymentSuccess from "../pages/car-checkout-pages/payment-pages/PaymentSuccess";
 // import PaymentFailed from "../pages/car-checkout-pages/payment-pages/PaymentFailed";
@@ -46,6 +47,7 @@ const AppRoutes = () => {
         <Route path="/customers" element={<Homepage />} />
         <Route path="/customers/cars" element={<Category />} />
         <Route path="/customers/cars/:id" element={<Details />} />
+        <Route path="/customers/compare" element={<Comparison />} />
         
         {/* <Route path="/checkout" element={<ProtectedRoute><Payment /></ProtectedRoute>} /> */}
         <Route path="/customers/favourites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />

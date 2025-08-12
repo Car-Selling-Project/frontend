@@ -50,7 +50,7 @@ const Header = () => {
   const handleTabClick = (key) => {
     const routes = {
       "1": "/customers/cars",
-      "2": "/compare-cars",
+      "2": "/customers/compare",
       "3": "/cost-estimation",
       "4": "/book-test-drive",
     };
