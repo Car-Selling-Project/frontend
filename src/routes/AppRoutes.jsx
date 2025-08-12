@@ -19,7 +19,6 @@ import Details from "../pages/car-browsing-pages/Details";
 import Comparison from "../pages/car-browsing-pages/Comparison";
 import MainLayout from "/src/MainLayout";
 import Favorites from "../pages/car-browsing-pages/Favorites";
-import Comparison from "../pages/car-browsing-pages/Comparison"
 
 // import Payment from "../pages/car-checkout-pages/payment-pages/Payment";
 // import OrderTracking from "../pages/order-tracking/Order Tracking";

@@ -15,10 +15,6 @@ const Header = () => {
   const { user, logout } = useAuth();
   const dropdownRef = useRef(null);
 
-  // const handleSelectCar = (car) => {
-  //   navigate(`/car/${car._id}`);
-  // };
-
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -50,7 +46,7 @@ const Header = () => {
   const handleTabClick = (key) => {
     const routes = {
       "1": "/customers/cars",
-      "2": "/customers/compare",
+      "2": "/customers/comparison",
       "3": "/cost-estimation",
       "4": "/book-test-drive",
     };
