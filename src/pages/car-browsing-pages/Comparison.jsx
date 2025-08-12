@@ -68,7 +68,7 @@ const Comparison = () => {
     <main className='w-full h-full flex flex-col items-center justify-between'>
       <div className='w-full flex flex-col'>
         <div className='header flex items-center justify-start p-10'>
-          <h1 className='font-semibold' style={{ fontSize: '1.5rem' }}>Compare Cars</h1>
+          <h1 className='font-semibold' style={{ fontSize: '1.5rem' }}>So sánh xe</h1>
         </div>
         <div className="compare w-full flex items-center justify-around flex-row">
           {/* Car 1 */}
@@ -88,7 +88,7 @@ const Comparison = () => {
             ) : (
               <div className='comparison-cars flex flex-col items-center justify-center' style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '2rem', margin: '3rem 0', minHeight: '300px' }}>
                 <Select
-                  placeholder="Pick a car to compare"
+                  placeholder="Chọn xe để so sánh"
                   style={{ width: 250, marginBottom: 20 }}
                   onChange={(value) => handleCarSelect(value, 0)}
                   showSearch
@@ -123,7 +123,7 @@ const Comparison = () => {
             ) : (
               <div className='comparison-cars flex flex-col items-center justify-center' style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '2rem', margin: '3rem 0', minHeight: '300px' }}>
                 <Select
-                  placeholder="Pick a car to compare"
+                  placeholder="Chọn xe để so sánh"
                   style={{ width: 250, marginBottom: 20 }}
                   onChange={(value) => handleCarSelect(value, 1)}
                   showSearch

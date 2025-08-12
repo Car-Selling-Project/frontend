@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import useCarData from "../../hooks/useCarData";
 import { Button } from "antd";
 import { StarOutlined, StarFilled } from "@ant-design/icons";
@@ -24,7 +24,7 @@ export const StarRating = ({ rating }) => {
 const Details = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { cars, loading } = useCarData();
+  const { cars, error, loading } = useCarData();
 
   const car = cars.find((c) => c._id === id);
   console.log(car)
@@ -46,21 +46,26 @@ const Details = () => {
     return <div className="text-center dark:text-white py-10">Loading car details...</div>;
   }
 
+  // if (error) {
+  //   return <div className="text-center text-red-600 dark:text-red-400 py-10">Error: {error}</div>;
+  // }
+
   if (!car) {
     return <div className="text-center text-red-600 dark:text-red-400 py-10">Car not found.</div>;
   }
   const brandName = car.brandId?.name || (typeof car.brandId === "string" ? "Loading Brand..." : "Unknown Brand");
 
   return (
-    <main className="w-full py-4 flex flex-col dark:text-white">
+    <main className="w-full mx-auto py-8 flex flex-col dark:text-white">
       {/* Car Info */}
       <div className="flex flex-col justify-center gap-8">
-        {/* Left Column - Images, Reviews */}
+        {/* Left Column - Images, Title, Reviews */}
         <section className="mt-6 w-full flex flex-col">
           <div className="flex flex-row gap-6 mx-5 items-stretch">
             {/* Image Slideshow */}
             <div className="mt-6 w-1/2 mx-5 flex flex-col">
               <div className="flex justify-center items-center rounded-lg overflow-hidden">
+                {/* <img src={mockData.image[0]} alt='car1' className="rounded-lg shadow-md bg-primary flex-1" style={{ objectFit: 'cover', height: '25rem', width: '100%' }} /> */}
                 <img src={mainImage} alt='car1' className="rounded-lg shadow-md bg-primary flex-1" style={{ objectFit: 'cover', height: '25rem', width: '100%' }} />
               </div>
               <div className="flex gap-4 mt-4 justify-between">
@@ -69,7 +74,7 @@ const Details = () => {
                     key={index}
                     src={img}
                     alt={`Preview ${index}`}
-                    className={`w-[10rem] h-[7.5rem] rounded-md cursor-pointer object-cover ${selectedImage === index ? "border-4 border-blue-500 scale-105" : ""
+                    className={`w-[2.5rem] h-[2rem] rounded-md cursor-pointer object-cover ${selectedImage === index ? "border-4 border-blue-500 scale-105" : ""
                       }`}
                     onClick={() => {
                       setMainImage(img);
@@ -83,14 +88,13 @@ const Details = () => {
             {/* Title and Price Section */}
             <div className="mt-6 w-1/2 bg-white rounded-lg p-10 dark:bg-gray-800 flex flex-col justify-between">
               <div>
-                <h1 className="text-4xl font-extrabold mb-4" style={{ color: '#1A202C' }}>{car.title}</h1>
-                <h3 className="text-xl font-medium mb-4 text-subtitle">{brandName}</h3>
+                <h1 className="text-2xl font-bold mb-4" style={{ color: '#1A202C' }}>{car.title}</h1>
                 <StarRating rating={car.rating} />
                 <p>{car.description}</p>
                 <div className="mt-4 flex flex-row items-center justify-between gap-2">
                   <div>
                     <h2 className="text-3xl font-bold text-black dark:text-white">
-                      $ {car.price.toLocaleString(2)}
+                      $ {car.price}
                     </h2>
                   </div>
                   {/* Action Buttons */}
@@ -238,29 +242,35 @@ const Details = () => {
               <span className="text-sm" style={{ color: '#90A3BF' }}>(12 Reviews)</span>
             </div>
 
-            <Button
-              className="w-full bg-slate-700 border-slate-600 text-white hover:bg-slate-600 hover:border-slate-500"
-              size="large"
-              onClick={() => navigate(`/customers/compare`)}
-            >
-              🔄 Compare
-            </Button>
+            <Link to ='/customers/comparison'>
+              <Button
+                className="w-full bg-slate-700 border-slate-600 text-white hover:bg-slate-600 hover:border-slate-500"
+                size="large"
+              >
+                🔄 Compare
+              </Button>
+            </Link>
           </div>
         </section>
       </div>
 
-      {/* Recommended Cars */}
-      <div className="mt-10 flex flex-row items-end justify-between ">
+      {/* Recommended car */}
+      <div className="mt-10 flex flex-row items-end justify-between">
         <h1 className="text-2xl font-bold">Recommended Cars</h1>
-        <Button className="!text-base" type="link" onClick={() => navigate("/customers/cars")}>View All</Button>
+        <Button className="!text-base" type="link" onClick={() => navigate("/customers/cars")}>
+          View All
+        </Button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
-      {cars
+      <div className="w-full flex items-center justify-center mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+          {cars
             .sort((a, b) => b.rating - a.rating)
-            .slice(0, 8)
+            .slice(0, 6)
             .map((car) => (
               <CarCard key={car._id} car={car} />
-            ))}      </div>
+            ))}
+        </div>
+      </div>
     </main>
   );
 };
