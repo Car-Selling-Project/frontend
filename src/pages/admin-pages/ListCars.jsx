@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import {
   DeleteOutlined,
   InfoCircleOutlined,
+  EllipsisOutlined
 } from "@ant-design/icons";
 import { Pagination, Modal, Tag, Descriptions, Image, Spin } from "antd";
 import AddCar from "../../components/AddCar";
@@ -174,7 +175,6 @@ const ListCars = () => {
                     <th className="px-4 py-3">Registration Year</th>
                     <th className="px-4 py-3">Location</th>
                     <th className="px-4 py-3">Stock</th>
-                    <th className="px-4 py-3">Delete</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -219,7 +219,10 @@ const ListCars = () => {
                       </td>
                       <td className="px-4 py-4 text-gray-700">{car.stock}</td>
                       <td className="px-4 py-4">
-                        <button className="bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full p-2 transition">
+                        <button className="bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full p-2 mx-2 transition cursor-pointer">
+                          <EllipsisOutlined />
+                        </button>
+                        <button className="bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full p-2 mx-2 transition cursor-pointer">
                           <DeleteOutlined />
                         </button>
                       </td>

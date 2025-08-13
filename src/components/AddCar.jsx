@@ -3,15 +3,11 @@ import { Button, Select, Modal, Input } from "antd";
 import { toast } from "react-toastify";
 const { Option } = Select;
 import useCarData from "../hooks/useCarData";
-import useBrandData from "../hooks/useBrandData";
-import useLocationData from "../hooks/useLocationData";
+import api from '../api/axiosInstance'
 
 const AddCar = () => {
   const [open, setOpen] = useState(false);
   const { refetch } = useCarData();
-  const { brands, loading } = useBrandData();
-  const { locations } = useLocationData();
-  const openModal = () => setOpen(true);
   const [formData, setFormData] = useState({
     title: "",
     brandId: "",
@@ -38,6 +34,26 @@ const AddCar = () => {
   const seatOptions = ["2", "4", "5", "7"];
   const fuelTypeOptions = ["Gasoline", "Electric", "Diesel", "Hybrid"];
 
+  const openModal = () => setOpen(true);
+
+  const [brands, setBrands] = useState([]);
+  const [locations, setLocations] = useState([]);
+
+  useEffect(() => {
+    api.get('/admins/brands')
+     .then(res => {
+        const brandList = Array.isArray(res.data) ? res.data : res.data.brands || []
+        setBrands(brandList);
+     })
+     .catch(() => setBrands([]))
+    api.get('/admins/locations')
+     .then(res => {
+        const locationList = Array.isArray(res.data) ? res.data : res.data.locations || []
+        setLocations(locationList);
+     })
+      .catch(() => setLocations([]))
+  }, [])
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -58,10 +74,11 @@ const AddCar = () => {
       console.log("Car added successfully:", res.data);
       toast.success("Car added successfully")
       refetch()
-      setOpen(false)
     } catch (error) {
       toast.error("Failed to add car")
       console.error("Error adding car:", error);
+    } finally {
+      setOpen(false)
     }
   }
 
@@ -93,13 +110,14 @@ const AddCar = () => {
             <div className="w-1/3">
               <label>Brand</label>
               <Select
+                style={{ width: "100%" }}
                 placeholder="Brand"
                 name="brandId"
                 value={formData.brandId}
-                onChange={value => setFormData(prev => ({ ...prev, brandId: value }))}
-                style={{ width: "100%" }}
-                loading={loading}
+                onChange={value => handleSelectChange("brandId", value)}
+                defaultValue=""
               >
+                <Option value="">Select Brand</Option>
                 {brands.map(brand => (
                   <Option key={brand._id} value={brand._id}>{brand.name}</Option>
                 ))}
@@ -125,6 +143,7 @@ const AddCar = () => {
                 onChange={(value) => handleSelectChange("carType", value)}
                 style={{ width: "100%" }}
               >
+                <Option value="">Select Car Type</Option>
                 {carTypeOptions.map((type) => (
                   <Option key={type} value={type}>{type}</Option>
                 ))}
@@ -190,6 +209,7 @@ const AddCar = () => {
                 onChange={(value) => handleSelectChange("fuelType", value)}
                 style={{ width: "100%" }}
               >
+                <Option value="">Select Fuel Type</Option>
                 {fuelTypeOptions.map((type) => (
                   <Option key={type} value={type}>{type}</Option>
                 ))}
@@ -212,6 +232,7 @@ const AddCar = () => {
                 onChange={(value) => handleSelectChange("tranmission", value)}
                 style={{ width: "100%" }}
               >
+                <Option value="">Select Transmission</Option>
                 <Option value="manual">Manual</Option>
                 <Option value="automatic">Automatic</Option>
               </Select>
@@ -234,6 +255,7 @@ const AddCar = () => {
                 onChange={(value) => handleSelectChange("seats", value)}
                 style={{ width: "100%" }}
               >
+                <Option value="">Select Seats</Option>
                 {seatOptions.map((seat) => (
                   <Option key={seat} value={seat}>{seat}</Option>
                 ))}
@@ -278,8 +300,9 @@ const AddCar = () => {
                 value={formData.locationId}
                 onChange={value => setFormData(prev => ({ ...prev, locationId: value }))}
                 style={{ width: "100%" }}
-                loading={loading}
+                defaultValue=""
               >
+                <Option value="">Select Location</Option>
                 {locations.map(loc => (
                   <Option key={loc._id} value={loc._id}>{loc.name}</Option>
                 ))}
