@@ -67,14 +67,14 @@ const Comparison = () => {
   return (
     <main className='w-full h-full flex flex-col items-center justify-between'>
       <div className='w-full flex flex-col'>
-        <div className='header flex items-center justify-start p-10'>
-          <h1 className='font-semibold' style={{ fontSize: '1.5rem' }}>So sánh xe</h1>
+        <div className='header flex items-center justify-start p-4'>
+          <h1 className='font-bold dark:text-white text-3xl'>Car Comparison</h1>
         </div>
-        <div className="compare w-full flex items-center justify-around flex-row">
+        <div className="compare w-full flex items-center justify-around flex-row ">
           {/* Car 1 */}
           <div className='w-1/2 flex items-center justify-center'>
             {comparisonData[0] ? (
-              <div className='comparison-cars flex flex-col relative' style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '2rem', margin: '3rem 0' }}>
+              <div className='comparison-cars flex flex-col relative bg-white' style={{ borderRadius: '16px', padding: '2rem', margin: '3rem 0' }}>
                 <Button 
                   type="text" 
                   icon={<CloseOutlined />} 
@@ -88,7 +88,7 @@ const Comparison = () => {
             ) : (
               <div className='comparison-cars flex flex-col items-center justify-center' style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '2rem', margin: '3rem 0', minHeight: '300px' }}>
                 <Select
-                  placeholder="Chọn xe để so sánh"
+                  placeholder="Pick a car to compare"
                   style={{ width: 250, marginBottom: 20 }}
                   onChange={(value) => handleCarSelect(value, 0)}
                   showSearch
@@ -123,7 +123,7 @@ const Comparison = () => {
             ) : (
               <div className='comparison-cars flex flex-col items-center justify-center' style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '2rem', margin: '3rem 0', minHeight: '300px' }}>
                 <Select
-                  placeholder="Chọn xe để so sánh"
+                  placeholder="Pick a car to compare"
                   style={{ width: 250, marginBottom: 20 }}
                   onChange={(value) => handleCarSelect(value, 1)}
                   showSearch
@@ -147,7 +147,7 @@ const Comparison = () => {
           <>
             <div className="details" style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '1rem', margin: '1.5rem 0' }}>
               <div className='category flex items-center flex-col'>
-                <h3>General Information</h3>
+                <h3 className="font-bold text-2xl pb-4">General Information</h3>
               </div>
               <hr />
               <div className="infomation">
@@ -200,7 +200,7 @@ const Comparison = () => {
             
             <div className="details" style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '1rem', margin: '1.5rem 0' }}>
               <div className='flex items-center justify-center'>
-                <h3>Engine Information</h3>
+                <h3 className="font-bold text-2xl pb-4">Engine Information</h3>
               </div>
               <hr />
               <div className="infomation">
@@ -264,7 +264,7 @@ const Comparison = () => {
             
             <div className="details" style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '1rem', margin: '1.5rem 0' }}>
               <div className='flex items-center justify-center'>
-                <h3>Dimensions</h3>
+                <h3 className="font-bold text-2xl pb-4">Dimensions</h3>
               </div>
               <hr />
               <div className="infomation">
@@ -317,7 +317,7 @@ const Comparison = () => {
             
             <div className="details" style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '1rem', margin: '1.5rem 0' }}>
               <div className='flex items-center justify-center'>
-                <h3>Price & Rating</h3>
+                <h3 className="font-bold text-2xl pb-4">Price & Rating</h3>
               </div>
               <hr />
               <div className="infomation">

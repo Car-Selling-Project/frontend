@@ -37,6 +37,7 @@ const CarCard = ({ car }) => {
         try {
           const response = await api.get(`/customers/cars/${car._id}`); 
           setFullCar(response.data.car || response.data); 
+          console.log(response.data.car);
         } catch (error) {
           console.error("❌ Failed to fetch car details:", error);
         } finally {

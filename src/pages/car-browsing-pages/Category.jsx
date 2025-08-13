@@ -85,7 +85,7 @@ const Category = () => {
             itemRender={(page, type, originalElement) => {
               if (type === "prev") {
                 return (
-                  <button className=" rounded bg-transparent text-white">
+                  <button className="rounded bg-transparent text-white">
                     <LeftOutlined />
                   </button>
                 );

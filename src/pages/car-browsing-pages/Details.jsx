@@ -89,11 +89,15 @@ const Details = () => {
             <div className="mt-6 w-1/2 bg-white rounded-lg p-10 dark:bg-gray-800 flex flex-col justify-between">
               <div>
                 <h1 className="text-2xl font-bold mb-4" style={{ color: '#1A202C' }}>{car.title}</h1>
+                <div className="flex flex-row justify-between">
+                  <h2 classNAme="text-xl font-semibold mb-4 text-subtitle">{brandName}</h2>
+                  <h2 classNAme="text-xl font-semibold mb-4 text-subtitle">{brandName}</h2>
+                </div>
                 <StarRating rating={car.rating} />
                 <p>{car.description}</p>
                 <div className="mt-4 flex flex-row items-center justify-between gap-2">
                   <div>
-                    <h2 className="text-3xl font-bold text-black dark:text-white">
+                    <h2 className="text-3xl font-bold text-primary dark:text-white">
                       $ {car.price}
                     </h2>
                   </div>
@@ -105,7 +109,7 @@ const Details = () => {
                       className="flex-1"
                       style={{ backgroundColor: '#3563E9', borderColor: '#3563E9', borderRadius: '16px', marginRight: '10px' }}
                     >
-                      Book to test trial
+                      Book Test Drive
                     </Button>
                     <Button
                       type="primary"
@@ -113,7 +117,7 @@ const Details = () => {
                       className="flex-1"
                       style={{ backgroundColor: '#3563E9', borderColor: '#3563E9', borderRadius: '16px', marginLeft: '10px' }}
                     >
-                      Buy now
+                      Cost Estimate
                     </Button>
                   </div>
                 </div>
