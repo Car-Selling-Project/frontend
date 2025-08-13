@@ -1,49 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Input } from "antd";
 import { HeartFilled, BellFilled, SettingFilled, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import useCarData from "../hooks/useCarData";
+import { Tabs } from "antd";
 import ThemeToggle from "./ThemeToggle";
 import { useAuth } from "../hooks/useAuth";
+// import SearchInput from "./SearchInput";
+
+const { TabPane } = Tabs;
 
 const Header = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredCars, setFilteredCars] = useState([]);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState(null);
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const dropdownRef = useRef(null); 
+  const dropdownRef = useRef(null);
 
-  // Search Function
-  const { cars } = useCarData();
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearchQuery(value);
-
-    if (value.trim() === "") {
-      setFilteredCars([]);
-      return;
-    }
-
-    const results = cars.filter((car) =>
-      car.name.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredCars(results);
-  };
-
-  // Navigate
-  const handleSelectCar = (car) => {
-    setSearchQuery("");
-    setFilteredCars([]);
-    navigate(`/car/${car._id}`);
-  };
-
-  // Toggle Dropdown
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  // Handle Dropdown Options
   const handleOrderTracking = () => {
     setIsDropdownOpen(false);
     navigate("/orders");
@@ -55,7 +30,6 @@ const Header = () => {
     setTimeout(() => navigate("/customers/login"), 0);
   };
 
-  // Close Dropdown on Outside Click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -68,58 +42,44 @@ const Header = () => {
     };
   }, []);
 
+  // Handle tab click to navigate
+  const handleTabClick = (key) => {
+    const routes = {
+      "1": "/customers/cars",
+      "2": "/customers/comparison",
+      "3": "/cost-estimation",
+      "4": "/book-test-drive",
+    };
+    if (routes[key]) {
+      navigate(routes[key]);
+      setActiveTab(key); 
+    }
+  };
+
   return (
     <header className="p-4 shadow-md flex items-center justify-between dark:bg-gray-800">
       {/* Logo */}
       <h1
         className="pl-8 text-2xl font-bold text-blue-600 cursor-pointer"
-        onClick={() => navigate("/")}
+        onClick={() => {navigate("/customers");  setActiveTab(null)}}
       >
         CAR HUNT
       </h1>
 
       {/* Search Box */}
-      <div className="relative w-1/3">
-        <Input
-          placeholder="Search something here"
-          prefix={
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
-                stroke="#596780"
-                strokeWidth="1.5"
-              />
-              <path
-                d="M22 22L20 20"
-                stroke="#596780"
-                strokeWidth="1.5"
-              />
-            </svg>
-          }
-          className="w-80 h-10 gap-2 !rounded-full shadow-sm"
-          onChange={handleSearch}
-          value={searchQuery}
-        />
-        {filteredCars.length > 0 && (
-          <ul className="absolute top-full mt-1 w-80 bg-white shadow-lg rounded-md border border-gray-200 z-10">
-            {filteredCars.map((car) => (
-              <li
-                key={car._id}
-                className="p-2 hover:bg-gray-100 cursor-pointer"
-                onClick={() => handleSelectCar(car)}
-              >
-                {car.name}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      {/* <SearchInput onSelectCar={handleSelectCar} /> */}
+
+      {/* Navigation Tabs */}
+      <Tabs
+        onTabClick={handleTabClick}
+        activeKey={activeTab}
+        className="custom-tabs"
+      >
+        <TabPane tab={<span className="cursor-pointer text-base font-medium dark:text-gray-200">Product</span>} key="1" />
+        <TabPane tab={<span className="cursor-pointer text-base font-medium dark:text-gray-200">Compare Cars</span>} key="2" />
+        <TabPane tab={<span className="cursor-pointer text-base font-medium dark:text-gray-200">Cost Estimation</span>} key="3" />
+        <TabPane tab={<span className="cursor-pointer text-base font-medium dark:text-gray-200">Book Test Drive</span>} key="4" />
+      </Tabs>
 
       {/* Navigation Icons */}
       <div className="flex items-center space-x-4">
@@ -129,7 +89,7 @@ const Header = () => {
         <span className="w-10 h-10 rounded-full border flex items-center justify-center hover:text-red-500 dark:text-gray-400">
           <HeartFilled
             className="text-xl cursor-pointer"
-            onClick={() => navigate("/favorites")}
+            onClick={() => navigate("/customers/favourites")}
           />
         </span>
 
