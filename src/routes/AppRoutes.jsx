@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { ToastContainer } from 'react-toastify'
 // Customer Authentication routes
 import Login from "../pages/user-authentication-pages/Login";
 import Register from "../pages/user-authentication-pages/Register";
@@ -15,7 +16,11 @@ import ResetPWAdmin from "../pages/user-authentication-pages/ResetPasswordAdmin"
 import Homepage from "../pages/car-browsing-pages/Homepage";
 import Category from "../pages/car-browsing-pages/Category";
 import Details from "../pages/car-browsing-pages/Details";
+import Comparison from "../pages/car-browsing-pages/Comparison";
+import MainLayout from "/src/MainLayout";
 import Favorites from "../pages/car-browsing-pages/Favorites";
+import TestDrive from "../pages/car-browsing-pages/TestDrive";
+// import Payment from "../pages/car-checkout-pages/payment-pages/Payment";
 
 //Admin Management routes
 import Dashboard from "../pages/admin-dashboard-pages/AdminDashboard";
@@ -55,6 +60,7 @@ const AppRoutes = () => {
         
         <Route path="/checkout" element={<ProtectedRoute><Payment /></ProtectedRoute>} />
         <Route path="/customers/favourites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+        <Route path="/customers/test-drive" element={<TestDrive />} />
 
         <Route path="/orders" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
@@ -64,6 +70,14 @@ const AppRoutes = () => {
         <Route path="/admins/cars" element={<ListCars />} />
         <Route path="/admins/orders" element={<Orders />} />
       </Routes>
+      <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          closeOnClick
+          pauseOnHover
+          theme="colored"
+        />
     </MainLayout>
   );
 };
