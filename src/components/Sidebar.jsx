@@ -11,7 +11,7 @@ const Sidebar = () => {
   return (
     <aside className="w-72 min-h-screen bg-white border-r flex flex-col">
       {/* Main Menu */}
-      <nav className="flex-1 px-4 py-6">
+      <nav className="flex-1 px-4 flex justify-center py-16">
         <div>
           <p className="text-xs text-gray-400 mb-3 ml-2">MAIN MENU</p>
           <ul className="space-y-2">
@@ -45,7 +45,7 @@ const Sidebar = () => {
           </ul>
         </div>
         {/* Preferences */}
-        <div className="mt-10">
+        {/* <div className="mt-10">
           <p className="text-xs text-gray-400 mb-3 ml-2">PREFERENCES</p>
           <ul className="space-y-2">
             <li>
@@ -67,7 +67,7 @@ const Sidebar = () => {
               </a>
             </li>
           </ul>
-        </div>
+        </div> */}
       </nav>
     </aside>
   );

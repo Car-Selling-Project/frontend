@@ -13,17 +13,17 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 // import AdminDashboard from "../pages/admin-dashboard-pages/AdminDashboard";
 
-import Homepage from "../pages/car-browsing-pages/Homepage";
-import Category from "../pages/car-browsing-pages/Category";
-import Details from "../pages/car-browsing-pages/Details";
-import Comparison from "../pages/car-browsing-pages/Comparison";
+// import Homepage from "../pages/car-browsing-pages/Homepage";
+// import Category from "../pages/car-browsing-pages/Category";
+// import Details from "../pages/car-browsing-pages/Details";
+// import Comparison from "../pages/car-browsing-pages/Comparison";
 import MainLayout from "/src/MainLayout";
-import Payment from "../pages/car-checkout-pages/payment-pages/PaymentSuccess";
-import Favorites from "../pages/car-browsing-pages/Favorites";
+// import Payment from "../pages/car-checkout-pages/payment-pages/PaymentSuccess";
+// import Favorites from "../pages/car-browsing-pages/Favorites";
 
 // import OrderTracking from "../pages/order-tracking/Order Tracking";
-import PaymentSuccess from "../pages/car-checkout-pages/payment-pages/PaymentSuccess";
-import PaymentFailed from "../pages/car-checkout-pages/payment-pages/PaymentFailed";
+// import PaymentSuccess from "../pages/car-checkout-pages/payment-pages/PaymentSuccess";
+// import PaymentFailed from "../pages/car-checkout-pages/payment-pages/PaymentFailed";
 
 //Admin pages
 import Dashboard from "../pages/admin-pages/Dashboard";

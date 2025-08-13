@@ -1,48 +1,39 @@
-import { useState, useEffect } from "react";
-import { Button, Select, Modal, Input } from "antd";
-import { toast } from "react-toastify";
+import { useState } from "react";
+import { Button, Select, Modal, Input, Radio, Rate, Checkbox } from "antd";
 const { Option } = Select;
-import useCarData from "../hooks/useCarData";
-import useBrandData from "../hooks/useBrandData";
-import useLocationData from "../hooks/useLocationData";
 
-const AddCar = () => {
+const AddOrder = () => {
   const [open, setOpen] = useState(false);
-  const { refetch } = useCarData();
-  const { brands, loading } = useBrandData();
-  const { locations } = useLocationData();
-  const openModal = () => setOpen(true);
   const [formData, setFormData] = useState({
-    title: "",
-    brandId: "",
-    model: "",
-    carType: "",
-    exteriorColor: [],
-    seats: "",
-    length: "",
-    width: "",
-    height: "",
-    image: [],
-    fuelType: "",
-    fuelconsumsion: "",
-    tranmission: "",
-    power: "",
-    price: "",
-    registrationYear: "",
-    stock: "",
-    locationId: "",
+    name: "",
+    type: "",
+    image: "",
+    steering: "manual",
+    capacity: "2",
+    originalPrice: "",
+    discountedPrice: "",
+    rating: 0,
+    location: "danang",
+    dateAvailable: "",
     description: "",
+    popular: false,
   });
 
-  const carTypeOptions = ["Sedan", "SUV", "Hatchback", "Pickup", "MPV"];
-  const seatOptions = ["2", "4", "5", "7"];
-  const fuelTypeOptions = ["Gasoline", "Electric", "Diesel", "Hybrid"];
+  const openModal = () => {
+    setOpen(true);
+  };
+
+  const submitForm = () => {
+    // Logic to submit the form goes here
+    console.log("Form submitted", formData);
+    setOpen(false);
+  };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -50,20 +41,9 @@ const AddCar = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    console.log("Submitting car:", formData);
-    try {
-      const res = await instance.post("/admins/cars", formData)
-      console.log("Car added successfully:", res.data);
-      toast.success("Car added successfully")
-      refetch()
-      setOpen(false)
-    } catch (error) {
-      toast.error("Failed to add car")
-      console.error("Error adding car:", error);
-    }
-  }
+  const handleRatingChange = (value) => {
+    setFormData((prev) => ({ ...prev, rating: value }));
+  };
 
   return (
     <>
@@ -73,11 +53,9 @@ const AddCar = () => {
       <Modal
         title="Add New Car"
         open={open}
-        onOk={handleSubmit}
+        onOk={submitForm}
         onCancel={() => setOpen(false)}
         okText="Submit"
-        width={900}
-        className="overflow-hidden"
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ display: "flex", gap: "16px", width: "100%" }}>
@@ -85,24 +63,25 @@ const AddCar = () => {
               <label htmlFor="">Title</label>
               <Input
                 placeholder="Title"
-                name="title"
-                value={formData.title}
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
               />
             </div>
             <div className="w-1/3">
-              <label>Brand</label>
+              <label htmlFor="">Brand</label>
               <Select
                 placeholder="Brand"
-                name="brandId"
-                value={formData.brandId}
-                onChange={value => setFormData(prev => ({ ...prev, brandId: value }))}
+                name="brand"
+                // value={formData.brand}
+                // onChange={(value) => handleSelectChange("brand", value)}
                 style={{ width: "100%" }}
-                loading={loading}
               >
-                {brands.map(brand => (
-                  <Option key={brand._id} value={brand._id}>{brand.name}</Option>
-                ))}
+                <Option value="nissan">Nissan</Option>
+                <Option value="toyota">Toyota</Option>
+                <Option value="honda">Honda</Option>
+                <Option value="ford">Ford</Option>
+                <Option value="bmw">BMW</Option>
               </Select>
             </div>
             <div className="w-1/3">
@@ -120,14 +99,16 @@ const AddCar = () => {
               <label htmlFor="">Car Type</label>
               <Select
                 placeholder="Car Type"
-                name="carType"
-                value={formData.carType}
-                onChange={(value) => handleSelectChange("carType", value)}
+                name="type"
+                // value={formData.type}
+                // onChange={(value) => handleSelectChange("type", value)}
                 style={{ width: "100%" }}
               >
-                {carTypeOptions.map((type) => (
-                  <Option key={type} value={type}>{type}</Option>
-                ))}
+                <Option value="sedan">Sedan</Option>
+                <Option value="suv">SUV</Option>
+                <Option value="hatchback">Hatchback</Option>
+                <Option value="pickup">Pickup</Option>
+                <Option value="mpv">MPV</Option>
               </Select>
             </div>
             <div className="w-1/2">
@@ -170,35 +151,31 @@ const AddCar = () => {
             </div>
           </div>
           <div style={{ display: "flex", gap: "16px", width: "100%" }}>
-            <div className="w-1/3 flex flex-col">
+            <div className="w-1/3">
               <label htmlFor="">Image (max 9 pictures)</label>
-              <input 
-                type="file" 
-                accept="image/*" 
-                multiple
-                name="image" 
-                value={formData.image} 
-                onChange={handleChange}
-                className="rounded-xl border-2" />
+              <Button>
+                Add Image
+              </Button>
             </div>
             <div className="w-1/3">
               <label htmlFor="">Fuel Type</label>
               <Select
                 placeholder="Fuel Type"
                 name="fuelType"
-                value={formData.fuelType}
-                onChange={(value) => handleSelectChange("fuelType", value)}
+                // value={formData.fuelType}
+                // onChange={(value) => handleSelectChange("fuelType", value)}
                 style={{ width: "100%" }}
               >
-                {fuelTypeOptions.map((type) => (
-                  <Option key={type} value={type}>{type}</Option>
-                ))}
+                <Option value="gasoline">Gasoline</Option>
+                <Option value="electric">Electric</Option>
+                <Option value="diesel">Diesel</Option>
+                <Option value="hybrid">Hybrid</Option>
               </Select>
             </div>
             <div className="flex flex-col w-1/3">
               <label htmlFor="">Fuel Consumption</label>
               <div className="flex gap-2">
-                <Input placeholder="Fuel Consumption" name="fuelconsumsion" value={formData.fuelconsumsion} onChange={handleChange} />
+                <Input placeholder="Fuel Consumption" name="fuelConsumption" value={formData.fuelConsumption} onChange={handleChange} />
               </div>
             </div>
           </div>
@@ -207,13 +184,13 @@ const AddCar = () => {
               <p>Transmission</p>
               <Select
                 placeholder="Transmission"
-                name="tranmission"
-                value={formData.tranmission}
-                onChange={(value) => handleSelectChange("tranmission", value)}
+                name="transmission"
+                value={formData.transmission}
+                onChange={(value) => handleSelectChange("transmission", value)}
                 style={{ width: "100%" }}
               >
-                <Option value="manual">Manual</Option>
-                <Option value="automatic">Automatic</Option>
+                <Option value="2">Manual</Option>
+                <Option value="4">Automatic</Option>
               </Select>
             </div>
             <div className="w-1/3">
@@ -234,9 +211,10 @@ const AddCar = () => {
                 onChange={(value) => handleSelectChange("seats", value)}
                 style={{ width: "100%" }}
               >
-                {seatOptions.map((seat) => (
-                  <Option key={seat} value={seat}>{seat}</Option>
-                ))}
+                <Option value="2">2</Option>
+                <Option value="4">4</Option>
+                <Option value="5">5</Option>
+                <Option value="7">7</Option>
               </Select>
             </div>
           </div>
@@ -245,8 +223,8 @@ const AddCar = () => {
               <label htmlFor="">Price</label>
               <Input
                 placeholder="Price"
-                name="price"
-                value={formData.price}
+                name="originalPrice"
+                value={formData.originalPrice}
                 onChange={handleChange}
               />
             </div>
@@ -255,12 +233,16 @@ const AddCar = () => {
               <Input
                 placeholder="Registration Year"
                 name="registrationYear"
-                value={formData.registrationYear}
+                // value={formData.registrationYear}
                 onChange={handleChange}
               />
             </div>
           </div>
           <div style={{ display: "flex", gap: "16px", width: "100%" }}>
+            <div className="w-1/3">
+              <p className="py-2">Rating</p>
+              <Rate value={formData.rating} onChange={handleRatingChange} />
+            </div>
             <div className="w-1/3">
               <label htmlFor="">Stock</label>
               <Input
@@ -271,18 +253,18 @@ const AddCar = () => {
               />
             </div>
             <div className="w-1/3">
-              <label>Location</label>
+              <label htmlFor="">Location</label>
               <Select
                 placeholder="Location"
-                name="locationId"
-                value={formData.locationId}
-                onChange={value => setFormData(prev => ({ ...prev, locationId: value }))}
+                name="location"
+                value={formData.location}
+                onChange={(value) => handleSelectChange("location", value)}
                 style={{ width: "100%" }}
-                loading={loading}
               >
-                {locations.map(loc => (
-                  <Option key={loc._id} value={loc._id}>{loc.name}</Option>
-                ))}
+                <Option value="hanoi">Hanoi</Option>
+                <Option value="hochiminhcity">Ho Chi Minh City</Option>
+                <Option value="hue">Hue</Option>
+                <Option value="danang">Danang</Option>
               </Select>
             </div>
           </div>
@@ -292,6 +274,13 @@ const AddCar = () => {
             value={formData.description}
             onChange={handleChange}
           />
+          <Checkbox
+            name="popular"
+            checked={formData.popular}
+            onChange={handleChange}
+          >
+            Popular
+          </Checkbox>
         </div>
       </Modal>
     </>
