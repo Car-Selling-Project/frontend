@@ -1,3 +1,4 @@
 src/pages/*
 !src/pages/user-authentication-pages/
+!src/pages/car-checkout-pages/
 node_modules
