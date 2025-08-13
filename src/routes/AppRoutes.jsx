@@ -11,14 +11,14 @@ import AdminRegister from "../pages/user-authentication-pages/AdminRegister";
 import ForgotPWAdmin from "../pages/user-authentication-pages/ForgotPasswordAdmin";
 import ResetPWAdmin from "../pages/user-authentication-pages/ResetPasswordAdmin";
 
-import AdminDashboard from "../pages/admin-dashboard-pages/AdminDashboard";
-
+//Car Browsing routes
 import Homepage from "../pages/car-browsing-pages/Homepage";
 import Category from "../pages/car-browsing-pages/Category";
 import Details from "../pages/car-browsing-pages/Details";
-import MainLayout from "/src/MainLayout";
-import Payment from "../pages/car-checkout-pages/payment-pages/Payment";
 import Favorites from "../pages/car-browsing-pages/Favorites";
+
+//Admin Management routes
+import Dashboard from "../pages/admin-dashboard-pages/AdminDashboard";
 
 import Payment from "../pages/car-checkout-pages/payment-pages/Payment";
 import OrderTracking from "../pages/order-tracking/Order Tracking";
@@ -29,7 +29,7 @@ import PaymentFailed from "../pages/car-checkout-pages/payment-pages/PaymentFail
 import Dashboard from "../pages/admin-pages/Dashboard";
 import ListCars from "../pages/admin-pages/ListCars";
 import Orders from "../pages/admin-pages/Orders";
-
+import MainLayout from "/src/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
 
 
