@@ -1,4 +1,4 @@
 src/pages/*
-!src/pages/user-authentication-pages/
-!src/pages/car-browsing-pages/
+# !src/pages/user-authentication-pages/
+# !src/pages/car-browsing-pages/
 node_modules
