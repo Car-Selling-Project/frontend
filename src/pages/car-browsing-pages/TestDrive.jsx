@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Select, Button, Form, Input } from 'antd'
 import { toast } from 'react-toastify'
 const { Option } = Select
-import jesko from '../../assets/icons/jesko.jpg'
 import api from '../../api/axiosInstance'
 
 const TestDrive = () => {
