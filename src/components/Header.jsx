@@ -19,11 +19,6 @@ const Header = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleOrderTracking = () => {
-    setIsDropdownOpen(false);
-    navigate("/orders");
-  };
-
   const handleLogout = () => {
     logout();
     setIsDropdownOpen(false);
@@ -61,45 +56,23 @@ const Header = () => {
       {/* Logo */}
       <h1
         className="pl-8 text-2xl font-bold text-blue-600 cursor-pointer"
-        onClick={() => {navigate("/customers");  setActiveTab(null)}}
+        onClick={() => { navigate("/customers"); setActiveTab(null) }}
       >
         CAR HUNT
       </h1>
 
-      {/* Search Box */}
-      {/* <SearchInput onSelectCar={handleSelectCar} /> */}
-
-      {/* Navigation Tabs */}
-      <Tabs
-        onTabClick={handleTabClick}
-        activeKey={activeTab}
-        className="custom-tabs"
-      >
-        <TabPane tab={<span className="cursor-pointer text-base font-medium dark:text-gray-200">Product</span>} key="1" />
-        <TabPane tab={<span className="cursor-pointer text-base font-medium dark:text-gray-200">Compare Cars</span>} key="2" />
-        <TabPane tab={<span className="cursor-pointer text-base font-medium dark:text-gray-200">Cost Estimation</span>} key="3" />
-        <TabPane tab={<span className="cursor-pointer text-base font-medium dark:text-gray-200">Book Test Drive</span>} key="4" />
-      </Tabs>
+      <div className="flex items-center gap-4">
+        <input
+          type="text"
+          placeholder="Search something here..."
+          className="w-96 px-4 py-2 rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-200"
+        />
+        {/* Add icons/user avatar here if needed */}
+      </div>
 
       {/* Navigation Icons */}
       <div className="flex items-center space-x-4">
         <ThemeToggle />
-
-        {/* Favorites */}
-        <span className="w-10 h-10 rounded-full border flex items-center justify-center hover:text-red-500 dark:text-gray-400">
-          <HeartFilled
-            className="text-xl cursor-pointer"
-            onClick={() => navigate("/customers/favourites")}
-          />
-        </span>
-
-        {/* Notifications */}
-        <div className="relative">
-          <span className="w-10 h-10 rounded-full border flex items-center justify-center dark:text-gray-400">
-            <BellFilled className="text-xl cursor-pointer" />
-          </span>
-          <span className="absolute top-0 right-1 bg-red-500 text-xs w-2 h-2 rounded-full"></span>
-        </div>
 
         {/* Settings */}
         <span className="w-10 h-10 rounded-full border flex items-center justify-center dark:text-gray-400">
@@ -127,7 +100,7 @@ const Header = () => {
           )}
 
           {/* Dropdown Menu */}
-          {user && isDropdownOpen && (
+          {/* {user && isDropdownOpen && (
             <ul className="absolute right-0 mt-4 w-48 bg-white dark:bg-gray-700 shadow-lg rounded-md border border-gray-200 dark:border-gray-600 z-10">
               <li
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm dark:text-white"
@@ -142,7 +115,7 @@ const Header = () => {
                 Log Out
               </li>
             </ul>
-          )}
+          )} */}
         </div>
       </div>
     </header>
