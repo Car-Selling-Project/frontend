@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { ToastContainer } from 'react-toastify'
 // Customer Authentication routes
 // import Login from "../pages/user-authentication-pages/Login";
 // import Register from "../pages/user-authentication-pages/Register";
@@ -18,8 +19,9 @@ import Category from "../pages/car-browsing-pages/Category";
 import Details from "../pages/car-browsing-pages/Details";
 import Comparison from "../pages/car-browsing-pages/Comparison";
 import MainLayout from "/src/MainLayout";
-// import Payment from "../pages/car-checkout-pages/payment-pages/Payment";
 import Favorites from "../pages/car-browsing-pages/Favorites";
+import TestDrive from "../pages/car-browsing-pages/TestDrive";
+// import Payment from "../pages/car-checkout-pages/payment-pages/Payment";
 
 // import OrderTracking from "../pages/order-tracking/Order Tracking";
 // import PaymentSuccess from "../pages/car-checkout-pages/payment-pages/PaymentSuccess";
@@ -51,11 +53,20 @@ const AppRoutes = () => {
 
         {/* <Route path="/checkout" element={<ProtectedRoute><Payment /></ProtectedRoute>} /> */}
         <Route path="/customers/favourites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+        <Route path="/customers/test-drive" element={<TestDrive />} />
 
         {/* <Route path="/orders" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFailed />} />     */}
       </Routes>
+      <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          closeOnClick
+          pauseOnHover
+          theme="colored"
+        />
     </MainLayout>
   );
 };
