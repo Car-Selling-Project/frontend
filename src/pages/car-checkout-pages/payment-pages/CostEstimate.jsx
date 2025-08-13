@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "antd";
 import useCarData from "../../../hooks/useCarData";
+import { LeftOutlined } from "@ant-design/icons";
 
+
+// Component hiển thị sao
 const StarRating = ({ rating }) => {
   const maxStars = 5;
   return (
@@ -26,9 +29,18 @@ const CostEstimate = () => {
   const [selectedCarId, setSelectedCarId] = useState(id || "");
   const car = cars.find((c) => c._id === selectedCarId);
 
-  const mainImageDefault = car?.images?.[0] || null;
-  const [mainImage, setMainImage] = useState(mainImageDefault);
+  // State lưu ảnh chính & ảnh đang chọn
+  const [mainImage, setMainImage] = useState(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
+  // Khi car thay đổi, set lại ảnh đầu tiên
+  useEffect(() => {
+    if (car?.images?.length) {
+      setMainImage(car.images[0]);
+    }
+  }, [car]);
+
+  // Tính chi phí ước tính
   let estimate = null;
   if (car) {
     const tax = Math.round(car.price * 0.1);
@@ -64,27 +76,17 @@ const CostEstimate = () => {
         <section className="flex flex-col lg:flex-row gap-6">
           {/* Left Column - Image + Info */}
           <div className="lg:w-1/2 flex flex-col">
+            {/* Ảnh chính */}
             <div className="rounded-lg overflow-hidden">
               <img
                 src={mainImage}
                 alt={car.title}
-                className="w-full h-[20rem] object-cover"
+                className="w-full h-[20rem] object-contain"
               />
             </div>
-            <div className="flex gap-2 mt-4">
-              {car.images?.map((img, index) => (
-                <img
-                  key={index}
-                  src={img}
-                  alt={`thumb-${index}`}
-                  className={`w-16 h-12 object-cover rounded cursor-pointer ${
-                    mainImage === img ? "ring-2 ring-blue-500" : ""
-                  }`}
-                  onClick={() => setMainImage(img)}
-                />
-              ))}
-            </div>
+            
 
+            {/* Thông tin xe */}
             <div className="mt-6">
               <h2 className="text-xl font-bold">{car.title}</h2>
               <p className="text-gray-600 dark:text-gray-300">
@@ -97,7 +99,12 @@ const CostEstimate = () => {
 
           {/* Right Column - Cost Breakdown */}
           <div className="lg:w-1/2 bg-white dark:bg-gray-800 rounded-lg p-6 shadow">
-            <h3 className="text-xl font-bold mb-4 dark:text-white">On-road Cost Breakdown</h3>
+          <div className="flex flex-row items-center justify-start gap-4 mb-4">
+            <button onClick={() => navigate(`/customers/cars/${car._id}`)} className="rounded bg-transparent text-primary cursor-pointer">
+                    <LeftOutlined />
+            </button>
+            <h3 className="text-xl font-bold  dark:text-white">On-road Cost Breakdown</h3>
+        </div>
             <table className="w-full text-left dark:text-white">
               <tbody>
                 <tr>
@@ -126,7 +133,6 @@ const CostEstimate = () => {
                 </tr>
               </tbody>
             </table>
-
             <Button
               type="primary"
               size="large"
@@ -134,7 +140,7 @@ const CostEstimate = () => {
               style={{ backgroundColor: "#3563E9", borderColor: "#3563E9", borderRadius: "12px" }}
               onClick={() => navigate(`/customers/cars/${car._id}`)}
             >
-              View Full Details
+            Proceed Payment            
             </Button>
           </div>
         </section>

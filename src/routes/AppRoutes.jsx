@@ -17,15 +17,11 @@ import Homepage from "../pages/car-browsing-pages/Homepage";
 import Category from "../pages/car-browsing-pages/Category";
 import Details from "../pages/car-browsing-pages/Details";
 import Comparison from "../pages/car-browsing-pages/Comparison";
-import MainLayout from "/src/MainLayout";
 import Favorites from "../pages/car-browsing-pages/Favorites";
-import TestDrive from "../pages/car-browsing-pages/TestDrive";
-// import Payment from "../pages/car-checkout-pages/payment-pages/Payment";
-
-//Admin Management routes
-import Dashboard from "../pages/admin-dashboard-pages/AdminDashboard";
+import TestDrive from "../pages/car-checkout-pages/test-drive-page/TestDrive";
 
 import Payment from "../pages/car-checkout-pages/payment-pages/Payment";
+import CostEstimate from "../pages/car-checkout-pages/payment-pages/CostEstimate";
 import OrderTracking from "../pages/order-tracking/Order Tracking";
 import PaymentSuccess from "../pages/car-checkout-pages/payment-pages/PaymentSuccess";
 import PaymentFailed from "../pages/car-checkout-pages/payment-pages/PaymentFailed";
@@ -52,14 +48,15 @@ const AppRoutes = () => {
         <Route path="/admins/register" element={<AdminRegister />} />
         <Route path="/admins/forgot-password" element={<ForgotPWAdmin />} />
         <Route path="/admins/reset-password" element={<ResetPWAdmin />} />
-        <Route path="/admins/dashboard" element={<AdminDashboard />} /> */
 
         <Route path="/customers" element={<Homepage />} />
         <Route path="/customers/cars" element={<Category />} />
         <Route path="/customers/cars/:id" element={<Details />} />
+        <Route path="/customers/comparison" element={<Comparison />} />
         
         <Route path="/checkout" element={<ProtectedRoute><Payment /></ProtectedRoute>} />
         <Route path="/customers/favourites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+        <Route path="/customers/cost-estimate" element={<CostEstimate /> }/>
         <Route path="/customers/test-drive" element={<TestDrive />} />
 
         <Route path="/orders" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />

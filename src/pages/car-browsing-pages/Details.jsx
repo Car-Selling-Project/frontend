@@ -103,6 +103,7 @@ const Details = () => {
                   </div>
                   {/* Action Buttons */}
                   <div className="flex mt-6">
+                  <Link to ='/customers/test-drive'>
                     <Button
                       type="primary"
                       size="large"
@@ -111,6 +112,8 @@ const Details = () => {
                     >
                       Book Test Drive
                     </Button>
+                    </Link>
+                    <Link to ='/customers/cost-estimate'>
                     <Button
                       type="primary"
                       size="large"
@@ -119,6 +122,7 @@ const Details = () => {
                     >
                       Cost Estimate
                     </Button>
+                    </Link>
                   </div>
                 </div>
               </div>
