@@ -96,6 +96,7 @@ const CarDetailModal = ({ car, open, onClose }) => {
 
 const ListCars = () => {
   const { cars, loading } = useCarData();
+  console.log("cars from hook:", cars);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -131,9 +132,7 @@ const ListCars = () => {
   };
 
   // Slice data for current page
-  const pagedData = cars
-    ? cars.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-    : [];
+  const pagedData = cars ? cars.slice((currentPage - 1) * pageSize, currentPage * pageSize) : [];
 
   return (
     <div className="flex min-h-screen items-center bg-[#F6F7F9]">

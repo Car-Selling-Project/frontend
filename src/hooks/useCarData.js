@@ -19,7 +19,7 @@ const useCarData = () => {
         if (searchParams.get("minPrice")) params.minPrice = searchParams.get("minPrice");
         if (searchParams.get("maxPrice")) params.maxPrice = searchParams.get("maxPrice");
         if (searchParams.get("fuelType")) params.fuelType = searchParams.get("fuelType");
-        if (searchParams.get("tranmission")) params.tranmission = searchParams.get("tranmission"); 
+        if (searchParams.get("tranmission")) params.tranmission = searchParams.get("tranmission");
         if (searchParams.get("seat")) params.seat = searchParams.get("seat");
         if (searchParams.get("minRegistrationYear") && searchParams.get("maxRegistrationYear")) {
           params.minRegistrationYear = searchParams.get("minRegistrationYear");
@@ -31,9 +31,9 @@ const useCarData = () => {
         if (searchParams.get("brandIds")) params.brandIds = searchParams.get("brandIds");
         if (searchParams.get("locationIds")) params.locationIds = searchParams.get("locationIds");
 
-        console.log("Query params sent:", params); // Debug
-        const response = await api.get("/customers/cars", { params });
-        setCars(response.data.cars || response.data);
+        // console.log("Query params sent:", params); // Debug
+        const response = await api.get("/admins/cars", { params });
+        setCars(response.data.cars || response.data || []);
       } catch (err) {
         console.error("Failed to fetch cars:", err);
       } finally {
