@@ -15,6 +15,8 @@ import { ToastContainer } from 'react-toastify'
 // import AdminDashboard from "../pages/admin-dashboard-pages/AdminDashboard";
 
 import Homepage from "../pages/car-browsing-pages/Homepage";
+import UserProfile from "../pages/UserProfile";
+import ContractList from '../pages/ContractList';
 import Category from "../pages/car-browsing-pages/Category";
 import Details from "../pages/car-browsing-pages/Details";
 import Comparison from "../pages/car-browsing-pages/Comparison";
@@ -47,6 +49,8 @@ const AppRoutes = () => {
         <Route path="/admins/dashboard" element={<AdminDashboard />} /> */}
 
         <Route path="/customers" element={<Homepage />} />
+        <Route path="/customers/profile" element={<UserProfile />} />
+        <Route path="/customers/contracts" element={<ContractList />} />
         <Route path="/customers/cars" element={<Category />} />
         <Route path="/customers/cars/:id" element={<Details />} />
         <Route path="/customers/comparison" element={<Comparison />} />

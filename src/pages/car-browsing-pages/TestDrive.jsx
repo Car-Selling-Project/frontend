@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Select, Button, Form, Input } from 'antd'
 import { toast } from 'react-toastify'
 const { Option } = Select
-import jesko from '../../assets/icons/jesko.jpg'
 import api from '../../api/axiosInstance'
 
 const TestDrive = () => {
@@ -149,10 +148,12 @@ const TestDrive = () => {
                         <label className='font-bold text-xl'>Name of car*</label>
                         <Select
                             style={{ width: '25rem' }}
+                            name='carInfo'
                             value={formData.carInfo}
                             onChange={value => handleSelectChange('carInfo', value)}
+                            defaultValue="#"
                         >
-                            <Option value="">Select a car</Option>
+                            <Option value="#">Select a car</Option>
                             {cars.map(car => (
                                 <Option key={car._id} value={car._id}>{car.title}</Option>
                             ))}
