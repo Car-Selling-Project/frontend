@@ -8,7 +8,9 @@ import { toast } from "react-toastify";
 import { Pagination, Modal, Tag, Descriptions, Image, Spin, Form, Input, Button } from "antd";
 import AddCar from "../../components/AddCar";
 import useCarData from "../../hooks/useCarData";
-import api from '../../api/axiosInstance'
+import api from '../../api/axiosInstance';
+import AdminSidebar from "../../components/AdminSidebar"
+
 
 const CarDetailModal = ({ car, open, onClose }) => {
   if (!car) return null;
@@ -142,6 +144,7 @@ const EditCarModal = ({ car, open, onClose, onUpdate }) => {
   if (!car) return null; // <-- Prevent rendering if car is null
 
   return (
+    
     <Modal
       open={open}
       onCancel={onClose}
@@ -201,7 +204,6 @@ const EditCarModal = ({ car, open, onClose, onUpdate }) => {
 
 const ListCars = () => {
   const { cars, loading, refetch } = useCarData();
-  console.log("cars from hook:", cars);
   const [editCar, setEditCar] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
 
@@ -262,7 +264,7 @@ const ListCars = () => {
   const pagedData = cars ? cars.slice((currentPage - 1) * pageSize, currentPage * pageSize) : [];
 
   return (
-    <div className="flex min-h-screen items-center bg-[#F6F7F9]">
+    <div className="flex min-h-screen items-center bg-[#F6F7F9] ">
       <div className="flex-1 flex flex-col px-8 py-6">
         <div className="w-full bg-white rounded-2xl shadow p-8">
           <div className="flex justify-between items-center mb-6">

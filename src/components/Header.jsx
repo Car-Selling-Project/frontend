@@ -24,10 +24,15 @@ const Header = () => {
     navigate("/customers/portal");
   };
 
-  const handleLogout = () => {
+  const handleLogoutCustomer = () => {
     logout();
     setIsDropdownOpen(false);
     setTimeout(() => navigate("/customers/login"), 0);
+  };
+  const handleLogoutAdmin = () => {
+    logout();
+    setIsDropdownOpen(false);
+    setTimeout(() => navigate("/admins/login"), 0);
   };
 
   useEffect(() => {
@@ -57,7 +62,7 @@ const Header = () => {
   };
 
   return (
-    <header className="p-4 shadow-md flex items-center justify-between dark:bg-gray-800">
+    <header className="p-4  flex items-center justify-between bg-white dark:bg-gray-800">
       {/* Logo */}
       <h1
         className="pl-8 text-2xl font-bold text-blue-600 cursor-pointer"
@@ -65,9 +70,6 @@ const Header = () => {
       >
         CAR HUNT
       </h1>
-
-      {/* Search Box */}
-      {/* <SearchInput onSelectCar={handleSelectCar} /> */}
 
       {/* Navigation Tabs */}
       <Tabs
@@ -106,44 +108,71 @@ const Header = () => {
           <SettingFilled className="text-xl cursor-pointer" />
         </span>
 
-        {/* User Section */}
-        <div className="relative" ref={dropdownRef}>
-          {user ? (
-            <div
-              className="dark:text-white flex items-center cursor-pointer hover:text-blue-600"
-              onClick={toggleDropdown}
-            >
-              <UserOutlined className="text-xl mr-1" />
-              <span className="text-sm">Welcome, {user.name}</span>
-            </div>
-          ) : (
-            <div
-              className="dark:text-white flex items-center cursor-pointer hover:text-blue-600"
-              onClick={() => navigate("/customers/login")}
-            >
-              <UserOutlined className="text-xl mr-1" />
-              <span className="text-sm">Log In/Sign Up</span>
-            </div>
-          )}
+{/* User Section */}
+<div className="relative" ref={dropdownRef}>
+  {user ? (
+    <div
+      className="dark:text-white flex items-center cursor-pointer hover:text-blue-600"
+      onClick={toggleDropdown}
+    >
+      <UserOutlined className="text-xl mr-1" />
+      <span className="text-sm">Welcome, {user.name}</span>
+    </div>
+  ) : (
+    <div
+      className="dark:text-white flex items-center cursor-pointer hover:text-blue-600"
+      onClick={() => navigate("/customers/login")}
+    >
+      <UserOutlined className="text-xl mr-1" />
+      <span className="text-sm">Log In/Sign Up</span>
+    </div>
+  )}
 
-          {/* Dropdown Menu */}
-          {user && isDropdownOpen && (
-            <ul className="absolute right-0 mt-4 w-48 bg-white dark:bg-gray-700 shadow-lg rounded-md border border-gray-200 dark:border-gray-600 z-10">
-              <li
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm dark:text-white"
-                onClick={handleCustomerPortal}
-              >
-                Customer Portal
-              </li>
-              <li
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm dark:text-white"
-                onClick={handleLogout}
-              >
-                Log Out
-              </li>
-            </ul>
-          )}
-        </div>
+  {/* Dropdown Menu */}
+  {user && isDropdownOpen && (
+    <ul className="absolute right-0 mt-4 w-48 bg-white dark:bg-gray-700 shadow-lg rounded-md border border-gray-200 dark:border-gray-600 z-10">
+      
+      {/* Nếu là customer */}
+      {user.role === "customer" && (
+        <>
+          <li
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm dark:text-white"
+            onClick={handleCustomerPortal}
+          >
+            Customer Portal
+          </li>
+          <li
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm dark:text-white"
+            onClick={handleLogoutCustomer}
+          >
+            Log Out
+          </li>
+        </>
+      )}
+
+      {/* Nếu là admin */}
+      {user.role === "admin" && (
+        <>
+          <li
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm dark:text-white"
+            onClick={() => { 
+              setIsDropdownOpen(false);
+              navigate("/admins/dashboard"); 
+            }}
+          >
+            Admin Dashboard
+          </li>
+          <li
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm dark:text-white"
+            onClick={handleLogoutAdmin}
+          >
+            Log Out
+          </li>
+        </>
+      )}
+    </ul>
+  )}
+</div>
       </div>
     </header>
   );

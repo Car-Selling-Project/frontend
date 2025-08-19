@@ -41,9 +41,7 @@ const useCarData = () => {
       const exteriorColors = searchParamsObj.get("exteriorColors");
       if (exteriorColors) params.exteriorColors = exteriorColors;
 
-      console.log("Fetch params:", params);
       const response = await api.get("/customers/cars", { params }); 
-      console.log("API response:", response.data);
       setCars(response.data.cars || []);
       setTotal(response.data.total || 0);
     } catch (err) {

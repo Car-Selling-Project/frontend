@@ -6,7 +6,7 @@ import RentalPerDayChart from '../../components/charts/RentPerDay';
 
 const Dashboard = () => {
   return (
-    <div className="flex min-h-screen bg-[#F6F7F9]">
+    <div className="flex min-h-screen bg-[#F6F7F9] ">
       <div className="flex-1 flex flex-col px-8 py-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
