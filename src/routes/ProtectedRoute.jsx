@@ -3,11 +3,12 @@ import { useAuth } from "../hooks/useAuth";
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
+  const location = useLocation();
 
   if (!user) {
     
     alert("You need to log in to access this page!");
-    return <Navigate to="/customers/login" state={{ from: useLocation() }} replace />;
+    return <Navigate to="/admins/login" state={{ from: location }} replace />;
   }
 
   return children;

@@ -411,40 +411,6 @@ const AddCar = () => {
     setFormData((prev) => ({ ...prev, exteriorColor: value }));
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const form = new FormData();
-  //   Object.entries(formData).forEach(([key, value]) => {
-  //     if (key === "images") {
-  //       value.forEach((file) => form.append("images", file));
-  //     } else if (key === "dimension" || key === "engine") {
-  //       form.append(key, JSON.stringify(value));
-  //     } else if (key === "exteriorColor") {
-  //       value.forEach((color) => form.append("exteriorColor[]", color));
-  //     } else {
-  //       form.append(key, value);
-  //     }
-  //   });
-  //   console.log("Submitting form data:", formData);
-  //   try {
-  //     const res = await api.post("/admins/cars", form, {
-  //       headers: { "Content-Type": "multipart/form-data" }
-  //     });
-  //     console.log("Add car response:", res.data);
-  //     toast.success("Car added successfully");
-  //     refetch();
-  //   } catch (error) {
-  //     toast.error(
-  //       error.response?.data?.errors
-  //         ? error.response.data.errors.map(e => e.message).join(", ")
-  //         : "Failed to add car"
-  //     );
-  //     console.error("Error adding car:", error);
-  //   } finally {
-  //     setOpen(false);
-  //   }
-  // };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (["length", "width", "height"].includes(name)) {
@@ -473,53 +439,65 @@ const AddCar = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const form = new FormData();
 
-    // Ensure dimension and engine are objects with values
-    const dimensionObj = {
-      length: formData.dimension.length || "",
-      width: formData.dimension.width || "",
-      height: formData.dimension.height || "",
-    };
-    const engineObj = {
-      power: formData.engine.power || "",
-      fuelconsumsion: formData.engine.fuelconsumsion || "",
-    };
-
-    // Append all fields to FormData
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key === "images") {
-        value.forEach((file) => form.append("images", file));
-      } else if (key === "dimension") {
-        form.append("dimension", JSON.stringify(dimensionObj));
-      } else if (key === "engine") {
-        form.append("engine", JSON.stringify(engineObj));
-      } else if (key === "exteriorColor") {
-        value.forEach((color) => form.append("exteriorColor[]", color));
-      } else {
-        form.append(key, value);
-      }
-    });
-
-    console.log("Submitting form data:", {
-      ...formData,
-      dimension: dimensionObj,
-      engine: engineObj,
-    }); // Log to verify structure
+    console.log("Submitting form data:", formData);
 
     try {
-      const res = await api.post("/admins/cars", form, {
+      const form = new FormData();
+
+      // ép kiểu number cho các field numeric
+      const payload = {
+        title: formData.title,
+        brandId: formData.brandId,
+        model: formData.model,
+        carType: formData.carType,
+        description: formData.description,
+        dimension: {
+          height: Number(formData.dimension.height),
+          length: Number(formData.dimension.length),
+          width: Number(formData.dimension.width),
+        },
+        engine: {
+          fuelconsumsion: Number(formData.engine.fuelconsumsion),
+          power: Number(formData.engine.power),
+        },
+        exteriorColor: formData.exteriorColor, // mảng string
+        fuelType: formData.fuelType,
+        locationId: formData.locationId,
+        price: Number(formData.price),
+        registrationYear: Number(formData.registrationYear),
+        seat: Number(formData.seat),
+        stock: Number(formData.stock),
+        tranmission: formData.tranmission,
+      };
+
+      // append object payload vào FormData
+      Object.keys(payload).forEach((key) => {
+        if (typeof payload[key] === "object" && !Array.isArray(payload[key])) {
+          // nested object (dimension, engine)
+          Object.keys(payload[key]).forEach((subKey) => {
+            form.append(`${key}[${subKey}]`, payload[key][subKey]);
+          });
+        } else if (Array.isArray(payload[key])) {
+          payload[key].forEach((val) => form.append(`${key}[]`, val));
+        } else {
+          form.append(key, payload[key]);
+        }
+      });
+
+      // append images
+      formData.images.forEach((image) => {
+        form.append("images", image);
+      });
+
+      await api.post("/admins/cars", form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      toast.success("Car added successfully");
-      refetch();
+      toast.success("Car added successfully!");
+      refetch;
     } catch (error) {
-      toast.error(
-        error.response?.data?.errors
-          ? error.response.data.errors.map((e) => e.message).join(", ")
-          : "Failed to add car"
-      );
-      console.error("Error adding car:", error.response?.data || error);
+      console.error(error);
+      toast.error("Error adding car");
     } finally {
       setOpen(false);
     }

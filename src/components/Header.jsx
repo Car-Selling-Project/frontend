@@ -78,7 +78,7 @@ const Header = () => {
           ) : (
             <div
               className="dark:text-white flex items-center cursor-pointer hover:text-blue-600"
-              onClick={() => navigate("/customers/login")}
+              onClick={() => navigate("/admins/login")}
             >
               <UserOutlined className="text-xl mr-1" />
               <span className="text-sm">Log In/Sign Up</span>
@@ -86,14 +86,8 @@ const Header = () => {
           )}
 
           {/* Dropdown Menu */}
-          {/* {user && isDropdownOpen && (
+          {user && isDropdownOpen && (
             <ul className="absolute right-0 mt-4 w-48 bg-white dark:bg-gray-700 shadow-lg rounded-md border border-gray-200 dark:border-gray-600 z-10">
-              <li
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm dark:text-white"
-                onClick={handleOrderTracking}
-              >
-                Order Tracking
-              </li>
               <li
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm dark:text-white"
                 onClick={handleLogout}
@@ -101,7 +95,7 @@ const Header = () => {
                 Log Out
               </li>
             </ul>
-          )} */}
+          )}
         </div>
       </div>
     </header>
