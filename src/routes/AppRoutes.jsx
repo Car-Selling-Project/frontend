@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 // Customer Authentication routes
 // import Login from "../pages/user-authentication-pages/Login";
 // import Register from "../pages/user-authentication-pages/Register";
@@ -65,6 +66,14 @@ const AppRoutes = () => {
         <Route path="/admins/cars" element={<ListCars />} />
         <Route path="/admins/orders" element={<Orders />} />
       </Routes>
+      <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          closeOnClick
+          pauseOnHover
+          theme="colored"
+        />
     </MainLayout>
   );
 };

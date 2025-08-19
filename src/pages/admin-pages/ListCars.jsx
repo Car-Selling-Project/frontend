@@ -4,9 +4,11 @@ import {
   InfoCircleOutlined,
   EllipsisOutlined
 } from "@ant-design/icons";
-import { Pagination, Modal, Tag, Descriptions, Image, Spin } from "antd";
+import { toast } from "react-toastify";
+import { Pagination, Modal, Tag, Descriptions, Image, Spin, Form, Input, Button } from "antd";
 import AddCar from "../../components/AddCar";
 import useCarData from "../../hooks/useCarData";
+import api from '../../api/axiosInstance'
 
 const CarDetailModal = ({ car, open, onClose }) => {
   if (!car) return null;
@@ -30,7 +32,7 @@ const CarDetailModal = ({ car, open, onClose }) => {
             alt={car.title}
             width={180}
             height={120}
-            className="rounded-lg object-cover"
+            className="rounded-lg object-scale-down"
             fallback="https://via.placeholder.com/180x120?text=No+Image"
           />
           <div className="flex flex-wrap gap-2 mt-2">
@@ -40,7 +42,7 @@ const CarDetailModal = ({ car, open, onClose }) => {
                 src={img}
                 width={50}
                 height={40}
-                className="rounded object-cover"
+                className="rounded object-scale-down"
                 fallback="https://via.placeholder.com/50x40?text=No+Image"
               />
             ))}
@@ -94,9 +96,114 @@ const CarDetailModal = ({ car, open, onClose }) => {
   );
 };
 
+const EditCarModal = ({ car, open, onClose, onUpdate }) => {
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const [newImages, setNewImages] = useState([]);
+
+  useEffect(() => {
+    if (car) {
+      form.setFieldsValue({
+        title: car.title,
+        model: car.model,
+        price: car.price,
+        stock: car.stock,
+      });
+      setNewImages([]);
+    }
+  }, [car, form]);
+
+  const handleImageChange = (e) => {
+    setNewImages(Array.from(e.target.files));
+  };
+
+  const handleFinish = async (values) => {
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      Object.entries(values).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+      newImages.forEach((file) => formData.append("images", file));
+      await api.patch(`/admins/cars/${car?._id || car?.id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+      toast.success("Car updated successfully");
+      onUpdate();
+      onClose();
+    } catch (error) {
+      toast.error("Failed to update car");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!car) return null; // <-- Prevent rendering if car is null
+
+  return (
+    <Modal
+      open={open}
+      onCancel={onClose}
+      footer={null}
+      title="Edit Car"
+      width={400}
+    >
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleFinish}
+      >
+        <Form.Item label="Title" name="title">
+          <Input />
+        </Form.Item>
+        <Form.Item label="Model" name="model">
+          <Input />
+        </Form.Item>
+        <Form.Item label="Price" name="price">
+          <Input type="number" />
+        </Form.Item>
+        <Form.Item label="Stock" name="stock">
+          <Input type="number" />
+        </Form.Item>
+        <Form.Item label="Add Images">
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageChange}
+          />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" loading={loading} block>
+            Save Changes
+          </Button>
+        </Form.Item>
+      </Form>
+      <div>
+        <strong>Current Images:</strong>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
+          {(car.images || []).map((img, idx) => (
+            <Image
+              key={idx}
+              src={img}
+              width={50}
+              height={40}
+              style={{ borderRadius: 4, objectFit: "cover" }}
+              fallback="https://via.placeholder.com/50x40?text=No+Image"
+            />
+          ))}
+        </div>
+      </div>
+    </Modal>
+  );
+};
+
 const ListCars = () => {
-  const { cars, loading } = useCarData();
+  const { cars, loading, refetch } = useCarData();
   console.log("cars from hook:", cars);
+  const [editCar, setEditCar] = useState(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -129,6 +236,26 @@ const ListCars = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
     setCheckedIds([]); // Optionally clear checks on page change
+  };
+
+  const handleEditCar = (car) => {
+    setEditCar(car);
+    setEditModalOpen(true);
+  };
+
+  const handleUpdateCar = () => {
+    if (refetch) refetch();
+  };
+
+  const handleDeleteCar = async (id) => {
+    try {
+      await api.delete(`/admins/cars/${id}`);
+      message.success("Car deleted successfully");
+      if (refetch) refetch();
+    } catch (error) {
+      message.error("Failed to delete car");
+      console.error(error);
+    }
   };
 
   // Slice data for current page
@@ -180,13 +307,12 @@ const ListCars = () => {
                   {pagedData.map((car, idx) => (
                     <tr
                       key={car._id || car.id}
-                      className={`border-b last:border-b-0 text-base transition-colors ${
-                        checkedIds.includes(car._id || car.id)
-                          ? "bg-blue-50"
-                          : idx % 2 === 0
+                      className={`border-b last:border-b-0 text-base transition-colors ${checkedIds.includes(car._id || car.id)
+                        ? "bg-blue-50"
+                        : idx % 2 === 0
                           ? "bg-white"
                           : "bg-gray-50"
-                      } hover:bg-blue-100`}
+                        } hover:bg-blue-100`}
                     >
                       <td className="px-4 py-4 align-middle">
                         <input
@@ -218,10 +344,18 @@ const ListCars = () => {
                       </td>
                       <td className="px-4 py-4 text-gray-700">{car.stock}</td>
                       <td className="px-4 py-4">
-                        <button className="bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full p-2 mx-2 transition cursor-pointer">
+                        <button
+                          className="hover:bg-blue-200 text-blue-600 rounded-full p-2 mx-2 transition cursor-pointer"
+                          onClick={() => handleEditCar(car)}
+                          title="Edit Car"
+                        >
                           <EllipsisOutlined />
                         </button>
-                        <button className="bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full p-2 mx-2 transition cursor-pointer">
+                        <button
+                          className="hover:bg-blue-200 text-red-600 rounded-full p-2 mx-2 transition cursor-pointer"
+                          onClick={() => handleDeleteCar(car._id || car.id)}
+                          title="Delete Car"
+                        >
                           <DeleteOutlined />
                         </button>
                       </td>
@@ -252,6 +386,13 @@ const ListCars = () => {
           car={modalCar}
           open={!!modalCar}
           onClose={() => setModalCar(null)}
+        />
+        {/* Edit Car Modal */}
+        <EditCarModal
+          car={editCar}
+          open={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+          onUpdate={handleUpdateCar}
         />
       </div>
     </div>

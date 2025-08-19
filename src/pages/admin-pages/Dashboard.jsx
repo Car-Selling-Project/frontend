@@ -3,7 +3,6 @@ import { ShoppingCartOutlined, CarOutlined, UserOutlined, DollarOutlined, Ellips
 import gtr from '../../assets/images/gtr.jpg';
 import Top5CarChart from '../../components/charts/TopCars';
 import RentalPerDayChart from '../../components/charts/RentPerDay';
-import Sidebar from '../../components/Sidebar'; // adjust path as needed
 
 const Dashboard = () => {
   return (
