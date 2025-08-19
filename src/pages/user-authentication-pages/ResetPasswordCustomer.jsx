@@ -14,26 +14,16 @@ const ResetPWCustomer = () => {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const toggleConfirmPasswordVisibility = () => setShowConfirmPassword(!showConfirmPassword);
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
-    if (!password) {
-      newErrors.password = "Password is required";
-    }
-    if (!confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
-    } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
+    if (!password) newErrors.password = "Password is required";
+    if (!confirmPassword) newErrors.confirmPassword = "Please confirm your password";
+    else if (password !== confirmPassword) newErrors.confirmPassword = "Passwords do not match";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -45,20 +35,28 @@ const ResetPWCustomer = () => {
       setErrors({});
       setSuccessMessage("");
 
-      await axios.patch("/customers/reset-password", {
-        password,
-        confirmPassword,
-      }, { withCredentials: true });
-
+      console.log("Sending PATCH request to /customers/reset-password with:", { password, confirmPassword }); // Debug
+      const res = await axios.post(
+        "/customers/reset-password",
+        { password, confirmPassword },
+        { withCredentials: true }
+      );
+      console.log("Response from server:", res.data); // Debug
       setSuccessMessage("Password reset successfully! Redirecting to login...");
       setLoading(false);
 
       setTimeout(() => navigate("/customers/login"), 2000);
     } catch (err) {
       setLoading(false);
-      const message =
-        err.response?.data?.message ||
-        "Something went wrong. Please try again.";
+      const errorDetails = {
+        status: err.response?.status,
+        data: err.response?.data,
+        message: err.message,
+        code: err.code, // Ví dụ: 'ECONNABORTED', 'ERR_NETWORK'
+        config: err.config, // Kiểm tra URL và headers
+      };
+      console.error("Error resetting password:", errorDetails); // Debug chi tiết
+      const message = err.response?.data?.message || err.message || "Something went wrong. Please try again.";
       setErrors({ general: message });
     }
   };
@@ -66,22 +64,11 @@ const ResetPWCustomer = () => {
   return (
     <div className="min-h-full flex items-center justify-center mt-8 dark:bg-gray-900">
       <div className="flex dark:bg-gray-800 bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl w-full">
-        {/* Left Form Section */}
         <div className="w-1/2 p-10">
-          <h2 className="dark:text-white text-primary text-2xl font-semibold mb-4">
-            Reset Password
-          </h2>
-
-          <FormStatus
-            loading={loading}
-            errorMessage={errors.general}
-          />
-
+          <h2 className="dark:text-white text-primary text-2xl font-semibold mb-4">Reset Password</h2>
+          <FormStatus loading={loading} errorMessage={errors.general} />
           <form onSubmit={handleResetPassword} noValidate>
-            {/* Password */}
-            <label className="block dark:text-gray-400 text-maintext mb-2">
-              New Password
-            </label>
+            <label className="block dark:text-gray-400 text-maintext mb-2">New Password</label>
             <div className="relative my-3">
               <input
                 type={showPassword ? "text" : "password"}
@@ -93,25 +80,13 @@ const ResetPWCustomer = () => {
                   errors.password ? "border-red-500" : "border-gray-600"
                 } focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
-              <span
-                className="absolute right-3 top-3 text-gray-400 cursor-pointer"
-                onClick={togglePasswordVisibility}
-              >
-                {showPassword ? (
-                  <EyeFilled className="text-lg" />
-                ) : (
-                  <EyeInvisibleFilled className="text-lg" />
-                )}
+              <span className="absolute right-3 top-3 text-gray-400 cursor-pointer" onClick={togglePasswordVisibility}>
+                {showPassword ? <EyeFilled className="text-lg" /> : <EyeInvisibleFilled className="text-lg" />}
               </span>
             </div>
-            {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password}</p>
-            )}
+            {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
 
-            {/* Confirm Password */}
-            <label className="block dark:text-gray-400 text-maintext mb-2">
-              Confirm New Password
-            </label>
+            <label className="block dark:text-gray-400 text-maintext mb-2">Confirm New Password</label>
             <div className="relative my-3">
               <input
                 type={showConfirmPassword ? "text" : "password"}
@@ -123,20 +98,11 @@ const ResetPWCustomer = () => {
                   errors.confirmPassword ? "border-red-500" : "border-gray-600"
                 } focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
-              <span
-                className="absolute right-3 top-3 text-gray-400 cursor-pointer"
-                onClick={toggleConfirmPasswordVisibility}
-              >
-                {showConfirmPassword ? (
-                  <EyeFilled className="text-lg" />
-                ) : (
-                  <EyeInvisibleFilled className="text-lg" />
-                )}
+              <span className="absolute right-3 top-3 text-gray-400 cursor-pointer" onClick={toggleConfirmPasswordVisibility}>
+                {showConfirmPassword ? <EyeFilled className="text-lg" /> : <EyeInvisibleFilled className="text-lg" />}
               </span>
             </div>
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
-            )}
+            {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
 
             <button
               type="submit"
@@ -146,16 +112,12 @@ const ResetPWCustomer = () => {
             </button>
           </form>
         </div>
-
-        {/* Right Section */}
         <div className="w-1/2 flex items-center justify-center dark:bg-gray-800 bg-white">
           <div className="border border-blue-600 py-24 px-10 rounded-lg text-center">
             <h2 className="text-blue-500 text-6xl font-bold">CAR HUNT</h2>
             <p className="dark:text-white text-lg my-4">Welcome back!</p>
-            <FormStatus
-            successMessage={successMessage}
-            />
-            </div>
+            <FormStatus successMessage={successMessage} />
+          </div>
         </div>
       </div>
     </div>

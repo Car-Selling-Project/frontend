@@ -19,9 +19,9 @@ const Header = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleOrderTracking = () => {
+  const handleCustomerPortal = () => {
     setIsDropdownOpen(false);
-    navigate("/orders");
+    navigate("/customers/portal");
   };
 
   const handleLogout = () => {
@@ -131,9 +131,9 @@ const Header = () => {
             <ul className="absolute right-0 mt-4 w-48 bg-white dark:bg-gray-700 shadow-lg rounded-md border border-gray-200 dark:border-gray-600 z-10">
               <li
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm dark:text-white"
-                onClick={handleOrderTracking}
+                onClick={handleCustomerPortal}
               >
-                Order Tracking
+                Customer Portal
               </li>
               <li
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm dark:text-white"

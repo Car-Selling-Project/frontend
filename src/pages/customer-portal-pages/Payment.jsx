@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import useCarData from "../../../hooks/useCarData.js";
+import useCarData from "../../hooks/useCarData.js";
 import { useSearchParams } from "react-router-dom";
-import { StarRating } from "../../car-browsing-pages/Details.jsx";
-import axios from "../../../api/axiosInstance.js";
+import { StarRating } from "../car-browsing-pages/Details.jsx";
+import axios from "../../api/axiosInstance.js";
 import { DatePicker, Select, Button } from "antd";
 import dayjs from "dayjs";
-import { useAuth } from "../../../hooks/useAuth.js";
+import { useAuth } from "../../hooks/useAuth.js";
 
 const Payment = () => {
   const [agreeTerms, setAgreeTerms] = useState(false);

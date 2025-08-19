@@ -15,6 +15,8 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
+  const [address, setAddress] = useState("");
+  const [citizenId, setCitizenId] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
@@ -45,6 +47,12 @@ const Register = () => {
       case "gender":
         if (!gender) return "Please select a gender";
         break;
+      case "address":
+        if (!address) return "Address is required";
+        break;
+      case "citizenId":
+        if (!citizenId) return "CitizenID is required";
+        break;  
       case "password":
         if (!password) return "Password is required";
         break;
@@ -67,7 +75,7 @@ const Register = () => {
     e.preventDefault();
 
     const newErrors = {};
-    const fields = ["name", "email", "phone", "dob", "gender", "password", "confirmPassword"];
+    const fields = ["name", "email", "phone", "dob", "gender", "password", "confirmPassword", "address" ,"citizenId"];
     fields.forEach((f) => {
       const msg = validateField(f);
       if (msg) newErrors[f] = msg;
@@ -83,7 +91,7 @@ const Register = () => {
       setLoading(true);
       setSuccessMessage("");
 
-      await registerCustomer({ name, email, phone, password, dob, gender, confirmPassword });
+      await registerCustomer({ name, email, phone, password, dob, gender, confirmPassword, address, citizenId });
 
       setSuccessMessage("Registration successful! Redirecting...");
       setLoading(false);
@@ -185,6 +193,36 @@ const Register = () => {
             </select>
             {errors.gender && <p className="text-red-500 text-sm mb-2">{errors.gender}</p>}
 
+            {/* Address */}
+            <label className="block dark:text-gray-400 text-maintext mb-2">Address</label>
+            <input
+              type="text"
+              value={address}
+              onBlur={() => handleBlurField("address")}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="Input your address"
+              required
+              className={`w-full p-3 rounded-md mb-4 dark:bg-gray-700 dark:text-white text-subtitle border ${
+                errors.address ? 'border-red-500' : 'border-gray-600'
+              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            />
+            {errors.address && <p className="text-red-500 text-sm mb-2">{errors.address}</p>}
+            
+            {/* CitizenId */}
+            <label className="block dark:text-gray-400 text-maintext mb-2">CitizenID</label>
+            <input
+              type="text"
+              value={citizenId}
+              onBlur={() => handleBlurField("address")}
+              onChange={(e) => setCitizenId(e.target.value)}
+              placeholder="Input your citizenID"
+              required
+              className={`w-full p-3 rounded-md mb-4 dark:bg-gray-700 dark:text-white text-subtitle border ${
+                errors.citizenId ? 'border-red-500' : 'border-gray-600'
+              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            />
+            {errors.citizenId && <p className="text-red-500 text-sm mb-2">{errors.citizenId}</p>}
+
             {/* Password */}
             <label className="block dark:text-gray-400 text-maintext mb-2">Password</label>
             <div className="relative mb-1">
@@ -224,7 +262,7 @@ const Register = () => {
               />
               <span
                 className="absolute right-3 top-3 text-gray-400 cursor-pointer"
-                onClick={togglePasswordVisibility}
+                onClick={toggleConfirmPasswordVisibility}
               >
                 {showPassword ? <EyeFilled className="text-lg" /> : <EyeInvisibleFilled className="text-lg" />}
               </span>

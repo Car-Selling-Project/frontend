@@ -20,11 +20,8 @@ import Comparison from "../pages/car-browsing-pages/Comparison";
 import Favorites from "../pages/car-browsing-pages/Favorites";
 import TestDrive from "../pages/car-checkout-pages/test-drive-page/TestDrive";
 
-import Payment from "../pages/car-checkout-pages/payment-pages/Payment";
 import CostEstimate from "../pages/car-checkout-pages/payment-pages/CostEstimate";
-import OrderTracking from "../pages/order-tracking/Order Tracking";
-import PaymentSuccess from "../pages/car-checkout-pages/payment-pages/PaymentSuccess";
-import PaymentFailed from "../pages/car-checkout-pages/payment-pages/PaymentFailed";
+
 
 //Admin pages
 import Dashboard from "../pages/admin-pages/Dashboard";
@@ -33,6 +30,12 @@ import Orders from "../pages/admin-pages/Orders";
 import MainLayout from "/src/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
 
+//Customers Portal
+import CustomerPortal from "../pages/customer-portal-pages/CustomerPortal"
+import OrderTracking from "../pages/customer-portal-pages/Order Tracking";
+import Payment from "../pages/customer-portal-pages/Payment";
+import PaymentSuccess from "../pages/customer-portal-pages/PaymentSuccess";
+import PaymentFailed from "../pages/customer-portal-pages/PaymentFailed";
 
 const AppRoutes = () => {
 
@@ -59,6 +62,7 @@ const AppRoutes = () => {
         <Route path="/customers/cost-estimate" element={<CostEstimate /> }/>
         <Route path="/customers/test-drive" element={<TestDrive />} />
 
+        <Route path="/customers/portal" element={<ProtectedRoute><CustomerPortal /></ProtectedRoute>} />
         <Route path="/orders" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFailed />} />    

@@ -45,7 +45,7 @@ const ResetPWAdmin = () => {
       setErrors({});
       setSuccessMessage("");
 
-      await axios.patch("/admins/reset-password", {
+      await axios.post("/admins/reset-password", {
         password,
         confirmPassword,
       }, { withCredentials: true });
@@ -53,7 +53,7 @@ const ResetPWAdmin = () => {
       setSuccessMessage("Password reset successfully! Redirecting to login...");
       setLoading(false);
 
-      setTimeout(() => navigate("/customers/login"), 2000);
+      setTimeout(() => navigate("/admins/login"), 2000);
     } catch (err) {
       setLoading(false);
       const message =

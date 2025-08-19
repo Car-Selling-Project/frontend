@@ -67,7 +67,7 @@ const Login = () => {
       setSuccessMessage("Login successful! Redirecting...");
       setLoading(false);
   
-      setTimeout(() => navigate("/"), 5000);
+      setTimeout(() => navigate("/customers"), 5000);
     } catch (err) {
       setLoading(false);
   

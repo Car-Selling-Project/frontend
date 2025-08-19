@@ -66,7 +66,7 @@ const Details = () => {
             <div className="mt-6 w-1/2 mx-5 flex flex-col">
               <div className="flex justify-center items-center rounded-lg overflow-hidden">
                 {/* <img src={mockData.image[0]} alt='car1' className="rounded-lg shadow-md bg-primary flex-1" style={{ objectFit: 'cover', height: '25rem', width: '100%' }} /> */}
-                <img src={mainImage} alt='car1' className="rounded-lg shadow-md bg-primary flex-1" style={{ objectFit: 'cover', height: '25rem', width: '100%' }} />
+                <img src={mainImage} alt='car1' className="rounded-lg shadow-md bg-primary flex-1" style={{ objectFit: 'contain', height: '25rem', width: '100%' }} />
               </div>
               <div className="flex gap-4 mt-4 justify-between">
                 {car.images.map((img, index) => (

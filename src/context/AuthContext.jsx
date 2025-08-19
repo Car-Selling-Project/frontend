@@ -9,9 +9,9 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    const token = localStorage.getItem("token");
-    if (storedUser && token) {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    const accessToken = localStorage.getItem("accessToken");
+    console.log("Loading user from localStorage:", { storedUser, accessToken }); // Debug
+    if (storedUser && accessToken) {
       setUser(storedUser);
     }
     setIsLoading(false);
@@ -21,18 +21,26 @@ export const AuthProvider = ({ children }) => {
   const loginCustomer = async ({ email, password }) => {
     try {
       const res = await axios.post("/customers/login", { email, password });
-      const { token, ...userData } = res.data;
+      console.log("Login response data:", res.data); // Debug
+      const { message, accessToken, refreshToken, user } = res.data; // Trích xuất user trực tiếp
 
+      if (!accessToken) {
+        throw new Error("No access token received");
+      }
+
+      // Nếu có user trong phản hồi, sử dụng nó; nếu không, để user là null
+      const userData = user || {};
       localStorage.setItem("user", JSON.stringify(userData));
-      localStorage.setItem("token", token);
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
       setUser(userData);
+      return { accessToken, refreshToken, user: userData };
     } catch (err) {
       throw err;
     }
   };
 
-  const registerCustomer = async ({ name, email, phone, password, dob, gender, confirmPassword }) => {
+  const registerCustomer = async ({ name, email, phone, password, dob, gender, confirmPassword, address, citizenId }) => {
     try {
       const res = await axios.post("/customers/register", {
         name,
@@ -42,14 +50,19 @@ export const AuthProvider = ({ children }) => {
         dob,
         gender,
         confirmPassword,
-      });
+        address,
+        citizenId
+      }, { withCredentials: true });
 
-      const { token, ...userData } = res.data;
+      const { message, accessToken, refreshToken, user } = res.data;
+      console.log("Register response data:", res.data); // Debug
 
+      const userData = user || {};
       localStorage.setItem("user", JSON.stringify(userData));
-      localStorage.setItem("token", token);
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
       setUser(userData);
+      return { accessToken, refreshToken, user: userData };
     } catch (err) {
       throw err;
     }
@@ -58,13 +71,16 @@ export const AuthProvider = ({ children }) => {
   // 🧑‍💼 ADMIN AUTH
   const loginAdmin = async ({ employeeCode, password }) => {
     try {
-      const res = await axios.post("/admins/login", { employeeCode, password });
-      const { token, ...userData } = res.data;
+      const res = await axios.post("/admins/login", { employeeCode, password }, { withCredentials: true });
+      const { message, accessToken, refreshToken, user } = res.data;
+      console.log("Admin login response data:", res.data); // Debug
 
+      const userData = user || {};
       localStorage.setItem("user", JSON.stringify(userData));
-      localStorage.setItem("token", token);
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
       setUser(userData);
+      return { accessToken, refreshToken, user: userData };
     } catch (err) {
       throw err;
     }
@@ -79,15 +95,18 @@ export const AuthProvider = ({ children }) => {
         password,
         dob,
         gender,
-        confirmPassword,
-      });
+        confirmPassword
+      }, { withCredentials: true });
 
-      const { token, ...userData } = res.data;
+      const { message, accessToken, refreshToken, user } = res.data;
+      console.log("Admin register response data:", res.data); // Debug
 
+      const userData = user || {};
       localStorage.setItem("user", JSON.stringify(userData));
-      localStorage.setItem("token", token);
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
       setUser(userData);
+      return { accessToken, refreshToken, user: userData };
     } catch (err) {
       throw err;
     }
@@ -95,8 +114,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    delete axios.defaults.headers.common["Authorization"];
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     setUser(null);
   };
 

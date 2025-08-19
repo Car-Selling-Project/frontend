@@ -138,7 +138,7 @@ const CostEstimate = () => {
               size="large"
               className="mt-6 w-full"
               style={{ backgroundColor: "#3563E9", borderColor: "#3563E9", borderRadius: "12px" }}
-              onClick={() => navigate(`/customers/cars/${car._id}`)}
+              onClick={() => navigate(`/customers/payment`)}
             >
             Proceed Payment            
             </Button>

@@ -33,6 +33,7 @@ const ForgotPasswordCustomer = () => {
       setSuccessMessage("");
 
       const res = await axios.post("/customers/forgot-password", { email }, { withCredentials: true });
+      console.log("Response from server:", res.data); // Debug
 
       setSuccessMessage(res.data.message || "Email verified. Redirecting...");
       setLoading(false);
