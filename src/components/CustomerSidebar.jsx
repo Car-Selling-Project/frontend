@@ -1,8 +1,8 @@
 import {
-    DashboardOutlined,
+    UserOutlined,
     CarOutlined,
+    SolutionOutlined,
     ShoppingCartOutlined,
-    LogoutOutlined,
   } from "@ant-design/icons";
   
   const CustomerSidebar = () => {
@@ -20,7 +20,7 @@ import {
                   href="/customers/portal"
                   className="flex -ml-10 font-bold items-center gap-3 px-4 py-4 rounded-lg text-gray-700 text-base hover:bg-blue-50 hover:text-blue-600 transition"
                 >
-                  <DashboardOutlined className="text-xl" />
+                  <UserOutlined className="text-xl" />
                   Customer Info
                 </a>
               </li>
@@ -38,7 +38,7 @@ import {
                   href="/"
                   className="flex -ml-10 font-bold items-center gap-3 px-4 py-4 rounded-lg text-gray-700 text-base hover:bg-blue-50 hover:text-blue-600 transition"
                 >
-                  <ShoppingCartOutlined className="text-xl" />
+                  <SolutionOutlined className="text-xl" />
                   Contract
                 </a>
               </li>
