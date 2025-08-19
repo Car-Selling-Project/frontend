@@ -32,7 +32,8 @@ const useCarData = () => {
         if (searchParams.get("locationIds")) params.locationIds = searchParams.get("locationIds");
 
         // console.log("Query params sent:", params); // Debug
-        const response = await api.get("/admins/cars", { params });
+        // const response = await api.get("/admins/cars", { params });
+        const response = await api.get("/admins/cars", { params: { ...params, limit: 1000 } });
         setCars(response.data.cars || response.data || []);
       } catch (err) {
         console.error("Failed to fetch cars:", err);

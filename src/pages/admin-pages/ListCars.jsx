@@ -247,13 +247,19 @@ const ListCars = () => {
     if (refetch) refetch();
   };
 
+  const refreshCars = () => {
+    setCurrentPage(1); // Always show first page after any change
+    if (refetch) refetch();
+  };
+
   const handleDeleteCar = async (id) => {
     try {
       await api.delete(`/admins/cars/${id}`);
-      message.success("Car deleted successfully");
+      toast.success("Car deleted successfully");
       if (refetch) refetch();
+      refreshCars();
     } catch (error) {
-      message.error("Failed to delete car");
+      toast.error("Failed to delete car");
       console.error(error);
     }
   };
@@ -267,7 +273,7 @@ const ListCars = () => {
         <div className="w-full bg-white rounded-2xl shadow p-8">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-            <AddCar />
+            <AddCar onAdd={refreshCars} />
           </div>
           <div className="overflow-x-auto rounded-xl border border-gray-200">
             {loading ? (

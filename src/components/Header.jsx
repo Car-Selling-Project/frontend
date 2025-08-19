@@ -22,7 +22,7 @@ const Header = () => {
   const handleLogout = () => {
     logout();
     setIsDropdownOpen(false);
-    setTimeout(() => navigate("/customers/login"), 0);
+    setTimeout(() => navigate("/admins/login"), 0);
   };
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const Header = () => {
       {/* Logo */}
       <h1
         className="pl-8 text-2xl font-bold text-blue-600 cursor-pointer"
-        onClick={() => { navigate("/customers"); setActiveTab(null) }}
+        onClick={() => { navigate("/admins"); setActiveTab(null) }}
       >
         CAR HUNT
       </h1>
