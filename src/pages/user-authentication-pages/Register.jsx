@@ -250,7 +250,7 @@ const Register = () => {
             <label className="block dark:text-gray-400 text-maintext mb-2">Confirm Password</label>
             <div className="relative mb-1">
               <input
-                type={showPassword ? "text" : "password"}
+                type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
                 onBlur={() => handleBlurField("confirmPassword")}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -264,7 +264,7 @@ const Register = () => {
                 className="absolute right-3 top-3 text-gray-400 cursor-pointer"
                 onClick={toggleConfirmPasswordVisibility}
               >
-                {showPassword ? <EyeFilled className="text-lg" /> : <EyeInvisibleFilled className="text-lg" />}
+                {showConfirmPassword ? <EyeFilled className="text-lg" /> : <EyeInvisibleFilled className="text-lg" />}
               </span>
             </div>
             {errors.confirmPassword && <p className="text-red-500 text-sm mb-2">{errors.confirmPassword}</p>}

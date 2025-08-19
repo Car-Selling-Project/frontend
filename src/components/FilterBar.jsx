@@ -17,7 +17,7 @@ const FilterBar = () => {
   const [brandId, setBrandId] = useState("");
   const [locationId, setLocationId] = useState("");
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(3000000);
+  const [maxPrice, setMaxPrice] = useState(300000);
 
   const handleSearchClick = () => {
     const queryParams = new URLSearchParams();

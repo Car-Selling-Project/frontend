@@ -10,7 +10,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     const accessToken = localStorage.getItem("accessToken");
-    console.log("Loading user from localStorage:", { storedUser, accessToken }); // Debug
     if (storedUser && accessToken) {
       setUser(storedUser);
     }
@@ -20,16 +19,17 @@ export const AuthProvider = ({ children }) => {
   // 👤 CUSTOMER AUTH
   const loginCustomer = async ({ email, password }) => {
     try {
-      const res = await axios.post("/customers/login", { email, password });
+      const res = await axios.post("/customers/login", { email, password }, {withCredentials: true});
       console.log("Login response data:", res.data); // Debug
-      const { message, accessToken, refreshToken, user } = res.data; // Trích xuất user trực tiếp
+      const { message, accessToken, refreshToken, customer } = res.data;
 
       if (!accessToken) {
         throw new Error("No access token received");
       }
-
-      // Nếu có user trong phản hồi, sử dụng nó; nếu không, để user là null
-      const userData = user || {};
+      const userData = {
+        ...customer,
+        role: "customer"
+      };
       localStorage.setItem("user", JSON.stringify(userData));
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
@@ -54,10 +54,12 @@ export const AuthProvider = ({ children }) => {
         citizenId
       }, { withCredentials: true });
 
-      const { message, accessToken, refreshToken, user } = res.data;
-      console.log("Register response data:", res.data); // Debug
+      const { accessToken, refreshToken, customer } = res.data;
 
-      const userData = user || {};
+    const userData = {
+      ...customer,
+      role: "customer"
+    };
       localStorage.setItem("user", JSON.stringify(userData));
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
@@ -72,10 +74,13 @@ export const AuthProvider = ({ children }) => {
   const loginAdmin = async ({ employeeCode, password }) => {
     try {
       const res = await axios.post("/admins/login", { employeeCode, password }, { withCredentials: true });
-      const { message, accessToken, refreshToken, user } = res.data;
-      console.log("Admin login response data:", res.data); // Debug
+      const { accessToken, refreshToken, admin } = res.data;
 
-      const userData = user || {};
+      const userData = {
+        ...admin,
+        role: "admin"
+      };
+
       localStorage.setItem("user", JSON.stringify(userData));
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
@@ -98,10 +103,12 @@ export const AuthProvider = ({ children }) => {
         confirmPassword
       }, { withCredentials: true });
 
-      const { message, accessToken, refreshToken, user } = res.data;
-      console.log("Admin register response data:", res.data); // Debug
+      const { accessToken, refreshToken, admin } = res.data;
 
-      const userData = user || {};
+      const userData = {
+        ...admin,
+        role: "admin"
+      };
       localStorage.setItem("user", JSON.stringify(userData));
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);

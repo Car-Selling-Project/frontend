@@ -20,15 +20,20 @@ const Category = () => {
 
   const handleViewAll = () => {
     navigate("/customers/cars");
-    setSearchParams({ page: "1", viewMode });
+    setSearchParams({ page: "1", viewMode }); // Chỉ giữ page và viewMode, reset filter
   };
 
   const handlePageChange = (newPage) => {
-    setSearchParams({ page: String(newPage), viewMode });
+    const params = new URLSearchParams(searchParams); // Sao chép tham số hiện tại
+    params.set("page", String(newPage));
+    setSearchParams(params); // Giữ nguyên các filter khác
   };
 
   const handleToggleView = (mode) => {
-    setSearchParams({ page: "1", viewMode: mode });
+    const params = new URLSearchParams(searchParams); // Sao chép tham số hiện tại
+    params.set("page", "1");
+    params.set("viewMode", mode);
+    setSearchParams(params); // Giữ nguyên các filter khác
   };
 
   if (loading) return <div className="p-6">Loading...</div>;

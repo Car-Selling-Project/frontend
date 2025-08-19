@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Select } from "antd";
 const { Option } = Select;
 import { FaCarSide } from "react-icons/fa";
 
 const ModelFilter = ({ cars, model, setModel }) => {
-  const uniqueModels = [...new Set(cars.map((car) => car.model).filter(m => m && m.trim()))]; // Lọc bỏ giá trị null/rỗng
+  const models = useMemo(() => {
+    const seen = new Map();
+    for (let car of cars) {
+      if ( car.model && !seen.has(car.model)) {
+        seen.set(car.model, car.model);
+      }
+    }
+    return Array.from(seen.entries()).map(([value]) => value);
+  }, [cars]);
 
   return (
     <Select
@@ -15,7 +23,7 @@ const ModelFilter = ({ cars, model, setModel }) => {
       onChange={(value) => setModel(value)}
       suffixIcon={<FaCarSide className="text-gray-500 w-5 h-5" />}
     >
-      {uniqueModels.map((m) => (
+      {models.map((m) => (
         <Option key={m} value={m}>
           {m}
         </Option>

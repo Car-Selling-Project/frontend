@@ -1,7 +1,7 @@
 import React from "react";
 import { Checkbox } from "antd";
 
-const SeatFilter = ({ selectedSeats, setSelectedSeats }) => {
+const SeatFilter = ({ selectedSeat, setSelectedSeat }) => { 
   const seatOptions = Array.from({ length: 6 }, (_, i) => ({
     label: `${i + 2} seats`,
     value: i + 2,
@@ -11,8 +11,8 @@ const SeatFilter = ({ selectedSeats, setSelectedSeats }) => {
     <div>
       <Checkbox.Group
         options={seatOptions}
-        value={selectedSeats}
-        onChange={setSelectedSeats}
+        value={selectedSeat || []} 
+        onChange={setSelectedSeat}
         className="flex flex-wrap gap-2 dark:text-white"
       />
     </div>

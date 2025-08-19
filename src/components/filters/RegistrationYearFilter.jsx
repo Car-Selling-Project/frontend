@@ -1,15 +1,15 @@
 import React from "react";
 import { Slider } from "antd";
 
-const RegistrationYearFilter = ({ yearRange, setYearRange }) => {
+const RegistrationYearFilter = ({ registrationYear, setRegistrationYear }) => { 
   return (
     <div>
       <Slider
         range
         min={1986}
         max={new Date().getFullYear()}
-        value={yearRange}
-        onChange={setYearRange}
+        value={registrationYear}
+        onChange={setRegistrationYear}
       />
     </div>
   );

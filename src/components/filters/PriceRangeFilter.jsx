@@ -7,6 +7,7 @@ const PriceRangeFilter = ({ minPrice, maxPrice, setMinPrice, setMaxPrice }) => {
     setMinPrice(value[0]);
     setMaxPrice(value[1]);
   };
+
   return (
     <div className="w-full">
       <div className="flex items-center gap-2">
@@ -17,10 +18,12 @@ const PriceRangeFilter = ({ minPrice, maxPrice, setMinPrice, setMaxPrice }) => {
         range
         min={0}
         max={300000}
-        step={10000}
+        step={100}
         value={[minPrice, maxPrice]}
         onChange={handleChange}
-        tooltip={{ formatter: (value) => `$${value.toLocaleString()}` }}
+        tooltip={{
+          formatter: (value) => `$${value.toLocaleString()}`,
+        }}
       />
       <div className="flex justify-between text-xs text-gray-600 dark:text-white mt-1">
         <span>${minPrice.toLocaleString()}</span>
