@@ -66,7 +66,6 @@ const AddCar = () => {
     setFormData((prev) => ({ ...prev, exteriorColor: value }));
   };
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (["length", "width", "height"].includes(name)) {
@@ -96,33 +95,35 @@ const AddCar = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log("Submitting form data:", formData);
+
     try {
-      const formData = new FormData();
+      const form = new FormData();
 
       // ép kiểu number cho các field numeric
       const payload = {
-        title,
-        brandId,
-        model,
-        carType,
-        description,
+        title: formData.title,
+        brandId: formData.brandId,
+        model: formData.model,
+        carType: formData.carType,
+        description: formData.description,
         dimension: {
-          height: Number(height),
-          length: Number(length),
-          width: Number(width),
+          height: Number(formData.dimension.height),
+          length: Number(formData.dimension.length),
+          width: Number(formData.dimension.width),
         },
         engine: {
-          fuelConsumption,
-          power,
+          fuelconsumsion: Number(formData.engine.fuelconsumsion),
+          power: Number(formData.engine.power),
         },
-        exteriorColor, // mảng string
-        fuelType,
-        locationId,
-        price: Number(price),
-        registrationYear: Number(registrationYear),
-        seat: Number(seat),
-        stock: Number(stock),
-        transmission,
+        exteriorColor: formData.exteriorColor, // mảng string
+        fuelType: formData.fuelType,
+        locationId: formData.locationId,
+        price: Number(formData.price),
+        registrationYear: Number(formData.registrationYear),
+        seat: Number(formData.seat),
+        stock: Number(formData.stock),
+        tranmission: formData.tranmission,
       };
 
       // append object payload vào FormData
@@ -130,28 +131,30 @@ const AddCar = () => {
         if (typeof payload[key] === "object" && !Array.isArray(payload[key])) {
           // nested object (dimension, engine)
           Object.keys(payload[key]).forEach((subKey) => {
-            formData.append(`${key}[${subKey}]`, payload[key][subKey]);
+            form.append(`${key}[${subKey}]`, payload[key][subKey]);
           });
         } else if (Array.isArray(payload[key])) {
-          payload[key].forEach((val) => formData.append(`${key}[]`, val));
+          payload[key].forEach((val) => form.append(`${key}[]`, val));
         } else {
-          formData.append(key, payload[key]);
+          form.append(key, payload[key]);
         }
       });
 
       // append images
-      images.forEach((image) => {
-        formData.append("images", image);
+      formData.images.forEach((image) => {
+        form.append("images", image);
       });
 
-      await axios.post("http://localhost:3001/admins/cars", formData, {
+      await api.post("/admins/cars", form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
       toast.success("Car added successfully!");
+      refetch;
     } catch (error) {
       console.error(error);
       toast.error("Error adding car");
+    } finally {
+      setOpen(false);
     }
   };
 

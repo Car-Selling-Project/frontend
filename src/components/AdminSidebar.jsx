@@ -1,3 +1,5 @@
+import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import {
   DashboardOutlined,
   CarOutlined,
@@ -6,6 +8,12 @@ import {
 } from "@ant-design/icons";
 
 const AdminSidebar = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // If not authenticated, don't render sidebar
+  if (!user) return null;
+
   return (
     <aside className="w-72 h-auto bg-white dark:bg-gray-800 flex flex-col -mb-10">
       <nav className="flex-1 pl-10 py-10 flex flex-col gap-10">

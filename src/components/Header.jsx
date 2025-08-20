@@ -27,7 +27,7 @@ const Header = () => {
   const handleLogoutCustomer = () => {
     logout();
     setIsDropdownOpen(false);
-    setTimeout(() => navigate("/customers/login"), 0);
+    setTimeout(() => navigate("/admins/login"), 0);
   };
   const handleLogoutAdmin = () => {
     logout();

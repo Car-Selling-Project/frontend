@@ -1,50 +1,61 @@
-
-
 import { useState, useEffect } from "react";
 import {
-  DeleteOutlined,
   EllipsisOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
-import { Pagination, Spin } from "antd";
+import { Pagination, Spin, Select, message } from "antd";
 import useOrderData from "../../hooks/useOrderData";
 import { Modal, Descriptions, Tag } from "antd";
-import AdminSidebar from "../../components/AdminSidebar"
+import { toast } from "react-toastify";
+import api from "../../api/axiosInstance";
 
+const statusOptions = [
+  { value: "pending", label: "Pending", color: "#FFD700", bg: "#FFFBE6" },
+  { value: "confirmed", label: "Confirmed", color: "#52C41A", bg: "#F6FFED" },
+  { value: "cancelled", label: "Cancelled", color: "#FF4D4F", bg: "#FFF1F0" },
+];
 
-const Status = ({ status }) => {
-  if (status === "confirmed") {
-    return (
-      <span className="bg-green-100 border-2 text-green-600 px-4 py-1 rounded-full font-medium text-sm">
-        Confirmed
-      </span>
-    );
-  }
-  if (status === "cancelled") {
-    return (
-      <span className="bg-red-100 border-2 text-red-600 px-4 py-1 rounded-full font-medium text-sm">
-        Cancelled
-      </span>
-    );
-  }
-  if (status === "pending") {
-    return (
-      <span className="bg-yellow-100 border-2 text-yellow-600 px-4 py-1 rounded-full font-medium text-sm">
-        Pending
-      </span>
-    );
-  }
+const StatusSelect = ({ status, orderId, onStatusChange }) => {
+  const option = statusOptions.find(opt => opt.value === status) || statusOptions[0];
+
+  const handleChange = async (value) => {
+    if (value === "confirmed") {
+      await onStatusChange(orderId, value, "confirm");
+    } else if (value === "cancelled") {
+      await onStatusChange(orderId, value, "cancel");
+    } else {
+      await onStatusChange(orderId, value, "update");
+    }
+  };
+
   return (
-    <span className="bg-gray-100 border-2 text-gray-600 px-4 py-1 rounded-full font-medium text-sm">
-      {status}
-    </span>
+    <Select
+      value={status}
+      onChange={handleChange}
+      bordered={false}
+      style={{
+        background: option.bg,
+        color: option.color,
+        fontWeight: 500,
+        borderRadius: 999,
+        padding: "0 16px",
+        minWidth: 110,
+      }}
+      dropdownStyle={{ borderRadius: 8 }}
+    >
+      {statusOptions.map(opt => (
+        <Select.Option key={opt.value} value={opt.value}>
+          <span style={{ color: opt.color, fontWeight: 500 }}>{opt.label}</span>
+        </Select.Option>
+      ))}
+    </Select>
   );
 };
 
-// Modal for order details
 const statusColors = {
   pending: "gold",
   confirmed: "green",
-  canceled: "red",
+  cancelled: "red",
 };
 
 const paymentStatusColors = {
@@ -143,23 +154,18 @@ const OrderDetailModal = ({ order, open, onClose }) => {
 };
 
 const Orders = () => {
-  const { orders, loading } = useOrderData();
-  // Pagination state
+  const { orders, loading, refetch } = useOrderData();
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const total = orders?.length || 0;
-
-  // Checkbox state
   const [checkedIds, setCheckedIds] = useState([]);
   const [modalOrder, setModalOrder] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Reset checkedIds if orders change
   useEffect(() => {
     setCheckedIds([]);
   }, [orders]);
 
-  // Slice data for current page
   const pagedData = orders ? orders.slice((currentPage - 1) * pageSize, currentPage * pageSize) : [];
 
   const handleCheck = (id) => {
@@ -184,6 +190,26 @@ const Orders = () => {
   const handleShowDetail = (order) => {
     setModalOrder(order);
     setModalOpen(true);
+  };
+
+  // Handle status change with direct endpoint calls
+  const handleStatusChange = async (orderId, newStatus, action) => {
+    try {
+      if (action === "confirm") {
+        await api.patch(`/admins/orders/${orderId}/confirm`);
+        toast.success("Order confirmed!");
+      } else if (action === "cancel") {
+        await api.patch(`/admins/orders/${orderId}/canceled`);
+        toast.success("Order canceled!");
+      } else {
+        await api.patch(`/admins/orders/${orderId}`, { status: newStatus });
+        toast.success("Order status updated!");
+      }
+      setCurrentPage(1); // Auto reset to first page
+      if (refetch) refetch(); // Auto refresh data
+    } catch (err) {
+      toast.error("Failed to update status");
+    }
   };
 
   return (
@@ -270,7 +296,11 @@ const Orders = () => {
                         {order.contract?.signed ? " (Signed)" : ""}
                       </td>
                       <td className="px-4 py-4">
-                        <Status status={order.status} />
+                        <StatusSelect
+                          status={order.status}
+                          orderId={order._id || order.id}
+                          onStatusChange={handleStatusChange}
+                        />
                       </td>
                       <td className="px-4 flex items-center">
                         <button
