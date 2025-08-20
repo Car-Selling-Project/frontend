@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children }) => {
   if (!user) {
     
     alert("You need to log in to access this page!");
-    return <Navigate to="/admins/login" state={{ from: location }} replace />;
+    return <Navigate to="/customers/login" state={{ from: location }} replace />;
   }
 
   return children;
