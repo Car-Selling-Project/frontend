@@ -60,12 +60,12 @@ const Details = () => {
       <div className="flex flex-col justify-center gap-8">
         {/* Left Column - Images, Title, Reviews */}
         <section className="mt-6 w-full flex flex-col">
-          <div className="flex flex-row gap-6 mx-5 items-stretch">
+          <div className="h-full flex flex-row gap-6 mx-5 items-stretch">
             {/* Image Slideshow */}
-            <div className="mt-6 w-1/2 mx-5 flex flex-col">
+            <div className="mt-6 w-2/3 mx-5 flex flex-col">
               <div className="flex justify-center items-center rounded-lg overflow-hidden">
                 {/* <img src={mockData.image[0]} alt='car1' className="rounded-lg shadow-md bg-primary flex-1" style={{ objectFit: 'cover', height: '25rem', width: '100%' }} /> */}
-                <img src={mainImage} alt='car1' className="rounded-lg shadow-md bg-primary flex-1" style={{ objectFit: 'cover', height: '25rem', width: '100%' }} />
+                <img src={mainImage} alt='car1' className="rounded-lg shadow-md bg-primary flex-1" style={{ objectFit: 'fill', height: '25rem', width: '100%' }} />
               </div>
               <div className="flex gap-4 mt-4 justify-between">
                 {car.images.map((img, index) => (
@@ -73,7 +73,7 @@ const Details = () => {
                     key={index}
                     src={img}
                     alt={`Preview ${index}`}
-                    className={`w-[2.5rem] h-[2rem] rounded-md cursor-pointer object-cover ${selectedImage === index ? "border-4 border-blue-500 scale-105" : ""
+                    className={`w-[5rem] h-[4rem] rounded-md cursor-pointer object-scale-down ${selectedImage === index ? "border-4 border-blue-500 scale-105" : ""
                       }`}
                     onClick={() => {
                       setMainImage(img);
@@ -85,11 +85,15 @@ const Details = () => {
             </div>
 
             {/* Title and Price Section */}
-            <div className="mt-6 w-1/2 bg-white rounded-lg p-10 dark:bg-gray-800 flex flex-col justify-between">
+            <div className="h-full mt-6 w-1/3 bg-white rounded-lg p-10 dark:bg-gray-800 flex flex-col justify-between">
               <div>
-                <h1 className="text-2xl font-bold mb-4" style={{ color: '#1A202C' }}>{car.title}</h1>
-                <StarRating rating={car.rating} />
-                <p>{car.description}</p>
+                <div className="my-5">
+                  <h1 className="text-2xl font-bold text-black dark:text-white">{car.title}</h1>
+                  {/* <StarRating rating={car.rating} className="text-sm" /> */}
+                </div>
+                <div className="my-5">
+                  <p className="text-xl">{car.description}</p>
+                </div>
                 <div className="mt-4 flex flex-row items-center justify-between gap-2">
                   <div>
                     <h2 className="text-3xl font-bold text-black dark:text-white">
@@ -104,7 +108,7 @@ const Details = () => {
                       className="flex-1"
                       style={{ backgroundColor: '#3563E9', borderColor: '#3563E9', borderRadius: '16px', marginRight: '10px' }}
                     >
-                      Book to test trial
+                      Book for test drive
                     </Button>
                     <Button
                       type="primary"
@@ -241,7 +245,7 @@ const Details = () => {
               <span className="text-sm" style={{ color: '#90A3BF' }}>(12 Reviews)</span>
             </div>
 
-            <Link to ='/customers/comparison'>
+            <Link to='/customers/comparison'>
               <Button
                 className="w-full bg-slate-700 border-slate-600 text-white hover:bg-slate-600 hover:border-slate-500"
                 size="large"
@@ -260,8 +264,8 @@ const Details = () => {
           View All
         </Button>
       </div>
-      <div className="w-full flex items-center justify-center mt-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+      <div className="mt-4 flex items-center">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
           {cars
             .sort((a, b) => b.rating - a.rating)
             .slice(0, 6)

@@ -77,7 +77,7 @@ const TestDrive = () => {
             console.log('Response:', res.data)
             setTimeout(() => { toast.success('Test drive request submitted successfully!') }, 5000)
         } catch (error) {
-            setTimeout(() => { toast.error('Failed to submit test drive request.') }, 5000)
+            setTimeout(() => { toast.error('Failed to submit test drive request.', error.message) }, 5000)
             console.error('Error:', error)
         }
     }

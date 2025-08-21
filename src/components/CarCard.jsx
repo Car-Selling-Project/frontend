@@ -20,8 +20,8 @@ const CarCard = ({ car }) => {
       if (car._id && (typeof car.brandId === "string" || !car.brandId?.name)) {
         setLoading(true);
         try {
-          const response = await api.get(`/customers/cars/${car._id}`); 
-          setFullCar(response.data.car || response.data); 
+          const response = await api.get(`/customers/cars/${car._id}`);
+          setFullCar(response.data.car || response.data);
         } catch (error) {
           console.error("❌ Failed to fetch car details:", error);
         } finally {
@@ -35,60 +35,64 @@ const CarCard = ({ car }) => {
   const brandName = fullCar.brandId?.name || (typeof fullCar.brandId === "string" ? "Loading Brand..." : "Unknown Brand");
 
   return (
-    <div className="bg-white dark:bg-gray-700 rounded-xl shadow-md p-4 max-w-xs h-fit relative">
+    <div className="w-full h-full flex items-center">
       {/* Favorite Button */}
-      <button
-        onClick={() => toggleFavorite(fullCar)}
-        className="absolute top-4 right-4 text-xl text-gray-500 hover:text-red-500 transition"
-      >
-        {isFavorite ? <HeartFilled style={{ color: "#ff4d4f" }} /> : <HeartOutlined />}
-      </button>
-
-      {/* Car Info */}
-      <h2 className="text-xl mb-1 font-bold dark:text-white">{fullCar.title}</h2>
-      <p className="text-base text-gray-500 dark:text-white">
-        {loading ? "Loading Brand..." : brandName}
-      </p>
-
-      {/* Car Image */}
-      <img
-        src={fullCar.images && fullCar.images.length > 0 ? fullCar.images[0] : "default-image-url.jpg"}
-        alt={fullCar.title}
-        className="w-full h-40 mx-auto object-contain"
-      />
-
-      {/* Car Specs */}
-      <div className="flex justify-between items-center mt-3 mb-3 text-gray-700 dark:text-white text-sm">
-        <div className="flex items-center gap-1">
-          <img src={GasolineIcon} alt="Fuel" className="w-5 h-5" />
-          {fullCar.fuelType || "N/A"}
-        </div>
-        <div className="flex items-center gap-1">
-          <img src={SteeringIcon} alt="Transmission" className="w-5 h-5" />
-          {fullCar.tranmission || "N/A"}
-        </div>
-        <div className="flex items-center gap-1">
-          <img src={CapacityIcon} alt="Capacity" className="w-5 h-5" />
-          {fullCar.seat ? `${fullCar.seat} People` : "N/A"}
-        </div>
-      </div>
-
-      {/* Price */}
-      <div className="flex justify-between items-center mt-4">
-        <div>
-          <p className="dark:text-white">
-            <span className="text-primary dark:text-white font-bold text-2xl">
-              ${fullCar.price || "0"}
-            </span>
-          </p>
-        </div>
-        {/* Buy Now Button */}
+      <div className="bg-white dark:bg-gray-700 rounded-xl shadow-md p-4 w-full h-fit relative">
         <button
-          onClick={() => navigate(`/customers/cars/${fullCar._id}`)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg text-base font-semibold hover:bg-blue-700 transition"
+          onClick={() => toggleFavorite(fullCar)}
+          className="absolute top-4 right-4 text-xl text-gray-500 hover:text-red-500 transition"
         >
-          Buy Now
+          {isFavorite ? <HeartFilled style={{ color: "#ff4d4f" }} /> : <HeartOutlined />}
         </button>
+
+        {/* Car Info */}
+        <h2 className="text-xl mb-1 font-bold dark:text-white">{fullCar.title}</h2>
+        <p className="text-base text-gray-500 dark:text-white">
+          {loading ? "Loading Brand..." : brandName}
+        </p>
+
+        {/* Car Image */}
+        <div className="w-full h-full">
+          <img
+            src={fullCar.images && fullCar.images.length > 0 ? fullCar.images[0] : "default-image-url.jpg"}
+            alt={fullCar.title}
+            className="w-[500px] h-[180px] mx-auto"
+          />
+        </div>
+
+        {/* Car Specs */}
+        <div className="flex justify-between items-center mt-3 mb-3 text-gray-700 dark:text-white text-sm">
+          <div className="flex items-center gap-1">
+            <img src={GasolineIcon} alt="Fuel" className="w-5 h-5" />
+            {fullCar.fuelType || "N/A"}
+          </div>
+          <div className="flex items-center gap-1">
+            <img src={SteeringIcon} alt="Transmission" className="w-5 h-5" />
+            {fullCar.tranmission || "N/A"}
+          </div>
+          <div className="flex items-center gap-1">
+            <img src={CapacityIcon} alt="Capacity" className="w-5 h-5" />
+            {fullCar.seat ? `${fullCar.seat} People` : "N/A"}
+          </div>
+        </div>
+
+        {/* Price */}
+        <div className="flex justify-between items-center mt-4">
+          <div>
+            <p className="dark:text-white">
+              <span className="text-primary dark:text-white font-bold text-2xl">
+                ${fullCar.price || "0"}
+              </span>
+            </p>
+          </div>
+          {/* Buy Now Button */}
+          <button
+            onClick={() => navigate(`/customers/cars/${fullCar._id}`)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg text-base font-semibold hover:bg-blue-700 transition"
+          >
+            Buy Now
+          </button>
+        </div>
       </div>
     </div>
   );

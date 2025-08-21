@@ -11,7 +11,7 @@ const MainLayout = ({ children }) => {
     <div data-theme={theme} className="min-h-screen w-full bg-[#F6F7F9] dark:bg-gray-900">
       <Header />
       <div className="flex">
-        <UserSidebar />
+        {/* <UserSidebar /> */}
         <main className="w-full py-4 px-16">{children}</main>
       </div>
       <Footer />

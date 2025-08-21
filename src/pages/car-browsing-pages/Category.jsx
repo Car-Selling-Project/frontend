@@ -14,36 +14,40 @@ const Category = () => {
   };
 
   const handleViewAll = () => {
-    navigate("/customers/cars"); 
+    navigate("/customers/cars");
   };
 
   if (loading) return <div className="p-6">Loading...</div>;
 
   return (
-    <div className="flex">
+    <div className="w-full flex">
       <SidebarFilter />
-      <main className="flex-1 p-6">
-        <SearchInput onSearch={handleSearch} />
+      <main className="w-full flex items-center flex-col p-6">
+        <div className="w-full">
+          <SearchInput onSearch={handleSearch} />
 
-        <div className="flex justify-between items-center mt-6 mb-4">
-          <h1 className="text-2xl font-bold mb-4 dark:text-white">Available Cars</h1>
-          <button
-            onClick={handleViewAll}
-            className="text-blue-600 hover:text-blue-400 px-4 py-2 rounded-md text-base underline font-medium"
-          >
-            View All
-          </button>
+          <div className="flex justify-between items-center mt-6 mb-4">
+            <h1 className="text-2xl font-bold mb-4 dark:text-white">Available Cars</h1>
+            <button
+              onClick={handleViewAll}
+              className="text-blue-600 hover:text-blue-400 px-4 py-2 rounded-md text-base underline font-medium"
+            >
+              View All
+            </button>
+          </div>
         </div>
 
         {cars.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {cars.map((car) => (
-              <CarCard
-                key={car._id}
-                car={car}
-                onClick={() => navigate(`/car/${car._id}`)}
-              />
-            ))}
+          <div className="flex justify-center w-full">
+            <div className="w-full grid grid-cols-4 gap-10">
+              {cars.map((car) => (
+                <CarCard
+                  key={car._id}
+                  car={car}
+                  onClick={() => navigate(`/car/${car._id}`)}
+                />
+              ))}
+            </div>
           </div>
         ) : (
           <p className="dark:text-white">No cars match your filters.</p>
