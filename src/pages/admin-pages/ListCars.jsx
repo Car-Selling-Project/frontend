@@ -272,7 +272,7 @@ const ListCars = () => {
       <div className="flex-1 flex flex-col px-8 py-6">
         <div className="w-full bg-white rounded-2xl shadow p-8">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+            <h1 className="text-2xl font-bold">Car List</h1>
             <AddCar onAdd={refreshCars} />
           </div>
           <div className="overflow-x-auto rounded-xl border border-gray-200">

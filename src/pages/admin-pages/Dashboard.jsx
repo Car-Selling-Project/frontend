@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ShoppingCartOutlined, CarOutlined, UserOutlined, DollarOutlined, EllipsisOutlined } from '@ant-design/icons';
 import gtr from '../../assets/images/gtr.jpg';
 import Top5CarChart from '../../components/charts/TopCars';
-import RentalPerDayChart from '../../components/charts/RentPerDay';
+import RentalPerDayChart from '../../components/charts/PurchasePerDay';
 import api from '../../api/axiosInstance';
 
 const Dashboard = () => {
@@ -133,7 +133,7 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="bg-white rounded-xl shadow p-6">
-              <h3 className="text-lg font-bold text-[#1A202C] mb-2">Rental per Day</h3>
+              <h3 className="text-lg font-bold text-[#1A202C] mb-2">Purchase per Day</h3>
               <div>
                 <RentalPerDayChart orders={stats.orders} />
               </div>

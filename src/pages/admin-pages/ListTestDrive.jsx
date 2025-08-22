@@ -1,31 +1,22 @@
-import { useState, useEffect } from "react";
-import {
-  EllipsisOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import React, { useState, useEffect } from "react";
 import { Pagination, Spin, Select, Button } from "antd";
-import useOrderData from "../../hooks/useOrderData";
+import { EllipsisOutlined, DeleteOutlined } from "@ant-design/icons";
+import useTestDriveData from "../../hooks/useTestDriveData";
 import { Modal, Descriptions, Tag } from "antd";
-import { toast } from "react-toastify";
-import AddOrder from "../../components/AddOrder";
 import api from "../../api/axiosInstance";
+import { toast } from "react-toastify";
 
 const statusOptions = [
   { value: "pending", label: "Pending", color: "#FFD700", bg: "#FFFBE6" },
-  { value: "confirmed", label: "Confirmed", color: "#52C41A", bg: "#F6FFED" },
-  { value: "cancelled", label: "Cancelled", color: "#FF4D4F", bg: "#FFF1F0" },
+  { value: "approved", label: "Approved", color: "#52C41A", bg: "#F6FFED" },
 ];
 
-const StatusSelect = ({ status, orderId, onStatusChange }) => {
+const StatusSelect = ({ status, testDriveId, onStatusChange }) => {
   const option = statusOptions.find(opt => opt.value === status) || statusOptions[0];
 
   const handleChange = async (value) => {
-    if (value === "confirmed") {
-      await onStatusChange(orderId, value, "confirm");
-    } else if (value === "cancelled") {
-      await onStatusChange(orderId, value, "cancel");
-    } else {
-      await onStatusChange(orderId, value, "update");
+    if (value === "approved") {
+      await onStatusChange(testDriveId, "approve");
     }
   };
 
@@ -43,6 +34,7 @@ const StatusSelect = ({ status, orderId, onStatusChange }) => {
         minWidth: 110,
       }}
       dropdownStyle={{ borderRadius: 8 }}
+      disabled={status !== "pending"}
     >
       {statusOptions.map(opt => (
         <Select.Option key={opt.value} value={opt.value}>
@@ -55,119 +47,81 @@ const StatusSelect = ({ status, orderId, onStatusChange }) => {
 
 const statusColors = {
   pending: "gold",
-  confirmed: "green",
-  cancelled: "red",
+  approved: "green",
+  declined: "red",
 };
 
-const paymentStatusColors = {
-  pending: "orange",
-  confirmed: "green",
-  failed: "red",
-};
-
-const OrderDetailModal = ({ order, open, onClose }) => {
-  if (!order) return null;
+const TestDriveDetailModal = ({ testDrive, open, onClose }) => {
+  if (!testDrive) return null;
 
   return (
     <Modal
-      title={`Order Details`}
+      title="Test Drive Details"
       open={open}
       onCancel={onClose}
       footer={null}
       width={700}
     >
       <Descriptions column={1} bordered>
-        <Descriptions.Item label="Order ID">{order._id}</Descriptions.Item>
+        <Descriptions.Item label="Test Drive ID">{testDrive._id}</Descriptions.Item>
         <Descriptions.Item label="Car">
-          {order.carInfo?.title || order.carInfo?._id || "N/A"}
+          {testDrive.carInfo?.title || testDrive.carInfo?._id || "N/A"}
         </Descriptions.Item>
         <Descriptions.Item label="Location">
-          {order.location?.name || order.location?._id || "N/A"}
+          {testDrive.location?.name || testDrive.location?._id || "N/A"}
         </Descriptions.Item>
-        <Descriptions.Item label="Admin">
-          {order.admin?.fullName || order.admin?._id || "N/A"}
+        <Descriptions.Item label="Request Day">
+          {testDrive.requestDay ? new Date(testDrive.requestDay).toLocaleString() : "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Note">
+          {testDrive.note || "N/A"}
         </Descriptions.Item>
         <Descriptions.Item label="Customer Name">
-          {order.customerInfo?.fullName}
+          {testDrive.customerInfo?.fullName}
         </Descriptions.Item>
         <Descriptions.Item label="Customer Phone">
-          {order.customerInfo?.phone}
+          {testDrive.customerInfo?.phone}
         </Descriptions.Item>
         <Descriptions.Item label="Customer Email">
-          {order.customerInfo?.email}
+          {testDrive.customerInfo?.email}
         </Descriptions.Item>
         <Descriptions.Item label="Customer Citizen ID">
-          {order.customerInfo?.citizenId}
+          {testDrive.customerInfo?.citizenId}
         </Descriptions.Item>
         <Descriptions.Item label="Customer Address">
-          {order.customerInfo?.address}
-        </Descriptions.Item>
-        <Descriptions.Item label="Payment Method">
-          {order.paymentMethod}
-        </Descriptions.Item>
-        {order.paymentMethod === "bank_transfer" && (
-          <>
-            <Descriptions.Item label="Bank Name">
-              {order.bankDetails?.bankName}
-            </Descriptions.Item>
-            <Descriptions.Item label="Bank Account Number">
-              {order.bankDetails?.bankAccountNumber}
-            </Descriptions.Item>
-          </>
-        )}
-        {order.paymentMethod === "qr" && (
-          <Descriptions.Item label="QR Code">
-            {order.qrCodeUrl ? (
-              <img src={order.qrCodeUrl} alt="QR Code" style={{ maxWidth: 120 }} />
-            ) : "N/A"}
-          </Descriptions.Item>
-        )}
-        <Descriptions.Item label="Deposit">{order.deposit}</Descriptions.Item>
-        <Descriptions.Item label="Total Price">{order.totalPrice}</Descriptions.Item>
-        <Descriptions.Item label="Quantity">{order.quantity}</Descriptions.Item>
-        <Descriptions.Item label="Payment Status">
-          <Tag color={paymentStatusColors[order.paymentStatus] || "default"}>
-            {order.paymentStatus}
-          </Tag>
-        </Descriptions.Item>
-        <Descriptions.Item label="Contract">
-          {order.contract?.url ? (
-            <a href={order.contract.url} target="_blank" rel="noopener noreferrer">
-              View Contract
-            </a>
-          ) : "N/A"}
-          {order.contract?.signed && <Tag color="green" className="ml-2">Signed</Tag>}
+          {testDrive.customerInfo?.address}
         </Descriptions.Item>
         <Descriptions.Item label="Status">
-          <Tag color={statusColors[order.status] || "default"}>
-            {order.status}
+          <Tag color={statusColors[testDrive.status] || "default"}>
+            {testDrive.status}
           </Tag>
         </Descriptions.Item>
         <Descriptions.Item label="Created At">
-          {order.createdAt ? new Date(order.createdAt).toLocaleString() : "N/A"}
+          {testDrive.createdAt ? new Date(testDrive.createdAt).toLocaleString() : "N/A"}
         </Descriptions.Item>
         <Descriptions.Item label="Updated At">
-          {order.updatedAt ? new Date(order.updatedAt).toLocaleString() : "N/A"}
+          {testDrive.updatedAt ? new Date(testDrive.updatedAt).toLocaleString() : "N/A"}
         </Descriptions.Item>
       </Descriptions>
     </Modal>
   );
 };
 
-const Orders = () => {
-  const { orders, loading, refetch } = useOrderData();
+const ListTestDrive = () => {
+  const { testDrives, loading, refetch } = useTestDriveData();
+  console.log("Test Drives:", testDrives);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
-  const total = orders?.length || 0;
+  const total = testDrives?.length || 0;
   const [checkedIds, setCheckedIds] = useState([]);
-  const [modalOrder, setModalOrder] = useState(null);
+  const [modalTestDrive, setModalTestDrive] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     setCheckedIds([]);
-  }, [orders]);
+  }, [testDrives]);
 
-  const pagedData = orders ? orders.slice((currentPage - 1) * pageSize, currentPage * pageSize) : [];
+  const pagedData = testDrives ? testDrives.slice((currentPage - 1) * pageSize, currentPage * pageSize) : [];
 
   const handleCheck = (id) => {
     setCheckedIds((prev) =>
@@ -179,7 +133,7 @@ const Orders = () => {
     if (checkedIds.length === pagedData.length) {
       setCheckedIds([]);
     } else {
-      setCheckedIds(pagedData.map((order) => order._id || order.id));
+      setCheckedIds(pagedData.map((td) => td._id));
     }
   };
 
@@ -188,38 +142,43 @@ const Orders = () => {
     setCheckedIds([]);
   };
 
-  const handleShowDetail = (order) => {
-    setModalOrder(order);
+  const handleShowDetail = (testDrive) => {
+    setModalTestDrive(testDrive);
     setModalOpen(true);
   };
 
-  // Handle status change with direct endpoint calls
-  const handleStatusChange = async (orderId, newStatus, action) => {
+  // Handle status change (approve/decline)
+  const handleStatusChange = async (testDriveId, action) => {
     try {
-      if (action === "confirm") {
-        await api.patch(`/admins/orders/${orderId}/confirm`);
-        toast.success("Order confirmed!");
-      } else if (action === "cancel") {
-        await api.patch(`/admins/orders/${orderId}/canceled`);
-        toast.success("Order canceled!");
-      } else {
-        await api.patch(`/admins/orders/${orderId}`, { status: newStatus });
-        toast.success("Order status updated!");
+      if (action === "approve") {
+        await api.patch(`/admins/testdrives/${testDriveId}`);
+        toast.success("Test drive approved!");
+        setCurrentPage(1);
+        if (refetch) refetch();
       }
-      setCurrentPage(1); // Auto reset to first page
-      if (refetch) refetch(); // Auto refresh data
     } catch (err) {
-      toast.error("Failed to update status", err.message || "Unknown error");
+      toast.error(`Failed to update status: ${err.response?.data?.message || err.message}`);
+      console.error("Failed to update status", err.response?.data || err.message);
     }
   };
+
+  const handleDeleteTestDrive = async (testDriveId) => {
+    try {
+      await api.delete(`/admins/testdrives/${testDriveId}`);
+      toast.success("Test drive deleted successfully!");
+      setCurrentPage(1);
+      if (refetch) refetch();
+    } catch (err) {
+      toast.error(`Failed to delete test drive: ${err.message}`);
+    }
+  }
 
   return (
     <div className="flex min-h-screen items-center bg-[#F6F7F9]">
       <div className="flex-1 flex flex-col px-8 py-6">
         <div className="w-full bg-white rounded-2xl shadow p-8">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Order List</h1>
-            <AddOrder />
+            <h1 className="text-2xl font-bold">Test Drive Requests</h1>
           </div>
           <div className="overflow-x-auto rounded-xl border border-gray-200">
             {loading ? (
@@ -250,19 +209,17 @@ const Orders = () => {
                     <th className="px-4 py-3">Car</th>
                     <th className="px-4 py-3">Customer</th>
                     <th className="px-4 py-3">Location</th>
-                    <th className="px-4 py-3">Payment Method</th>
-                    <th className="px-4 py-3">Total Price</th>
-                    <th className="px-4 py-3">Deposit</th>
-                    <th className="px-4 py-3">Contract</th>
+                    <th className="px-4 py-3">Request Day</th>
+                    <th className="px-4 py-3">Note</th>
                     <th className="px-4 py-3">Status</th>
                     <th className="px-4 py-3">Information</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {pagedData.map((order, idx) => (
+                  {pagedData.map((td, idx) => (
                     <tr
-                      key={order._id || order.id}
-                      className={`border-b last:border-b-0 text-base transition-colors ${checkedIds.includes(order._id || order.id)
+                      key={td._id}
+                      className={`border-b last:border-b-0 text-base transition-colors ${checkedIds.includes(td._id)
                         ? "bg-blue-50"
                         : idx % 2 === 0
                           ? "bg-white"
@@ -272,48 +229,44 @@ const Orders = () => {
                       <td className="px-4 py-4 align-middle">
                         <input
                           type="checkbox"
-                          checked={checkedIds.includes(order._id || order.id)}
-                          onChange={() => handleCheck(order._id || order.id)}
+                          checked={checkedIds.includes(td._id)}
+                          onChange={() => handleCheck(td._id)}
                           className="accent-blue-600 w-5 h-5 cursor-pointer"
                         />
                       </td>
-                      <td className="px-4 py-4 flex items-center gap-3">
-                        <span className="font-semibold text-[#222]">
-                          {order.carInfo?.title || "N/A"}
-                        </span>
+                      <td className="px-4 py-4 font-semibold text-[#222]">
+                        {td.carInfo?.title || "N/A"}
                       </td>
                       <td className="px-4 py-4 text-gray-500">
-                        {order.customerInfo?.fullName || "N/A"}
+                        {td.customerInfo?.fullName || "N/A"}
                       </td>
                       <td className="px-4 py-4">
-                        {order.location?.name || order.location || "N/A"}
+                        {td.location?.name || "N/A"}
                       </td>
-                      <td className="px-4 py-4">{order.paymentMethod || "N/A"}</td>
-                      <td className="px-4 py-4">{order.totalPrice || order.total || "N/A"}</td>
-                      <td className="px-4 py-4">{order.deposit || "N/A"}</td>
                       <td className="px-4 py-4">
-                        {order.contract?.url
-                          ? <a href={order.contract.url} target="_blank" rel="noopener noreferrer">
-                            <Button>
-                              View
-                            </Button>
-                          </a>
-                          : ""}
-                        {order.contract?.signed ? " (Signed)" : ""}
+                        {td.requestDay ? new Date(td.requestDay).toLocaleString() : "N/A"}
                       </td>
+                      <td className="px-4 py-4">{td.note || ""}</td>
                       <td className="px-4 py-4">
                         <StatusSelect
-                          status={order.status}
-                          orderId={order._id || order.id}
+                          status={td.status}
+                          testDriveId={td._id}
                           onStatusChange={handleStatusChange}
                         />
                       </td>
                       <td className="px-4 flex items-center">
                         <button
                           className="text-blue-600 rounded-full p-2 mx-2 transition cursor-pointer"
-                          onClick={() => handleShowDetail(order)}
+                          onClick={() => handleShowDetail(td)}
                         >
                           <EllipsisOutlined />
+                        </button>
+                        <button
+                          className="hover:bg-blue-200 text-red-600 rounded-full p-2 mx-2 transition cursor-pointer"
+                          onClick={() => handleDeleteTestDrive(td._id)}
+                          title="Delete Test Drive"
+                        >
+                          <DeleteOutlined />
                         </button>
                       </td>
                     </tr>
@@ -326,7 +279,7 @@ const Orders = () => {
           <div className="flex items-center justify-between mt-6">
             <span className="text-gray-400 text-sm">
               Showing {(currentPage - 1) * pageSize + 1}-
-              {Math.min(currentPage * pageSize, total)} from {total} orders
+              {Math.min(currentPage * pageSize, total)} from {total} test drives
             </span>
             <Pagination
               current={currentPage}
@@ -338,9 +291,9 @@ const Orders = () => {
             />
           </div>
         </div>
-        {/* Order Detail Modal */}
-        <OrderDetailModal
-          order={modalOrder}
+        {/* Test Drive Detail Modal */}
+        <TestDriveDetailModal
+          testDrive={modalTestDrive}
           open={modalOpen}
           onClose={() => setModalOpen(false)}
         />
@@ -349,4 +302,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default ListTestDrive;

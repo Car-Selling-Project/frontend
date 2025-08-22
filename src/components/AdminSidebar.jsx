@@ -97,6 +97,15 @@ const AdminSidebar = () => {
                 Order Management
               </a>
             </li>
+            <li>
+              <a
+                href="/admins/test-drives"
+                className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-50"
+              >
+                <CarOutlined />
+                Test Drive Management
+              </a>
+            </li>
           </ul>
         </div>
       </nav>

@@ -9,9 +9,10 @@ import ForgotPasswordAdmin from "../pages/admin-authentication/ForgotPasswordAdm
 import Dashboard from "../pages/admin-pages/Dashboard";
 import ListCars from "../pages/admin-pages/ListCars";
 import Orders from "../pages/admin-pages/Orders";
+import ListTestDrive from "../pages/admin-pages/ListTestDrive";
 //Layout and Protect Routes
 import MainLayout from "/src/MainLayout";
-import ProtectedRoute from "./ProtectedRoute";
+// import ProtectedRoute from "./ProtectedRoute";
 
 
 const AppRoutes = () => {
@@ -28,6 +29,7 @@ const AppRoutes = () => {
         <Route path="/admins/dashboard" element={<Dashboard />} />
         <Route path="/admins/cars" element={<ListCars />} />
         <Route path="/admins/orders" element={<Orders />} />
+        <Route path="/admins/test-drives" element={<ListTestDrive />} />
       </Routes>
       <ToastContainer
           position="top-right"
