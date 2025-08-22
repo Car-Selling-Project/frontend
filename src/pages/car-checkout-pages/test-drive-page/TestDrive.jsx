@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Select, Button, Form, Input } from 'antd'
 import { toast } from 'react-toastify'
 const { Option } = Select
-import api from '../../../api/axiosInstance'
+import api from '../../api/axiosInstance'
 
 const TestDrive = () => {
     const [formData, setFormData] = useState({
@@ -77,7 +77,7 @@ const TestDrive = () => {
             console.log('Response:', res.data)
             setTimeout(() => { toast.success('Test drive request submitted successfully!') }, 5000)
         } catch (error) {
-            setTimeout(() => { toast.error('Failed to submit test drive request.') }, 5000)
+            setTimeout(() => { toast.error('Failed to submit test drive request.', error.message) }, 5000)
             console.error('Error:', error)
         }
     }
@@ -148,10 +148,12 @@ const TestDrive = () => {
                         <label className='font-bold text-xl'>Name of car*</label>
                         <Select
                             style={{ width: '25rem' }}
+                            name='carInfo'
                             value={formData.carInfo}
                             onChange={value => handleSelectChange('carInfo', value)}
+                            defaultValue="#"
                         >
-                            <Option value="">Select a car</Option>
+                            <Option value="#">Select a car</Option>
                             {cars.map(car => (
                                 <Option key={car._id} value={car._id}>{car.title}</Option>
                             ))}

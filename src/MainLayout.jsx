@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { useTheme } from "./hooks/useTheme";
 import Header from "./components/Header";
+import UserSidebar from "./components/UserSidebar";
 import Footer from "./components/Footer";
 import AdminSidebar from "./components/AdminSidebar";
 import CustomerSidebar from "./components/CustomerSidebar";

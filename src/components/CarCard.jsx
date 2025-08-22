@@ -37,7 +37,6 @@ const CarCard = ({ car }) => {
         try {
           const response = await api.get(`/customers/cars/${car._id}`); 
           setFullCar(response.data.car || response.data); 
-          console.log(response.data.car);
         } catch (error) {
           console.error("❌ Failed to fetch car details:", error);
         } finally {
@@ -53,12 +52,13 @@ const CarCard = ({ car }) => {
   return (
     <div className="bg-white dark:bg-gray-700 rounded-xl shadow-md p-4 max-w-sm h-fit relative">
       {/* Favorite Button */}
-      <button
-        onClick={() => toggleFavorite(fullCar)}
-        className="absolute top-4 right-4 text-xl text-gray-500 hover:text-red-500 transition"
-      >
-        {isFavorite ? <HeartFilled style={{ color: "#ff4d4f" }} /> : <HeartOutlined />}
-      </button>
+      <div className="bg-white dark:bg-gray-700 rounded-xl shadow-md p-4 w-full h-fit relative">
+        <button
+          onClick={() => toggleFavorite(fullCar)}
+          className="absolute top-4 right-4 text-xl text-gray-500 hover:text-red-500 transition"
+        >
+          {isFavorite ? <HeartFilled style={{ color: "#ff4d4f" }} /> : <HeartOutlined />}
+        </button>
 
       {/* Car Info */}
       <h2 className="text-xl mb-1 font-bold dark:text-white">{fullCar.title}</h2>
@@ -67,12 +67,14 @@ const CarCard = ({ car }) => {
       </p>
       <StarRating rating={car.rating || 0} />
 
-      {/* Car Image */}
-      <img
-        src={fullCar.images && fullCar.images.length > 0 ? fullCar.images[0] : "default-image-url.jpg"}
-        alt={fullCar.title}
-        className="w-full h-40 mx-auto object-contain"
-      />
+        {/* Car Image */}
+        <div className="w-full h-full">
+          <img
+            src={fullCar.images && fullCar.images.length > 0 ? fullCar.images[0] : "default-image-url.jpg"}
+            alt={fullCar.title}
+            className="w-[500px] h-[180px] mx-auto"
+          />
+        </div>
 
       {/* Car Specs */}
       <div className="flex justify-between items-center mt-3 mb-3 text-gray-700 dark:text-white text-base">

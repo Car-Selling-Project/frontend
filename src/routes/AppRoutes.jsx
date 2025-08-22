@@ -14,6 +14,8 @@ import ResetPWAdmin from "../pages/user-authentication-pages/ResetPasswordAdmin"
 
 //Car Browsing routes
 import Homepage from "../pages/car-browsing-pages/Homepage";
+import UserProfile from "../pages/UserProfile";
+import ContractList from '../pages/ContractList';
 import Category from "../pages/car-browsing-pages/Category";
 import Details from "../pages/car-browsing-pages/Details";
 import Comparison from "../pages/car-browsing-pages/Comparison";
@@ -56,6 +58,8 @@ const AppRoutes = () => {
         <Route path="/admins/reset-password" element={<ResetPWAdmin />} />
 
         <Route path="/customers" element={<Homepage />} />
+        <Route path="/customers/profile" element={<UserProfile />} />
+        <Route path="/customers/contracts" element={<ContractList />} />
         <Route path="/customers/cars" element={<Category />} />
         <Route path="/customers/cars/:id" element={<Details />} />
         <Route path="/customers/comparison" element={<Comparison />} />
