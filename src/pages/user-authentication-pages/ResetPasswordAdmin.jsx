@@ -48,7 +48,8 @@ const ResetPWAdmin = () => {
       await axios.post("/admins/reset-password", {
         password,
         confirmPassword,
-      }, { withCredentials: true });
+      },
+      {withCredentials: true});
 
       setSuccessMessage("Password reset successfully! Redirecting to login...");
       setLoading(false);

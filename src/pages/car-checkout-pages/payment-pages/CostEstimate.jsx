@@ -4,7 +4,6 @@ import { Button } from "antd";
 import useCarData from "../../../hooks/useCarData";
 import { LeftOutlined } from "@ant-design/icons";
 
-
 // Component hiển thị sao
 const StarRating = ({ rating }) => {
   const maxStars = 5;
@@ -26,7 +25,7 @@ const CostEstimate = () => {
   const navigate = useNavigate();
   const { cars, loading } = useCarData();
 
-  const [selectedCarId, setSelectedCarId] = useState(id || "");
+  const [selectedCarId, setSelectedCarId] = useState(id || ""); 
   const car = cars.find((c) => c._id === selectedCarId);
 
   // State lưu ảnh chính & ảnh đang chọn
@@ -56,7 +55,7 @@ const CostEstimate = () => {
     <main className="w-full mx-auto py-8 flex flex-col dark:text-white">
       <h1 className="text-2xl font-bold mb-6">Car Cost Estimator</h1>
 
-      {/* Chọn xe nếu không truyền id */}
+      {/* Chọn xe nếu không truyền id (tùy chọn, có thể bỏ nếu chỉ dùng id từ URL) */}
       {!id && (
         <select
           className="border rounded p-2 w-full mb-6 dark:bg-gray-700 dark:text-white"
@@ -84,7 +83,6 @@ const CostEstimate = () => {
                 className="w-full h-[20rem] object-contain"
               />
             </div>
-            
 
             {/* Thông tin xe */}
             <div className="mt-6">
@@ -99,12 +97,15 @@ const CostEstimate = () => {
 
           {/* Right Column - Cost Breakdown */}
           <div className="lg:w-1/2 bg-white dark:bg-gray-800 rounded-lg p-6 shadow">
-          <div className="flex flex-row items-center justify-start gap-4 mb-4">
-            <button onClick={() => navigate(`/customers/cars/${car._id}`)} className="rounded bg-transparent text-primary cursor-pointer">
-                    <LeftOutlined />
-            </button>
-            <h3 className="text-xl font-bold  dark:text-white">On-road Cost Breakdown</h3>
-        </div>
+            <div className="flex flex-row items-center justify-start gap-4 mb-4">
+              <button
+                onClick={() => navigate(`/customers/cars/${car._id}`)}
+                className="rounded bg-transparent text-primary cursor-pointer"
+              >
+                <LeftOutlined />
+              </button>
+              <h3 className="text-xl font-bold dark:text-white">On-road Cost Breakdown</h3>
+            </div>
             <table className="w-full text-left dark:text-white">
               <tbody>
                 <tr>
@@ -138,9 +139,9 @@ const CostEstimate = () => {
               size="large"
               className="mt-6 w-full"
               style={{ backgroundColor: "#3563E9", borderColor: "#3563E9", borderRadius: "12px" }}
-              onClick={() => navigate(`/customers/payment`)}
+              onClick={() => navigate(`/customers/info-filling?carId=${car._id}`)}
             >
-            Proceed Payment            
+              Proceed Payment
             </Button>
           </div>
         </section>

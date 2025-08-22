@@ -35,27 +35,18 @@ const ResetPWCustomer = () => {
       setErrors({});
       setSuccessMessage("");
 
-      console.log("Sending PATCH request to /customers/reset-password with:", { password, confirmPassword }); // Debug
       const res = await axios.post(
         "/customers/reset-password",
         { password, confirmPassword },
-        { withCredentials: true }
+        {withCredentials: true}
       );
-      console.log("Response from server:", res.data); // Debug
+      
       setSuccessMessage("Password reset successfully! Redirecting to login...");
       setLoading(false);
 
       setTimeout(() => navigate("/customers/login"), 2000);
     } catch (err) {
       setLoading(false);
-      const errorDetails = {
-        status: err.response?.status,
-        data: err.response?.data,
-        message: err.message,
-        code: err.code, // Ví dụ: 'ECONNABORTED', 'ERR_NETWORK'
-        config: err.config, // Kiểm tra URL và headers
-      };
-      console.error("Error resetting password:", errorDetails); // Debug chi tiết
       const message = err.response?.data?.message || err.message || "Something went wrong. Please try again.";
       setErrors({ general: message });
     }

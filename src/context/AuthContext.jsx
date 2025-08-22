@@ -19,8 +19,7 @@ export const AuthProvider = ({ children }) => {
   // 👤 CUSTOMER AUTH
   const loginCustomer = async ({ email, password }) => {
     try {
-      const res = await axios.post("/customers/login", { email, password }, {withCredentials: true});
-      console.log("Login response data:", res.data); // Debug
+      const res = await axios.post("/customers/login", { email, password });
       const { message, accessToken, refreshToken, customer } = res.data;
 
       if (!accessToken) {

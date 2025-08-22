@@ -15,8 +15,9 @@ const OrderTracking = () => {
         return;
       }
       try {
-        const res = await axios.get("/orders");
-        setOrders(res.data);
+        const res = await axios.get("/customers/orders", {
+          headers: { Authorization: `Bearer ${user?.accessToken}` },
+        });        setOrders(res.data);
       } catch (err) {
         console.error("Failed to fetch orders:", err.response?.data || err.message);
       } finally {

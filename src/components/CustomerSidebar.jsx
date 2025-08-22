@@ -26,7 +26,7 @@ import {
               </li>
               <li>
                 <a
-                  href="/"
+                  href="/customers/orders"
                   className="flex -ml-10 font-bold items-center gap-3 px-4 py-4 rounded-lg text-gray-700 text-base hover:bg-blue-50 hover:text-blue-600 transition"
                 >
                   <CarOutlined className="text-xl" />
@@ -35,7 +35,7 @@ import {
               </li>
               <li>
                 <a
-                  href="/"
+                  href="/customers/orders/:orderId/contract"
                   className="flex -ml-10 font-bold items-center gap-3 px-4 py-4 rounded-lg text-gray-700 text-base hover:bg-blue-50 hover:text-blue-600 transition"
                 >
                   <SolutionOutlined className="text-xl" />
@@ -44,7 +44,7 @@ import {
               </li>
               <li>
                 <a
-                  href="/"
+                  href="/customers/payment"
                   className="flex -ml-10 font-bold items-center gap-3 px-4 py-4 rounded-lg text-gray-700 text-base hover:bg-blue-50 hover:text-blue-600 transition"
                 >
                   <ShoppingCartOutlined className="text-xl" />

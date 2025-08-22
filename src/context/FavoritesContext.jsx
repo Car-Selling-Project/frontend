@@ -9,7 +9,7 @@ export const FavoriteProvider = ({ children }) => {
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
-        const res = await axios.get("/customers/favourites", { withCredentials: true });
+        const res = await axios.get("/customers/favourites");
         setFavorites(res.data.data.map(fav => fav.carId));
       } catch (err) {
         console.error("Failed to fetch favorites:", err);
@@ -22,10 +22,10 @@ export const FavoriteProvider = ({ children }) => {
     try {
       const isFav = favorites.find(f => f._id === car._id);
       if (isFav) {
-        await axios.delete(`/customers/favourites/${car._id}`, { withCredentials: true });
+        await axios.delete(`/customers/favourites/${car._id}`);
         setFavorites(favorites.filter(f => f._id !== car._id));
       } else {
-        await axios.post("/customers/favourites", { carId: car._id }, { withCredentials: true });
+        await axios.post("/customers/favourites", { carId: car._id });
         setFavorites([car, ...favorites]);
       }
     } catch (err) {

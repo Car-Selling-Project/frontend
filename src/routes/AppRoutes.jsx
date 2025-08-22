@@ -19,8 +19,9 @@ import Details from "../pages/car-browsing-pages/Details";
 import Comparison from "../pages/car-browsing-pages/Comparison";
 import Favorites from "../pages/car-browsing-pages/Favorites";
 import TestDrive from "../pages/car-checkout-pages/test-drive-page/TestDrive";
-
 import CostEstimate from "../pages/car-checkout-pages/payment-pages/CostEstimate";
+
+import InfoFilling from "../pages/car-checkout-pages/payment-pages/InfoFilling";
 
 
 //Admin pages
@@ -32,7 +33,9 @@ import ProtectedRoute from "./ProtectedRoute";
 
 //Customers Portal
 import CustomerPortal from "../pages/customer-portal-pages/CustomerPortal"
-import OrderTracking from "../pages/customer-portal-pages/Order Tracking";
+import OrderTracking from "../pages/customer-portal-pages/OrderTracking";
+import OrderDetail from "../pages/customer-portal-pages/OrderDetail";
+import Contract from "../pages/customer-portal-pages/Contract";
 import Payment from "../pages/customer-portal-pages/Payment";
 import PaymentSuccess from "../pages/customer-portal-pages/PaymentSuccess";
 import PaymentFailed from "../pages/customer-portal-pages/PaymentFailed";
@@ -57,13 +60,17 @@ const AppRoutes = () => {
         <Route path="/customers/cars/:id" element={<Details />} />
         <Route path="/customers/comparison" element={<Comparison />} />
         
-        <Route path="/checkout" element={<ProtectedRoute><Payment /></ProtectedRoute>} />
         <Route path="/customers/favourites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
-        <Route path="/customers/cost-estimate" element={<CostEstimate /> }/>
+        <Route path="/customers/cost-estimate/:id" element={<CostEstimate />} />        
         <Route path="/customers/test-drive" element={<TestDrive />} />
+        <Route path="/customers/info-filling" element={<InfoFilling />} />
+
 
         <Route path="/customers/portal" element={<ProtectedRoute><CustomerPortal /></ProtectedRoute>} />
-        <Route path="/orders" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
+        <Route path="/customers/orders" element={<OrderTracking />} />
+        <Route path="/customers/orders/:id" element={<OrderDetail />} />
+        <Route path="/customers/contract" element={<Contract />} />
+        <Route path="/customers/payment" element={<Payment />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFailed />} />    
         {/* Admin routes */}

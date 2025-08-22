@@ -13,7 +13,7 @@ const MainLayout = ({ children }) => {
   const location = useLocation();
 
   // Danh sách route cần sidebar
-  const sidebarRoutes = ["/admins/dashboard", "/customers/portal", "/admins/cars", "/admins/orders"];
+  const sidebarRoutes = ["/admins/dashboard", "/customers/portal", "/admins/cars", "/admins/orders", "/customers/orders", "/customers/orders/:id","/customers/contract", "/customers/payment" ];
 
   // Kiểm tra route hiện tại có nằm trong danh sách không
   const showSidebar = sidebarRoutes.some((path) =>

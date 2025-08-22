@@ -30,7 +30,7 @@ const ForgotPasswordAdmin = () => {
       setErrors({});
       setSuccessMessage("");
 
-      const res = await axios.post("/admins/forgot-password", { employeeCode }, { withCredentials: true });
+      const res = await axios.post("/admins/forgot-password", { employeeCode }, {withCredentials: true});
 
       setSuccessMessage(res.data.message || "Employee Code is verified. Redirecting...");
       setLoading(false);

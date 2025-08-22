@@ -3,10 +3,11 @@ import {
   EllipsisOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import { Pagination, Spin, Select, message } from "antd";
+import { Pagination, Spin, Select, Button } from "antd";
 import useOrderData from "../../hooks/useOrderData";
 import { Modal, Descriptions, Tag } from "antd";
 import { toast } from "react-toastify";
+import AddOrder from "../../components/AddOrder";
 import api from "../../api/axiosInstance";
 
 const statusOptions = [
@@ -218,6 +219,7 @@ const Orders = () => {
         <div className="w-full bg-white rounded-2xl shadow p-8">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Order List</h1>
+            <AddOrder />
           </div>
           <div className="overflow-x-auto rounded-xl border border-gray-200">
             {loading ? (
@@ -253,7 +255,7 @@ const Orders = () => {
                     <th className="px-4 py-3">Deposit</th>
                     <th className="px-4 py-3">Contract</th>
                     <th className="px-4 py-3">Status</th>
-                    <th className="px-4 py-3">Actions</th>
+                    <th className="px-4 py-3">Information</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -291,7 +293,11 @@ const Orders = () => {
                       <td className="px-4 py-4">{order.deposit || "N/A"}</td>
                       <td className="px-4 py-4">
                         {order.contract?.url
-                          ? <a href={order.contract.url} target="_blank" rel="noopener noreferrer">View</a>
+                          ? <a href={order.contract.url} target="_blank" rel="noopener noreferrer">
+                            <Button>
+                              View
+                            </Button>
+                          </a>
                           : ""}
                         {order.contract?.signed ? " (Signed)" : ""}
                       </td>
@@ -308,9 +314,6 @@ const Orders = () => {
                           onClick={() => handleShowDetail(order)}
                         >
                           <EllipsisOutlined />
-                        </button>
-                        <button className="text-red-600 rounded-full p-2 mx-2 transition cursor-pointer">
-                          <DeleteOutlined />
                         </button>
                       </td>
                     </tr>
