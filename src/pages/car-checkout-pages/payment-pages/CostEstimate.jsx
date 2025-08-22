@@ -28,18 +28,15 @@ const CostEstimate = () => {
   const [selectedCarId, setSelectedCarId] = useState(id || ""); 
   const car = cars.find((c) => c._id === selectedCarId);
 
-  // State lưu ảnh chính & ảnh đang chọn
   const [mainImage, setMainImage] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-  // Khi car thay đổi, set lại ảnh đầu tiên
   useEffect(() => {
     if (car?.images?.length) {
       setMainImage(car.images[0]);
     }
   }, [car]);
 
-  // Tính chi phí ước tính
   let estimate = null;
   if (car) {
     const tax = Math.round(car.price * 0.1);

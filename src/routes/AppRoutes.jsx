@@ -65,6 +65,7 @@ const AppRoutes = () => {
         <Route path="/customers/comparison" element={<Comparison />} />
         
         <Route path="/customers/favourites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+        <Route path="/customers/cost-estimate/" element={<CostEstimate />} />        
         <Route path="/customers/cost-estimate/:id" element={<CostEstimate />} />        
         <Route path="/customers/test-drive" element={<TestDrive />} />
         <Route path="/customers/info-filling" element={<InfoFilling />} />

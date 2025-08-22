@@ -39,11 +39,10 @@ const Category = () => {
   if (loading) return <div className="p-6">Loading...</div>;
 
   return (
-    <div className="w-full flex">
+    <div className="flex">
       <SidebarFilter />
-      <main className="w-full flex items-center flex-col p-6">
-        <div className="w-full">
-          <SearchInput onSearch={handleSearch} />
+      <main className="flex-1 p-6">
+        <SearchInput onSearch={handleSearch} />
 
         {/* Header */}
         <div className="flex justify-between items-center mt-6 mb-4">
