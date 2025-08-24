@@ -641,10 +641,10 @@ const Orders = () => {
 
   const handleStatusChange = async (orderId, newStatus, action) => {
     try {
-      if (action === "confirm") {
+      if (action === "confirmed") {
         await api.patch(`/admins/orders/${orderId}/confirm`);
         toast.success("Order confirmed!");
-      } else if (action === "cancel") {
+      } else if (action === "canceled") {
         await api.patch(`/admins/orders/${orderId}/canceled`);
         toast.success("Order canceled!");
       } else if (action === "paid") {
