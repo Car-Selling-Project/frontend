@@ -157,7 +157,7 @@ const ListTestDrive = () => {
         if (refetch) refetch();
       }
     } catch (err) {
-      toast.error(`Failed to update status: ${err.response?.data?.message || err.message}`);
+      toast.error(`Failed to update status: \n ${err.response?.data?.message || err.message}`);
       console.error("Failed to update status", err.response?.data || err.message);
     }
   };

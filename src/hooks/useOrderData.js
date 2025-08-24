@@ -10,7 +10,8 @@ const useOrderData = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await api.get("/admins/orders");
+                const response = await api.get("/admins/orders?limit=1000");
+                // console.log(response.data);
                 setOrders(Array.isArray(response.data.data) ? response.data.data : []);
             } catch (err) {
                 console.error("Failed to fetch orders:", err);
