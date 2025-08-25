@@ -14,6 +14,7 @@ const Dashboard = () => {
     totalByBrand: [],
     totalByCarType: [],
     topAdmins: [],
+    activeCustomers: 0,
   });
 
   useEffect(() => {
@@ -25,10 +26,13 @@ const Dashboard = () => {
         const soldCarsRes = await api.get('/admins/dashboard-stat/sold-cars');
         // Fetch top sales admins
         const topAdminsRes = await api.get('/admins/dashboard-stat/top-sales');
+        // Fetch active customers
+        const activeCustomersRes = await api.get('/admins/dashboard-stat/active-customers');
 
         console.log('revenueRes:', revenueRes.data);
         console.log('soldCarsRes:', soldCarsRes.data);
         console.log('topAdminsRes:', topAdminsRes.data);
+        console.log('activeCustomersRes:', activeCustomersRes.data);
 
         setStats({
           totalRevenue: revenueRes.data.totalRevenue,
@@ -38,6 +42,7 @@ const Dashboard = () => {
           totalByBrand: soldCarsRes.data.totalByBrand,
           totalByCarType: soldCarsRes.data.totalByCarType,
           topAdmins: topAdminsRes.data,
+          activeCustomers: activeCustomersRes.data.count,
         });
       } catch (err) {
         console.error('Error fetching dashboard stats:', err);
@@ -79,7 +84,7 @@ const Dashboard = () => {
               <UserOutlined className="text-blue-600 text-2xl" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-[#1A202C]">{stats.orders.length}</h3>
+              <h3 className="text-xl font-bold text-[#1A202C]">{stats.activeCustomers}</h3>
               <p className="text-gray-400">Active Customers</p>
             </div>
           </div>
