@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import { HeartFilled, BellFilled, SettingFilled, UserOutlined } from "@ant-design/icons";
+import { useState, useEffect, useRef } from "react";
+import { SettingFilled, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { Tabs } from "antd";
 import ThemeToggle from "./ThemeToggle";
 import { useAuth } from "../hooks/useAuth";
-// import SearchInput from "./SearchInput";
 
 const { TabPane } = Tabs;
 

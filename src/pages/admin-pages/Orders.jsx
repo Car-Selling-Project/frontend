@@ -607,6 +607,8 @@ const Orders = () => {
   const [modalOrder, setModalOrder] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [signOrderId, setSignOrderId] = useState(null);
+  const [showSignModal, setShowSignModal] = useState(false);
+  const [signText, setSignText] = useState("");
   const fileInputRef = useRef();
 
   useEffect(() => {
@@ -681,13 +683,24 @@ const Orders = () => {
       toast.error("Order ID is missing!");
       return;
     }
+    let imageToSend = signatureImage;
+    // If signatureImage is a File, convert to base64
+    if (signatureImage instanceof File) {
+      imageToSend = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = ev => resolve(ev.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(signatureImage);
+      });
+    }
     try {
-      await api.patch(`/admins/orders/${orderId}/seller-sign`, { signatureImage });
+      await api.patch(`/admins/orders/${orderId}/seller-sign`, { signatureImage: imageToSend });
       toast.success("Signed contract successfully");
       if (refetch) refetch();
     } catch (error) {
-      toast.error(`Failed to sign contract: ${error.response?.data?.message || "Unknown error"}`);
-      console.error("Failed to sign contract", error.response?.data?.message || error.message);
+      toast.error(`Failed to sign contract: ${error.response?.data || "Unknown error"}`);
+      console.log(error.response?.data);
+      console.error("Failed to sign contract", error.response?.data || error.message);
     }
   };
 
@@ -802,30 +815,12 @@ const Orders = () => {
                                         className="ml-2"
                                         onClick={() => {
                                           setSignOrderId(validOrderId);
-                                          fileInputRef.current?.click();
+                                          setShowSignModal(true);
                                         }}
                                         disabled={!validOrderId || isCanceled}
                                       >
                                         Sign
                                       </Button>
-                                      <input
-                                        type="file"
-                                        accept="image/*"
-                                        ref={fileInputRef}
-                                        style={{ display: "none" }}
-                                        onChange={async (e) => {
-                                          const file = e.target.files[0];
-                                          if (!file || !signOrderId) return;
-                                          const reader = new FileReader();
-                                          reader.onload = async (ev) => {
-                                            const signatureImage = ev.target.result; // base64 string
-                                            await handleSignContract(signOrderId, signatureImage);
-                                            setSignOrderId(null);
-                                            e.target.value = ""; // reset file input
-                                          };
-                                          reader.readAsDataURL(file);
-                                        }}
-                                      />
                                     </>
                                   )}
                                 </>
@@ -887,6 +882,65 @@ const Orders = () => {
           open={modalOpen}
           onClose={() => setModalOpen(false)}
         />
+        <Modal
+          title="Sign Contract"
+          open={showSignModal}
+          onCancel={() => {
+            setShowSignModal(false);
+            setSignOrderId(null);
+            setSignText("");
+          }}
+          footer={null}
+        >
+          <div style={{ marginBottom: 16 }}>
+            <label className="block font-semibold mb-2">Sign with text:</label>
+            <input
+              type="text"
+              value={signText}
+              onChange={e => setSignText(e.target.value)}
+              placeholder="Enter your signature text"
+              className="border rounded px-2 py-1 w-full"
+            />
+            <Button
+              type="primary"
+              className="mt-2"
+              disabled={!signOrderId || !signText}
+              onClick={async () => {
+                await handleSignContract(signOrderId, signText);
+                setShowSignModal(false);
+                setSignOrderId(null);
+                setSignText("");
+              }}
+            >
+              Submit Text Signature
+            </Button>
+          </div>
+          <div>
+            <label className="block font-semibold mb-2">Or sign with image:</label>
+            <Button
+              type="default"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={!signOrderId}
+            >
+              Choose Image
+            </Button>
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={async (e) => {
+                const file = e.target.files[0];
+                if (!file || !signOrderId) return;
+                await handleSignContract(signOrderId, file);
+                setShowSignModal(false);
+                setSignOrderId(null);
+                setSignText("");
+                e.target.value = ""; // reset file input
+              }}
+            />
+          </div>
+        </Modal>
       </div>
     </div>
   );
