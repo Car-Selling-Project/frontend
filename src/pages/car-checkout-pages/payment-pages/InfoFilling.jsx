@@ -6,6 +6,8 @@ import axios from "../../../api/axiosInstance.js";
 import { Button, Select } from "antd";
 import { useAuth } from "../../../hooks/useAuth.js";
 
+const { Option } = Select;
+
 const InfoFilling = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -19,7 +21,6 @@ const InfoFilling = () => {
   const [successMsg, setSuccessMsg] = useState("");
 
   const [quantity, setQuantity] = useState(1);
-
   const [billingInfo, setBillingInfo] = useState({
     fullName: user?.name || "",
     email: user?.email || "",
@@ -27,16 +28,14 @@ const InfoFilling = () => {
     address: "",
     citizenId: "",
   });
-
-
   const [locations, setLocations] = useState([]);
-  const [location, setLocation] = useState(""); 
+  const [location, setLocation] = useState("");
   const [paymentType, setPaymentType] = useState("full");
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [deposit, setDeposit] = useState("");
-
+  const [bankDetails, setBankDetails] = useState({ bankName: "", bankAccountNumber: "" });
   const [admins, setAdmins] = useState([]);
-const [selectedAdmin, setSelectedAdmin] = useState(""); 
+  const [selectedAdmin, setSelectedAdmin] = useState("");
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -100,16 +99,26 @@ const [selectedAdmin, setSelectedAdmin] = useState("");
       return;
     }
 
-    // Validate payment
-    if (paymentType === "deposit" && (!deposit || Number(deposit) <= 0)) {
-      setError("Please enter a valid deposit amount");
+    if (!selectedAdmin) {
+      setError("Please select an admin for this order");
       return;
     }
 
-    if (!selectedAdmin) {
-        setError("Please select an admin for this order");
+    // Validate payment
+    if (paymentType === "deposit") {
+      const minDeposit = Math.round(0.3 * summary.fullPrice);
+      if (!deposit || Number(deposit) < minDeposit || Number(deposit) > summary.fullPrice) {
+        setError(`Deposit must be between ${minDeposit} and ${summary.fullPrice}`);
         return;
       }
+    }
+
+    if (paymentMethod === "bank_transfer") {
+      if (!bankDetails.bankName || !bankDetails.bankAccountNumber) {
+        setError("Please enter bank details");
+        return;
+      }
+    }
 
     try {
       const payload = {
@@ -117,12 +126,15 @@ const [selectedAdmin, setSelectedAdmin] = useState("");
         carInfo: carId,
         quantity,
         paymentMethod,
-        ...(paymentType === "deposit" ? { deposit: Number(deposit) } : {}),
+        paymentType,
+        bankDetails: paymentMethod === "bank_transfer" ? bankDetails : {},
+        qrCodeUrl: "", // Always empty, QR code handled in Payment page
+        deposit: paymentType === "deposit" ? Number(deposit) : summary.fullPrice,
         customerInfo: billingInfo,
         location,
       };
 
-      const res = await axios.post("/customers/orders/customers-create", payload, {
+      const res = await axios.post("/customers/orderss/customers-create", payload, {
         headers: { Authorization: `Bearer ${user?.accessToken}` },
       });
 
@@ -159,35 +171,35 @@ const [selectedAdmin, setSelectedAdmin] = useState("");
               type="text"
               placeholder="Full Name"
               value={billingInfo.fullName}
-              onChange={(e) => setBillingInfo(prev => ({ ...prev, fullName: e.target.value }))}
+              onChange={(e) => setBillingInfo((prev) => ({ ...prev, fullName: e.target.value }))}
             />
             <input
               className="w-full p-3 border rounded"
               type="email"
               placeholder="Email"
               value={billingInfo.email}
-              onChange={(e) => setBillingInfo(prev => ({ ...prev, email: e.target.value }))}
+              onChange={(e) => setBillingInfo((prev) => ({ ...prev, email: e.target.value }))}
             />
             <input
               className="w-full p-3 border rounded"
               type="text"
               placeholder="Phone number"
               value={billingInfo.phone}
-              onChange={(e) => setBillingInfo(prev => ({ ...prev, phone: e.target.value }))}
+              onChange={(e) => setBillingInfo((prev) => ({ ...prev, phone: e.target.value }))}
             />
             <input
               className="w-full p-3 border rounded"
               type="text"
               placeholder="Delivery address"
               value={billingInfo.address}
-              onChange={(e) => setBillingInfo(prev => ({ ...prev, address: e.target.value }))}
+              onChange={(e) => setBillingInfo((prev) => ({ ...prev, address: e.target.value }))}
             />
             <input
               className="w-full p-3 border rounded"
               type="text"
               placeholder="Your citizen ID"
               value={billingInfo.citizenId}
-              onChange={(e) => setBillingInfo(prev => ({ ...prev, citizenId: e.target.value }))}
+              onChange={(e) => setBillingInfo((prev) => ({ ...prev, citizenId: e.target.value }))}
             />
           </div>
         </section>
@@ -237,9 +249,9 @@ const [selectedAdmin, setSelectedAdmin] = useState("");
               <input
                 className="w-full p-2 border rounded"
                 type="number"
-                placeholder="Enter deposit amount"
+                placeholder={`Enter deposit amount (min ${summary ? Math.round(0.3 * summary.fullPrice) : 0})`}
                 value={deposit}
-                onChange={(e) => setDeposit(Number(e.target.value))}
+                onChange={(e) => setDeposit(e.target.value)}
               />
             )}
           </div>
@@ -262,23 +274,48 @@ const [selectedAdmin, setSelectedAdmin] = useState("");
               </label>
             ))}
           </div>
+          {paymentMethod === "bank_transfer" && (
+            <div className="mt-4 space-y-3">
+              <input
+                className="w-full p-3 border rounded"
+                type="text"
+                placeholder="Bank Name"
+                value={bankDetails.bankName}
+                onChange={(e) => setBankDetails({ ...bankDetails, bankName: e.target.value })}
+              />
+              <input
+                className="w-full p-3 border rounded"
+                type="text"
+                placeholder="Bank Account Number"
+                value={bankDetails.bankAccountNumber}
+                onChange={(e) => setBankDetails({ ...bankDetails, bankAccountNumber: e.target.value })}
+              />
+            </div>
+          )}
+          {paymentMethod === "qr" && (
+            <div className="mt-4">
+              <p className="text-sm text-gray-600">
+                QR code payment will be processed in the next step.
+              </p>
+            </div>
+          )}
         </section>
 
         {/* Seller Selection */}
         <section className="mb-6 p-6 bg-white shadow-md rounded-lg">
-        <h2 className="text-2xl font-semibold mb-2">Assign Seller</h2>
-        <Select
+          <h2 className="text-2xl font-semibold mb-2">Assign Seller</h2>
+          <Select
             placeholder="Select seller"
             className="w-full"
             value={selectedAdmin || undefined}
             onChange={(value) => setSelectedAdmin(value)}
-        >
+          >
             {admins.map((admin) => (
-            <Option key={admin._id} value={admin._id}>
-             {admin.name} – {admin.email}
-            </Option>
+              <Option key={admin._id} value={admin._id}>
+                {admin.name} – {admin.email}
+              </Option>
             ))}
-        </Select>
+          </Select>
         </section>
 
         {/* Confirmation */}

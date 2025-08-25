@@ -157,9 +157,8 @@ const TestDrive = () => {
       setLoading(true);
       setSuccessMessage("");
       setErrors({});
-      console.log("Sending payload:", payload); // Debug payload
       await api.post("/customers/testdrives", payload);
-      setSuccessMessage("Registration successful! Redirecting...");
+      setSuccessMessage("Book Test Drive Successfully! We will contact you soon");
       setFormData({
         fullName: "",
         phone: "",

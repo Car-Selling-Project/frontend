@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { StarFilled, StarOutlined } from "@ant-design/icons";
-import api from "../api/axiosInstance"; 
+import axios from "../api/axiosInstance"; 
+import useCarData from "../hooks/useCarData";
 
 const ReviewSection = ({ carId }) => {
   const [reviews, setReviews] = useState([]);
@@ -10,9 +11,10 @@ const ReviewSection = ({ carId }) => {
     const fetchReviews = async () => {
       try {
         setLoading(true);
-        const res = await api.get("/reviews");
-        // Lọc review chỉ cho xe hiện tại
-        const carReviews = res.data.reviews.filter(r => r.car && r.car._id === carId);
+        const res = await axios.get("/customers/reviews");
+        console.log("API response:", res.data); // Kiểm tra dữ liệu trả về
+        const carReviews = res.data.reviews.filter(r => r.car?._id === carId);
+        console.log("Filtered reviews:", carReviews); // Kiểm tra sau khi lọc
         setReviews(carReviews);
       } catch (error) {
         console.error("Failed to fetch reviews:", error);

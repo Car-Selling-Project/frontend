@@ -96,7 +96,7 @@ const Register = () => {
       setSuccessMessage("Registration successful! Redirecting...");
       setLoading(false);
 
-      setTimeout(() => navigate("/customers/login"), 5000);
+      setTimeout(() => navigate("/customers/login"), 2000);
     } catch (err) {
       setLoading(false);
       const backendErrors = err.response?.data?.errors || [];

@@ -76,8 +76,8 @@ const AppRoutes = () => {
         <Route path="/customers/orders/:id" element={<OrderDetail />} />
         <Route path="/customers/contract" element={<Contract />} />
         <Route path="/customers/payment" element={<Payment />} />
-        <Route path="/payment-success" element={<PaymentSuccess />} />
-        <Route path="/payment-failed" element={<PaymentFailed />} />    
+        {/* <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/payment-failed" element={<PaymentFailed />} />     */}
         {/* Admin routes */}
         <Route path="/admins/dashboard" element={<Dashboard />} />
         <Route path="/admins/cars" element={<ListCars />} />
