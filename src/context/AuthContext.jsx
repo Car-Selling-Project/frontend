@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     if (storedUser && token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       setUser(storedUser);
@@ -21,11 +21,12 @@ export const AuthProvider = ({ children }) => {
   const loginCustomer = async ({ email, password }) => {
     try {
       const res = await axios.post("/customers/login", { email, password });
-      const { token, ...userData } = res.data;
+      const { accessToken, refreshToken, ...userData } = res.data;
 
       localStorage.setItem("user", JSON.stringify(userData));
-      localStorage.setItem("token", token);
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
       setUser(userData);
     } catch (err) {
       throw err;
@@ -44,49 +45,12 @@ export const AuthProvider = ({ children }) => {
         confirmPassword,
       });
 
-      const { token, ...userData } = res.data;
+      const { accessToken, refreshToken, ...userData } = res.data;
 
       localStorage.setItem("user", JSON.stringify(userData));
-      localStorage.setItem("token", token);
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      setUser(userData);
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  // 🧑‍💼 ADMIN AUTH
-  const loginAdmin = async ({ employeeCode, password }) => {
-    try {
-      const res = await axios.post("/admins/login", { employeeCode, password });
-      const { token, ...userData } = res.data;
-
-      localStorage.setItem("user", JSON.stringify(userData));
-      localStorage.setItem("token", token);
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      setUser(userData);
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  const registerAdmin = async ({ name, email, phone, password, dob, gender, confirmPassword }) => {
-    try {
-      const res = await axios.post("/admins/register", {
-        name,
-        email,
-        phone,
-        password,
-        dob,
-        gender,
-        confirmPassword,
-      });
-
-      const { token, ...userData } = res.data;
-
-      localStorage.setItem("user", JSON.stringify(userData));
-      localStorage.setItem("token", token);
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
       setUser(userData);
     } catch (err) {
       throw err;
@@ -95,7 +59,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem("user");
-    localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     delete axios.defaults.headers.common["Authorization"];
     setUser(null);
   };
@@ -106,9 +71,7 @@ export const AuthProvider = ({ children }) => {
         user,
         isLoading,
         loginCustomer,
-        registerCustomer,
-        loginAdmin,
-        registerAdmin,
+        registerCustomer, 
         logout,
       }}
     >
