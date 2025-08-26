@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { SettingFilled, UserOutlined } from "@ant-design/icons";
+import { SettingFilled, UserOutlined, HeartFilled, BellFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { Tabs } from "antd";
 import ThemeToggle from "./ThemeToggle";

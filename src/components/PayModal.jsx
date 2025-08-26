@@ -6,7 +6,7 @@ const Label = ({ children }) => (
   <label className="block text-sm text-gray-500 mb-1">{children}</label>
 );
 
-const PayModal = ({ open, onClose, order, onAddPayment, onFail, onRefresh = () => {} }) => {
+const PayModal = ({ open, onClose, order, onAddPayment, onRefresh = () => {} }) => {
   const { user } = useAuth();
   const totalPrice = Number(order?.totalPrice || 0);
   const defaultDeposit = Number(order?.deposit || 0);
@@ -29,13 +29,17 @@ const PayModal = ({ open, onClose, order, onAddPayment, onFail, onRefresh = () =
   useEffect(() => {
     if (order && open) {
       setPaymentType(order.paymentType || "full");
-      setDepositAmount(isEdit ? defaultDeposit : 0);
+      // Nếu modal được mở kèm default amount từ panel, dùng nó; nếu isEdit thì giữ defaultDeposit
+      const providedDefault = order.__defaultPaymentAmount;
+      setDepositAmount(isEdit ? defaultDeposit : (typeof providedDefault !== "undefined" ? Number(providedDefault) : 0));
+      // Nếu panel truyền default method (ví dụ qr), set sẵn
+      if (order.__defaultPaymentMethod) setMethod(order.__defaultPaymentMethod);
       if (!order._id) {
         console.warn("Invalid order passed to PayModal:", order);
         setError("Invalid order: missing ID");
       }
     }
-  }, [order, isEdit, open]);
+  }, [order, isEdit, open, defaultDeposit]);
 
   useEffect(() => {
     if (!open) {
@@ -55,7 +59,39 @@ const PayModal = ({ open, onClose, order, onAddPayment, onFail, onRefresh = () =
     }
   }, [open, defaultDeposit]);
 
-  // Removed the useEffect for fetchQrCode as it's redundant; QR is generated on submit if needed
+  // Nếu panel đánh dấu __autoCreatePayment (ví dụ khi nhấn Pay ở deposit row với paymentMethod=qr),
+  // tự tạo payment (QR) ngay khi modal mở.
+  useEffect(() => {
+    const opts = order?.__autoCreatePayment;
+    if (open && opts) {
+      (async () => {
+        setError(null);
+        setLoading(true);
+        try {
+          const payload = {
+            orderId: order._id,
+            paymentMethod: order.__defaultPaymentMethod || "qr",
+            paymentType: order.__defaultPaymentType || "deposit",
+            amount: Number(order.__defaultPaymentAmount) || undefined,
+          };
+          const resp = await axios.post("/customers/payment", payload, {
+            headers: { Authorization: `Bearer ${user.accessToken}` },
+          });
+          // resp.data là object trả về từ backend
+          const data = resp.data;
+          setPaymentId(data.payment?._id || null);
+          setResponse(data);
+          setShowConfirmation(true);
+        } catch (err) {
+          console.error("Auto create QR failed:", err);
+          setError(err.response?.data?.message || "Failed to create QR payment");
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order, open]);
 
   if (!open) return null;
 
@@ -114,61 +150,43 @@ const PayModal = ({ open, onClose, order, onAddPayment, onFail, onRefresh = () =
 
       if (isEdit) {
         await axios.patch(
-          `/customers/orderss/${order._id}/deposit`, 
+          `/customers/orderss/${order._id}/deposit`,
           { deposit: amount },
           { headers: { Authorization: `Bearer ${user.accessToken}` } }
         );
         await axios.patch(
-          `/customers/orderss/${order._id}/paymentmethod`, 
+          `/customers/orderss/${order._id}/paymentmethod`,
           { paymentMethod: method },
           { headers: { Authorization: `Bearer ${user.accessToken}` } }
         );
+        await onRefresh();
+        setShowConfirmation(true);
       } else {
         const payload = {
           orderId: order._id,
           paymentMethod: method,
           paymentType,
-          amount, // Added to ensure amount is sent
+          amount, // pass amount; backend will accept it
         };
 
-        const { data } = await axios.post(
+        const resp = await axios.post(
           `/customers/payment`,
           payload,
           { headers: { Authorization: `Bearer ${user.accessToken}` } }
         );
 
-        setPaymentId(data.payment._id);
+        const data = resp.data;
+        setPaymentId(data.payment?._id || null);
         setResponse(data);
+        setShowConfirmation(true);
       }
 
-      onRefresh(); // Refresh orders after success
-      setShowConfirmation(true);
+      await onRefresh(); // Refresh orders after success
     } catch (err) {
       console.error("Error in handleProceed:", err);
       setError(err.response?.data?.message || "Server error");
-      onFail(order._id, null);
+      // **No cancel/confirm actions here** — admin handles those
       setShowConfirmation(true);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCancel = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      await axios.post(
-        `/customers/payments/cancel`,
-        { paymentId },
-        { headers: { Authorization: `Bearer ${user.accessToken}` } }
-      );
-      setResponse({ ...response, status: "failed" });
-      await onFail(order._id, paymentId);
-      onRefresh(); // Refresh after cancel
-      setQrCodeUrl("");
-    } catch (err) {
-      console.error("Error in handleCancel:", err);
-      setError(err.response?.data?.message || "Failed to cancel payment");
     } finally {
       setLoading(false);
     }
@@ -225,7 +243,7 @@ const PayModal = ({ open, onClose, order, onAddPayment, onFail, onRefresh = () =
                   <input
                     type="number"
                     value={depositAmount}
-                    onChange={(e) => setDepositAmount(e.target.value)}
+                    readOnly
                     className="form-control w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Enter deposit amount"
                     min={minDeposit}
@@ -317,7 +335,6 @@ const PayModal = ({ open, onClose, order, onAddPayment, onFail, onRefresh = () =
                 </div>
               )}
 
-              {/* Removed pre-generated QR display as it's handled in response */}
             </div>
           ) : (
             <div>
@@ -397,15 +414,8 @@ const PayModal = ({ open, onClose, order, onAddPayment, onFail, onRefresh = () =
               Submit
             </button>
           ) : (
-            (method === "qr" || method === "bank_transfer") && response?.status !== "failed" && (
-              <button
-                className="btn btn-danger px-4 py-2 bg-red-50 border border-red-200 text-red-600 rounded hover:bg-red-100"
-                onClick={handleCancel}
-                disabled={loading}
-              >
-                Cancel Payment
-              </button>
-            )
+            // Khi đã showConfirmation: chỉ cho phép đóng modal (khách không confirm/cancel)
+            null
           )}
         </div>
       </div>

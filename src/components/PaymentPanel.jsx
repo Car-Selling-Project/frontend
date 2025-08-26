@@ -36,15 +36,37 @@ const PaymentPanel = ({ order, onAddPayment = () => {}, showDeleted = false, tog
   const shortId = orderId.slice(-8);
   const totalPrice = Number(order.totalPrice || 0);
   const deposit = Number(order.deposit || 0);
-  const totalOutstanding = Math.max(0, totalPrice - deposit);
   const payments = order.payment || [];
-  const hasDepositPayment = payments.some((p) => !p.deleted && p.name?.toLowerCase() === "deposit"); // Added to check for existing deposit payment
-  const isDepositedOrPaid = ["deposited", "paid"].includes((order.paymentStatus || "").toLowerCase()) || hasDepositPayment; // Updated to consider existing deposit payment
+
+  // --- minimal change: compute paidAmount from payments (non-deleted) and outstanding accordingly
+  const depositAmount = order.deposit && !payments.some(p => !p.deleted && p.name?.toLowerCase() === "deposit")
+  ? Number(order.deposit)
+  : 0;
+
+const paidAmount = payments.filter(p => !p.deleted).reduce((s, p) => s + (Number(p.amount) || 0), 0) + depositAmount;
+const totalOutstanding = Math.max(0, totalPrice - paidAmount);
+
+  const hasDepositPayment = payments.some((p) => !p.deleted && p.name?.toLowerCase() === "deposit"); // check existing deposit
+  const isDepositedOrPaid = ["deposited", "paid"].includes((order.paymentStatus || "").toLowerCase()) || hasDepositPayment;
 
   const handlePay = async () => {
     try {
       setError(null);
-      const depositResponse = await axios.patch(
+      // keep old behavior for deposit Pay when method !== qr: update deposit & payment method
+      if (order.paymentMethod === "qr") {
+        // open modal directly and request QR flow by passing a flagged order object
+        onAddPayment({
+          ...order,
+          __autoCreatePayment: true,
+          __defaultPaymentAmount: deposit,
+          __defaultPaymentType: "deposit",
+          __defaultPaymentMethod: "qr",
+        });
+        toggleDropdown(null);
+        return;
+      }
+
+      await axios.patch(
         `/customers/orderss/${orderId}/deposit`, 
         { deposit },
         { headers: { Authorization: `Bearer ${user.accessToken}` } }
@@ -72,6 +94,9 @@ const PaymentPanel = ({ order, onAddPayment = () => {}, showDeleted = false, tog
       setError("Failed to open edit modal");
     }
   };
+
+  // Add Payment enabled only when outstanding > 0
+  const canAddPayment = totalOutstanding > 0;
 
   return (
     <section className="mb-6">
@@ -109,7 +134,7 @@ const PaymentPanel = ({ order, onAddPayment = () => {}, showDeleted = false, tog
               <li>
                 <button
                   className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  onClick={() => onAddPayment(order)}
+                  onClick={() => onAddPayment({ ...order, __defaultPaymentAmount: totalOutstanding, __defaultPaymentType: totalOutstanding === totalPrice ? "full" : "deposit" })}
                 >
                   <i className="far fa-money-bill-alt mr-2"></i>
                   Add Payment
@@ -208,7 +233,8 @@ const PaymentPanel = ({ order, onAddPayment = () => {}, showDeleted = false, tog
                     </tr>
                   ))}
 
-                {!isDepositedOrPaid && deposit > 0 && !hasDepositPayment && ( // Added !hasDepositPayment to prevent duplication
+                {/* Deposit row: show dropdown ⋯ only when paymentMethod === 'qr' */}
+                {!isDepositedOrPaid && deposit > 0 && !hasDepositPayment && (
                   <tr
                     key={`deposit-${orderId}`}
                     className="child payment"
@@ -223,38 +249,48 @@ const PaymentPanel = ({ order, onAddPayment = () => {}, showDeleted = false, tog
                     </td>
                     <td data-cy="event_payment_method">{order.paymentMethod || "—"}</td>
                     <td>
-                      <div className="dropdown relative group">
-                        <button
-                          className="btn btn-white btn-sm flex items-center text-gray-600 hover:text-blue-600"
-                          onClick={() => toggleDropdown(`deposit-${orderId}`)}
-                        >
-                          <span className="text-lg">⋯</span>
-                        </button>
-                        <ul
-                          className={`dropdown-menu absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg ${
-                            openDropdown === `deposit-${orderId}` ? "block" : "hidden"
-                          }`}
-                        >
-                          <li>
-                            <button
-                              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              onClick={handlePay}
-                            >
-                              <i className="far fa-money-bill-alt mr-2"></i>
-                              Pay
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-100"
-                              onClick={handleEdit}
-                            >
-                              <i className="fas fa-edit mr-2"></i>
-                              Edit
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
+                      {order.paymentMethod === "qr" ? (
+                        <div className="dropdown relative group">
+                          <button
+                            className="btn btn-white btn-sm flex items-center text-gray-600 hover:text-blue-600"
+                            onClick={() => toggleDropdown(`deposit-${orderId}`)}
+                          >
+                            <span className="text-lg">⋯</span>
+                          </button>
+                          <ul
+                            className={`dropdown-menu absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg ${
+                              openDropdown === `deposit-${orderId}` ? "block" : "hidden"
+                            }`}
+                          >
+                            <li>
+                              <button
+                                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                onClick={() =>
+                                  onAddPayment({
+                                    ...order,
+                                    __autoCreatePayment: true,
+                                    __defaultPaymentAmount: deposit,
+                                    __defaultPaymentType: "deposit",
+                                    __defaultPaymentMethod: "qr",
+                                  })
+                                }
+                              >
+                                <i className="far fa-money-bill-alt mr-2"></i>
+                                Pay
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-100"
+                                onClick={handleEdit}
+                              >
+                                <i className="fas fa-edit mr-2"></i>
+                                Edit
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      ) : null}
                     </td>
                   </tr>
                 )}
@@ -271,9 +307,10 @@ const PaymentPanel = ({ order, onAddPayment = () => {}, showDeleted = false, tog
 
             <div className="m-4">
               <button
-                className="btn btn-primary btn-sm text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded"
+                className={`btn btn-primary btn-sm text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded ${!canAddPayment ? "opacity-50 cursor-not-allowed" : ""}`}
                 data-cy="add_payment"
-                onClick={() => onAddPayment(order)}
+                onClick={() => onAddPayment({ ...order, __defaultPaymentAmount: totalOutstanding, __defaultPaymentType: totalOutstanding === totalPrice ? "full" : "deposit" })}
+                disabled={!canAddPayment}
               >
                 Add a Payment
               </button>

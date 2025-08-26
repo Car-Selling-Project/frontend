@@ -4,7 +4,7 @@ import PayModal from "../../components/PayModal";
 import { useAuth } from "../../hooks/useAuth";
 import PaymentPanel from "../../components/PaymentPanel";
 
-const Payment = () => {
+const PaymentPage = () => {
   const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -60,7 +60,7 @@ const Payment = () => {
         orderId,
         paymentMethod,
         paymentType,
-        amount: finalAmount, // Added amount to payload to ensure backend receives it
+        amount: finalAmount, // ensure backend receives it
       };
 
       console.log("Submitting payment:", payload);
@@ -99,7 +99,7 @@ const Payment = () => {
               onAddPayment={handleAddPayment}
               showDeleted={showDeleted}
               toggleShowDeleted={() => setShowDeleted(!showDeleted)}
-              onRefresh={fetchOrders} // Added to refresh after actions
+              onRefresh={fetchOrders}
             />
           ))
         )}
@@ -117,23 +117,10 @@ const Payment = () => {
         }}
         order={selectedOrder}
         onAddPayment={handleAddPaymentSubmit}
-        onFail={async (orderId, paymentId) => {
-          try {
-            await axios.patch(
-              `/customers/payments/cancel`,
-              { paymentId },
-              { headers: { Authorization: `Bearer ${user.accessToken}` } }
-            );
-            await fetchOrders();
-          } catch (err) {
-            console.error("Error cancelling payment:", err.response?.data || err.message);
-            setError(err.response?.data?.message || "Failed to cancel payment");
-          }
-        }}
-        onRefresh={fetchOrders} // Added to refresh after modal actions
+        onRefresh={fetchOrders}
       />
     </main>
   );
 };
 
-export default Payment;
+export default PaymentPage;

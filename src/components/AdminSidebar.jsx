@@ -44,27 +44,27 @@ const AdminSidebar = () => {
             <li>
               <a
                 href="/admins/orders"
-                className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-50"
+                className="flex -ml-10 font-bold items-center gap-3 px-4 py-4 rounded-lg text-gray-700 text-base hover:bg-blue-50 hover:text-blue-600 transition"
               >
-                <ShoppingCartOutlined />
+                <ShoppingCartOutlined className="text-xl"/>
                 Order Management
               </a>
             </li>
             <li>
               <a
                 href="/admins/test-drives"
-                className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-50"
+                className="flex -ml-10 font-bold items-center gap-3 px-4 py-4 rounded-lg text-gray-700 text-base hover:bg-blue-50 hover:text-blue-600 transition"
               >
-                <CarOutlined />
+                <CarOutlined className="text-xl"/>
                 Test Drive Management
               </a>
             </li>
             <li>
               <a
                 href="/admins/payments"
-                className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-50"
+                className="flex -ml-10 font-bold items-center gap-3 px-4 py-4 rounded-lg text-gray-700 text-base hover:bg-blue-50 hover:text-blue-600 transition"
               >
-                <BankOutlined />
+                <BankOutlined className="text-xl"/>
                 Payment Management
               </a>
             </li>

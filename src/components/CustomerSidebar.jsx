@@ -46,7 +46,7 @@ const CustomerSidebar = () => {
             </li>
             <li>
               <Link
-                to="/customers/contracts"
+                to="/customers/contract"
                 className="flex -ml-10 font-bold items-center gap-3 px-4 py-4 rounded-lg text-gray-700 text-base hover:bg-blue-50 hover:text-blue-600 transition"
               >
                 <SolutionOutlined className="text-xl" />

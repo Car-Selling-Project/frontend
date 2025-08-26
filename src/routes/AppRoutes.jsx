@@ -14,8 +14,6 @@ import ResetPWAdmin from "../pages/user-authentication-pages/ResetPasswordAdmin"
 
 //Car Browsing routes
 import Homepage from "../pages/car-browsing-pages/Homepage";
-import UserProfile from "../pages/UserProfile";
-import ContractList from '../pages/ContractList';
 import Category from "../pages/car-browsing-pages/Category";
 import Details from "../pages/car-browsing-pages/Details";
 import Comparison from "../pages/car-browsing-pages/Comparison";
@@ -41,9 +39,7 @@ import CustomerPortal from "../pages/customer-portal-pages/CustomerPortal"
 import OrderTracking from "../pages/customer-portal-pages/OrderTracking";
 import OrderDetail from "../pages/customer-portal-pages/OrderDetail";
 import Contract from "../pages/customer-portal-pages/Contract";
-import Payment from "../pages/customer-portal-pages/Payment";
-import PaymentSuccess from "../pages/customer-portal-pages/PaymentSuccess";
-import PaymentFailed from "../pages/customer-portal-pages/PaymentFailed";
+import PaymentPage from "../pages/customer-portal-pages/PaymentPage";
 
 const AppRoutes = () => {
 
@@ -62,8 +58,6 @@ const AppRoutes = () => {
         <Route path="/admins/reset-password" element={<ResetPWAdmin />} />
 
         <Route path="/customers" element={<Homepage />} />
-        <Route path="/customers/profile" element={<UserProfile />} />
-        <Route path="/customers/contracts" element={<ContractList />} />
         <Route path="/customers/cars" element={<Category />} />
         <Route path="/customers/cars/:id" element={<Details />} />
         <Route path="/customers/comparison" element={<Comparison />} />
@@ -79,9 +73,8 @@ const AppRoutes = () => {
         <Route path="/customers/orders" element={<OrderTracking />} />
         <Route path="/customers/orders/:id" element={<OrderDetail />} />
         <Route path="/customers/contract" element={<Contract />} />
-        <Route path="/customers/payment" element={<Payment />} />
-        {/* <Route path="/payment-success" element={<PaymentSuccess />} />
-        <Route path="/payment-failed" element={<PaymentFailed />} />     */}
+        <Route path="/customers/payment" element={<PaymentPage />} />
+
         {/* Admin routes */}
         <Route path="/admins/dashboard" element={<Dashboard />} />
         <Route path="/admins/cars" element={<ListCars />} />
