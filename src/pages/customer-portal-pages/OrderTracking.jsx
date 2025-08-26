@@ -161,7 +161,7 @@ const OrderTracking = () => {
                     <div className="flex flex-col">
                       <div className="flex items-center gap-3 flex-wrap">
                         <p className="text-xl font-bold">{order.data.carInfo?.title || "N/A"}</p>
-                        <StarRating rating={order.data.carInfo?.rating || 0} />
+                        {/* <StarRating rating={order.data.carInfo?._id || 0} /> */}
                       </div>
                       <p className="text-subtitle">Quantity: {qty}</p>
                     </div>

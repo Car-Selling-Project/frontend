@@ -109,19 +109,43 @@ import { useFavorites } from "../hooks/useFavorites";
 import GasolineIcon from "../assets/icons/gas-station.svg";
 import SteeringIcon from "../assets/icons/Car.svg";
 import CapacityIcon from "../assets/icons/profile-2user.svg";
-import api from "../api/axiosInstance"; // Make sure this exists
+import api from "../api/axiosInstance";
 
-const StarRating = ({ rating }) => {
+const StarRating = ({ carId }) => {
   const maxStars = 5;
+  const [averageRating, setAverageRating] = useState(0);
+
+  useEffect(() => {
+    const fetchAverageRating = async () => {
+      try {
+        const res = await api.get(`/customers/reviewss/${carId}`);
+        const reviews = res.data.reviews || [];
+        if (reviews.length > 0) {
+          const avg =
+            reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+          setAverageRating(avg);
+        } else {
+          setAverageRating(0);
+        }
+      } catch (err) {
+        setAverageRating(0);
+      }
+    };
+    if (carId) fetchAverageRating();
+  }, [carId]);
+
   return (
     <div className="flex items-center">
       {[...Array(maxStars)].map((_, index) =>
-        index < Math.round(rating) ? (
+        index < Math.round(averageRating) ? (
           <StarFilled key={index} className="!text-yellow-500 text-base" />
         ) : (
           <StarOutlined key={index} className="!text-gray-400 text-base" />
         )
       )}
+      <span className="ml-2 text-sm text-gray-500 dark:text-white">
+        {averageRating > 0 ? averageRating.toFixed(1) : "No ratings"}
+      </span>
     </div>
   );
 };
@@ -135,30 +159,7 @@ const CarListItem = ({ car }) => {
     typeof car.brandId === "string"
       ? "Loading Brand..."
       : car.brandId?.name || "Unknown Brand";
-
-  // --- NEW: Fetch average rating ---
-  const [averageRating, setAverageRating] = useState(0);
-
-  useEffect(() => {
-    const fetchAverageRating = async () => {
-      try {
-        const res = await api.get(`/customers/reviews`);
-        console.log(res.data);
-        const reviews = res.data.reviews || [];
-        if (reviews.length > 0) {
-          const avg =
-            reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
-          setAverageRating(avg);
-        } else {
-          setAverageRating(0);
-        }
-      } catch (err) {
-        setAverageRating(0);
-      }
-    };
-    if (car._id) fetchAverageRating();
-  }, [car._id]);
-  // --- END NEW ---
+      
 
   return (
     <div className="flex bg-white dark:bg-gray-700 rounded-xl shadow-md p-4 mb-4">
@@ -186,10 +187,8 @@ const CarListItem = ({ car }) => {
             </button>
           </div>
           {/* Show average rating */}
-          <StarRating rating={averageRating} />
-          <span className="ml-2 text-sm text-gray-500 dark:text-white">
-            {averageRating > 0 ? averageRating.toFixed(1) : "No ratings"}
-          </span>
+          <StarRating carId={car._id} />
+          
 
           <p className="text-sm mt-2 text-gray-600 dark:text-white line-clamp-2">
             {car.description || "No description provided"}

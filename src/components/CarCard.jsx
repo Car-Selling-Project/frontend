@@ -7,7 +7,7 @@ import CapacityIcon from "../assets/icons/profile-2user.svg";
 import { useFavorites } from "../hooks/useFavorites";
 import api from "../api/axiosInstance";
 
-const StarRating = ({ carId }) => {
+export const StarRating = ({ carId }) => {
   const maxStars = 5;
   const [averageRating, setAverageRating] = useState(0);
 
