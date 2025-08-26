@@ -25,7 +25,6 @@ const PaymentPage = () => {
         headers: { Authorization: `Bearer ${user.accessToken}` },
       });
       const fetchedOrders = response.data.data || [];
-      console.log("Fetched Orders:", fetchedOrders);
       setOrders(fetchedOrders.filter((order) => order._id && order.totalPrice !== undefined));
     } catch (err) {
       console.error("Fetch Error:", err.response?.data || err.message);

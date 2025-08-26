@@ -29,10 +29,8 @@ const PayModal = ({ open, onClose, order, onAddPayment, onRefresh = () => {} }) 
   useEffect(() => {
     if (order && open) {
       setPaymentType(order.paymentType || "full");
-      // Nếu modal được mở kèm default amount từ panel, dùng nó; nếu isEdit thì giữ defaultDeposit
       const providedDefault = order.__defaultPaymentAmount;
       setDepositAmount(isEdit ? defaultDeposit : (typeof providedDefault !== "undefined" ? Number(providedDefault) : 0));
-      // Nếu panel truyền default method (ví dụ qr), set sẵn
       if (order.__defaultPaymentMethod) setMethod(order.__defaultPaymentMethod);
       if (!order._id) {
         console.warn("Invalid order passed to PayModal:", order);
@@ -59,8 +57,7 @@ const PayModal = ({ open, onClose, order, onAddPayment, onRefresh = () => {} }) 
     }
   }, [open, defaultDeposit]);
 
-  // Nếu panel đánh dấu __autoCreatePayment (ví dụ khi nhấn Pay ở deposit row với paymentMethod=qr),
-  // tự tạo payment (QR) ngay khi modal mở.
+
   useEffect(() => {
     const opts = order?.__autoCreatePayment;
     if (open && opts) {
@@ -77,7 +74,6 @@ const PayModal = ({ open, onClose, order, onAddPayment, onRefresh = () => {} }) 
           const resp = await axios.post("/customers/payment", payload, {
             headers: { Authorization: `Bearer ${user.accessToken}` },
           });
-          // resp.data là object trả về từ backend
           const data = resp.data;
           setPaymentId(data.payment?._id || null);
           setResponse(data);

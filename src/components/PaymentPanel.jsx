@@ -57,7 +57,7 @@ const totalOutstanding = Math.max(0, totalPrice - paidAmount);
         // open modal directly and request QR flow by passing a flagged order object
         onAddPayment({
           ...order,
-          __autoCreatePayment: true,
+          __qrFlow: true, 
           __defaultPaymentAmount: deposit,
           __defaultPaymentType: "deposit",
           __defaultPaymentMethod: "qr",
@@ -151,7 +151,7 @@ const totalOutstanding = Math.max(0, totalPrice - paidAmount);
                       Pay
                     </button>
                   </li>
-                  <li>
+                  {/* <li>
                     <button
                       className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-100"
                       onClick={handleEdit}
@@ -159,7 +159,7 @@ const totalOutstanding = Math.max(0, totalPrice - paidAmount);
                       <i className="fas fa-edit mr-2"></i>
                       Edit
                     </button>
-                  </li>
+                  </li> */}
                 </>
               )}
             </ul>
@@ -279,15 +279,15 @@ const totalOutstanding = Math.max(0, totalPrice - paidAmount);
                                 Pay
                               </button>
                             </li>
-                            <li>
-                              <button
+                            {/* <li>
+                              {/* <button
                                 className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-100"
                                 onClick={handleEdit}
                               >
                                 <i className="fas fa-edit mr-2"></i>
                                 Edit
-                              </button>
-                            </li>
+                              </button> 
+                            </li> */}
                           </ul>
                         </div>
                       ) : null}
@@ -309,7 +309,7 @@ const totalOutstanding = Math.max(0, totalPrice - paidAmount);
               <button
                 className={`btn btn-primary btn-sm text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded ${!canAddPayment ? "opacity-50 cursor-not-allowed" : ""}`}
                 data-cy="add_payment"
-                onClick={() => onAddPayment({ ...order, __defaultPaymentAmount: totalOutstanding, __defaultPaymentType: totalOutstanding === totalPrice ? "full" : "deposit" })}
+                onClick={() => onAddPayment({ ...order, __defaultPaymentAmount: totalOutstanding })}
                 disabled={!canAddPayment}
               >
                 Add a Payment

@@ -235,7 +235,7 @@ const InfoFilling = () => {
               />
               <span>Full Payment</span>
             </label>
-            <label className="flex items-center space-x-2">
+            {/* <label className="flex items-center space-x-2">
               <input
                 type="radio"
                 name="paymentType"
@@ -244,7 +244,7 @@ const InfoFilling = () => {
                 onChange={() => setPaymentType("deposit")}
               />
               <span>Deposit</span>
-            </label>
+            </label> */}
             {paymentType === "deposit" && (
               <input
                 className="w-full p-2 border rounded"
