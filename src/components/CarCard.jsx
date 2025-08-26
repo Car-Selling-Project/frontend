@@ -7,17 +7,41 @@ import CapacityIcon from "../assets/icons/profile-2user.svg";
 import { useFavorites } from "../hooks/useFavorites";
 import api from "../api/axiosInstance";
 
-const StarRating = ({ rating }) => {
+const StarRating = ({ carId }) => {
   const maxStars = 5;
+  const [averageRating, setAverageRating] = useState(0);
+
+  useEffect(() => {
+    const fetchAverageRating = async () => {
+      try {
+        const res = await api.get(`/customers/reviewss/${carId}`);
+        const reviews = res.data.reviews || [];
+        if (reviews.length > 0) {
+          const avg =
+            reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+          setAverageRating(avg);
+        } else {
+          setAverageRating(0);
+        }
+      } catch (err) {
+        setAverageRating(0);
+      }
+    };
+    if (carId) fetchAverageRating();
+  }, [carId]);
+
   return (
     <div className="flex items-center">
       {[...Array(maxStars)].map((_, index) =>
-        index < rating ? (
+        index < Math.round(averageRating) ? (
           <StarFilled key={index} className="!text-yellow-500 text-base" />
         ) : (
           <StarOutlined key={index} className="!text-gray-400 text-base" />
         )
       )}
+      <span className="ml-2 text-sm text-gray-500 dark:text-white">
+        {averageRating > 0 ? averageRating.toFixed(1) : "No ratings"}
+      </span>
     </div>
   );
 };
@@ -65,7 +89,7 @@ const CarCard = ({ car }) => {
       <p className="text-base text-gray-500 dark:text-white mb-2">
         {loading ? "Loading Brand..." : brandName}
       </p>
-      <StarRating rating={car.rating || 0} />
+      <StarRating carId={fullCar._id} />
 
       {/* Car Image */}
       <img
