@@ -126,7 +126,10 @@ const EditCarModal = ({ car, open, onClose, onUpdate }) => {
       Object.entries(values).forEach(([key, value]) => {
         formData.append(key, value);
       });
-      newImages.forEach((file) => formData.append("images", file));
+      // Only append images if newImages is not empty
+      if (newImages.length > 0) {
+        newImages.forEach((file) => formData.append("images", file));
+      }
       await api.patch(`/admins/cars/${car?._id || car?.id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
@@ -134,8 +137,8 @@ const EditCarModal = ({ car, open, onClose, onUpdate }) => {
       onUpdate();
       onClose();
     } catch (error) {
-      toast.error("Failed to update car");
-      console.error(error);
+      toast.error(`Failed to update car: ${error.response?.data?.message || error.message}`);
+      console.error(error.response?.data.message || error.message);
     } finally {
       setLoading(false);
     }
@@ -206,6 +209,7 @@ const ListCars = () => {
   const { cars, loading, refetch } = useCarData();
   const [editCar, setEditCar] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [carTypeFilter, setCarTypeFilter] = useState("");
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -267,15 +271,38 @@ const ListCars = () => {
   };
 
   // Slice data for current page
-  const pagedData = cars ? cars.slice((currentPage - 1) * pageSize, currentPage * pageSize) : [];
+  const filteredCars = carTypeFilter
+    ? cars.filter(car => car.carType === carTypeFilter)
+    : cars;
+
+  const pagedData = filteredCars
+    ? filteredCars.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+    : [];
+  const totalCars = filteredCars?.length || 0;
 
   return (
     <div className="flex min-h-screen items-center bg-[#F6F7F9] ">
       <div className="flex-1 flex flex-col px-2 py-4">
         <div className="w-full bg-white rounded-2xl shadow p-8">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-            <AddCar onAdd={refreshCars} />
+            <h1 className="text-2xl font-bold">Car List</h1>
+            <div className="flex gap-4">
+              <div className="flex items-center gap-4 mb-4">
+                <span className="font-semibold">Filter by Car Type:</span>
+                <select
+                  value={carTypeFilter}
+                  onChange={e => setCarTypeFilter(e.target.value)}
+                  className="border rounded px-2 py-1"
+                  style={{ minWidth: 120 }}
+                >
+                  <option value="">All</option>
+                  {[...new Set(cars.map(car => car.carType).filter(Boolean))].map(type => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
+              </div>
+              <AddCar onAdd={refreshCars} />
+            </div>
           </div>
           <div className="overflow-x-auto rounded-xl border border-gray-200">
             {loading ? (

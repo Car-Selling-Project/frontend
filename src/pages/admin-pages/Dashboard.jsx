@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ShoppingCartOutlined, CarOutlined, UserOutlined, DollarOutlined, EllipsisOutlined } from '@ant-design/icons';
 import gtr from '../../assets/images/gtr.jpg';
 import Top5CarChart from '../../components/charts/TopCars';
-import RentalPerDayChart from '../../components/charts/RentPerDay';
+import RentalPerDayChart from '../../components/charts/PurchasePerDay';
 import api from '../../api/axiosInstance';
 
 const Dashboard = () => {
@@ -14,6 +14,7 @@ const Dashboard = () => {
     totalByBrand: [],
     totalByCarType: [],
     topAdmins: [],
+    activeCustomers: 0,
   });
 
   useEffect(() => {
@@ -25,10 +26,13 @@ const Dashboard = () => {
         const soldCarsRes = await api.get('/admins/dashboard-stat/sold-cars');
         // Fetch top sales admins
         const topAdminsRes = await api.get('/admins/dashboard-stat/top-sales');
+        // Fetch active customers
+        const activeCustomersRes = await api.get('/admins/dashboard-stat/active-customers');
 
         console.log('revenueRes:', revenueRes.data);
         console.log('soldCarsRes:', soldCarsRes.data);
         console.log('topAdminsRes:', topAdminsRes.data);
+        console.log('activeCustomersRes:', activeCustomersRes.data);
 
         setStats({
           totalRevenue: revenueRes.data.totalRevenue,
@@ -38,6 +42,7 @@ const Dashboard = () => {
           totalByBrand: soldCarsRes.data.totalByBrand,
           totalByCarType: soldCarsRes.data.totalByCarType,
           topAdmins: topAdminsRes.data,
+          activeCustomers: activeCustomersRes.data.count,
         });
       } catch (err) {
         console.error('Error fetching dashboard stats:', err);
@@ -79,7 +84,7 @@ const Dashboard = () => {
               <UserOutlined className="text-blue-600 text-2xl" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-[#1A202C]">{stats.orders.length}</h3>
+              <h3 className="text-xl font-bold text-[#1A202C]">{stats.activeCustomers}</h3>
               <p className="text-gray-400">Active Customers</p>
             </div>
           </div>
@@ -96,28 +101,58 @@ const Dashboard = () => {
 
         {/* Main Content */}
         <div className="flex gap-6">
-          {/* Recent Transactions */}
-          <div className="flex-1 bg-white rounded-xl shadow p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-[#1A202C]">Recent Transaction</h3>
-              <a href="/admins/orders" className="text-blue-600 text-sm font-medium">View All</a>
-            </div>
-            <div>
-              {stats.orders.slice(0, 4).map((order, idx) => (
-                <div key={order._id || idx} className="flex items-center justify-between py-3 border-b">
-                  <div className="flex items-center gap-4">
-                    <img src={order.carInfo?.images?.[0] || gtr} alt={order.carInfo?.title || "Car"} className="w-14 h-10 rounded object-cover" />
-                    <div>
-                      <h3 className="font-semibold text-[#1A202C]">{order.carInfo?.title || "Car"}</h3>
-                      <span className="text-xs text-gray-400">{order.carInfo?.carType || "Type"}</span>
+          <div className='w-full'>
+            {/* Recent Transactions */}
+            <div className="flex-1 h-[435px] flex flex-col bg-white rounded-xl shadow p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-[#1A202C]">Recent Transaction</h3>
+                <a href="/admins/orders" className="text-blue-600 text-sm font-medium">View All</a>
+              </div>
+              <div>
+                {stats.orders.slice(0, 4).map((order, idx) => (
+                  <div key={order._id || idx} className="flex items-center justify-between py-3 border-b">
+                    <div className="flex items-center gap-4">
+                      <img src={order.carInfo?.images?.[0] || gtr} alt={order.carInfo?.title || "Car"} className="w-14 h-10 rounded object-cover" />
+                      <div>
+                        <h3 className="font-semibold text-[#1A202C]">{order.carInfo?.title || "Car"}</h3>
+                        <span className="text-xs text-gray-400">{order.carInfo?.carType || "Type"}</span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-gray-400">{new Date(order.createdAt).toLocaleDateString()}</p>
+                      <h3 className="font-semibold">${order.totalPrice}</h3>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs text-gray-400">{new Date(order.createdAt).toLocaleDateString()}</p>
-                    <h3 className="font-semibold">${order.totalPrice}</h3>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+            {/* Top Seller (Top Sales Admins) */}
+            <div className="flex-1 bg-white rounded-xl shadow p-6 h-[435px] flex flex-col mt-5">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-[#1A202C]">Top Admins Sales</h3>
+              </div>
+              <div className="flex-1">
+                {stats.topAdmins && stats.topAdmins.length > 0 ? (
+                  stats.topAdmins.map((admin, idx) => (
+                    <div key={admin.name || idx} className="flex items-center justify-between py-3 border-b last:border-b-0">
+                      <div className="flex items-center gap-4">
+                        <div className="bg-blue-100 rounded-full w-10 h-10 flex items-center justify-center font-bold text-blue-600 text-lg">
+                          {admin.name ? admin.name[0].toUpperCase() : "A"}
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-[#1A202C]">{admin.name || "Admin"}</h3>
+                          <span className="text-xs text-gray-400">Orders: {admin.count}</span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <h3 className="font-semibold">${admin.totalRevenue?.toLocaleString() || 0}</h3>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-gray-400 text-center py-8">No sales data</div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -133,7 +168,7 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="bg-white rounded-xl shadow p-6">
-              <h3 className="text-lg font-bold text-[#1A202C] mb-2">Rental per Day</h3>
+              <h3 className="text-lg font-bold text-[#1A202C] mb-2">Purchase per Day</h3>
               <div>
                 <RentalPerDayChart orders={stats.orders} />
               </div>
