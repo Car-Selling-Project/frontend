@@ -1,5 +1,5 @@
 import { useAuth } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate , Link } from "react-router-dom";
 import {
   DashboardOutlined,
   CarOutlined,
@@ -22,49 +22,49 @@ const AdminSidebar = () => {
           <p className="text-xs text-gray-400 mb-3 ml-2">ADMIN MENU</p>
           <ul className="space-y-2">
             <li>
-              <a
-                href="/admins/dashboard"
-                className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-50"
-              >
-                <DashboardOutlined />
+              <Link
+    to="/admins/dashboard"
+    className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-50"
+  >
+    <DashboardOutlined />
                 Dashboard
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="/admins/cars"
+              <Link
+                to="/admins/cars"
                 className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-50"
               >
                 <CarOutlined />
                 Car Management
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="/admins/orders"
+              <Link
+                to="/admins/orders"
                 className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-50"
               >
                 <ShoppingCartOutlined />
                 Order Management
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="/admins/test-drives"
+              <Link
+                to="/admins/test-drives"
                 className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-50"
               >
                 <CarOutlined />
                 Test Drive Management
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="/admins/payments"
+              <Link
+                to="/admins/payments"
                 className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-50"
               >
                 <BankOutlined />
                 Payment Management
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
