@@ -265,9 +265,6 @@ const OrderDetail = ({ open, order, onClose }) => {
                       alt="QR Code"
                       className="w-32 h-32 object-contain"
                     />
-                    <p>
-                      QR Code URL: <a href={currentOrder.qrCodeUrl} target="_blank" rel="noopener noreferrer">{currentOrder.qrCodeUrl}</a>
-                    </p>
                   </>
                 ) : (
                   <p>QR Code: Not yet provided</p>
@@ -393,7 +390,7 @@ const OrderDetail = ({ open, order, onClose }) => {
 
           {/* Payment History Section */}
           <PaymentPanel
-            order={{ id: currentOrder._id, data: currentOrder }}
+            order={{ _id: currentOrder._id, ...currentOrder, data: currentOrder }}
             onAddPayment={handleAddPayment}
             onFail={handleFail}
             showDeleted={showDeleted}
@@ -401,18 +398,6 @@ const OrderDetail = ({ open, order, onClose }) => {
           />
         </div>
       </div>
-
-      <PayModal
-        open={modalOpen}
-        onClose={() => {
-          setModalOpen(false);
-        }}
-        order={{ id: currentOrder._id, data: currentOrder }}
-        onAddPayment={(paymentMethod, paymentType, amount) =>
-          handleAddPaymentSubmit(currentOrder._id, paymentMethod, paymentType, amount)
-        }
-        onFail={(orderId, paymentId) => handleFail(orderId, paymentId)}
-      />
     </Modal>
   );
 };
