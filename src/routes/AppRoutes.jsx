@@ -38,6 +38,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import CustomerPortal from "../pages/customer-portal-pages/CustomerPortal"
 import OrderTracking from "../pages/customer-portal-pages/OrderTracking";
 import OrderDetail from "../pages/customer-portal-pages/OrderDetail";
+import CreateReview from "../pages/CreateReview";
 import Contract from "../pages/customer-portal-pages/Contract";
 import PaymentPage from "../pages/customer-portal-pages/PaymentPage";
 
