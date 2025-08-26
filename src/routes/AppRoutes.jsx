@@ -48,6 +48,7 @@ const AppRoutes = () => {
     <MainLayout>
       <Routes>
         <Route path="/customers/login" element={<Login />} />
+        <Route path="/customers/login" element={<Login />} />
         <Route path="/customers/register" element={<Register />} />
         <Route path="/customers/forgot-password" element={<ForgotPWCustomer />} />
         <Route path="/customers/reset-password" element={<ResetPWCustomer />} />
