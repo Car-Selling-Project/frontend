@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route , Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 // Admin Authentication routes
 import AdminLogin from '../pages/admin-authentication/AdminLogin'
@@ -20,6 +20,7 @@ const AppRoutes = () => {
   return (
     <MainLayout>
       <Routes>
+        <Route path="/" element={<Navigate to="/admins/dashboard" replace />} />
         {/* Admin Authentication routes */}
         <Route path="/admins/login" element={<AdminLogin />} />
         <Route path="/admins/register" element={<AdminRegister />} />
