@@ -37,10 +37,11 @@ import ProtectedRoute from "./ProtectedRoute";
 import CustomerPortal from "../pages/customer-portal-pages/CustomerPortal"
 import OrderTracking from "../pages/customer-portal-pages/OrderTracking";
 import OrderDetail from "../pages/customer-portal-pages/OrderDetail";
+import CreateReview from "../pages/CreateReview";
 import Contract from "../pages/customer-portal-pages/Contract";
 import Payment from "../pages/customer-portal-pages/Payment";
-import PaymentSuccess from "../pages/customer-portal-pages/PaymentSuccess";
-import PaymentFailed from "../pages/customer-portal-pages/PaymentFailed";
+// import PaymentSuccess from "../pages/customer-portal-pages/PaymentSuccess";
+// import PaymentFailed from "../pages/customer-portal-pages/PaymentFailed";
 
 const AppRoutes = () => {
 
@@ -76,6 +77,7 @@ const AppRoutes = () => {
         <Route path="/customers/orders/:id" element={<OrderDetail />} />
         <Route path="/customers/contract" element={<Contract />} />
         <Route path="/customers/payment" element={<Payment />} />
+        <Route path="/customers/create-review" element={<CreateReview />} />
         {/* <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFailed />} />     */}
         {/* Admin routes */}
