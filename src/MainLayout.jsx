@@ -5,13 +5,13 @@ import AdminSidebar from "./components/AdminSidebar";
 
 const MainLayout = ({ children }) => {
   const { theme } = useTheme();
-  const { user } = useAuth();
+  const { token, user } = useAuth();
 
   return (
     <div data-theme={theme} className="min-h-screen w-full bg-[#F6F7F9] dark:bg-gray-900">
       <Header />
       <div className="flex">
-        { user && <AdminSidebar /> }
+        { token && user && <AdminSidebar />}
         <main className="w-full py-4 px-16">{children}</main>
       </div>
     </div>

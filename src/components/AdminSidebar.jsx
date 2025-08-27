@@ -1,5 +1,4 @@
 import { useAuth } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 import {
   DashboardOutlined,
   CarOutlined,
@@ -9,7 +8,6 @@ import {
 
 const AdminSidebar = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   // If not authenticated, don't render sidebar
   if (!user) return null;

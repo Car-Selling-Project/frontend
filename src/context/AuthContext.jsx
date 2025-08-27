@@ -4,18 +4,27 @@ import axios from "../api/axiosInstance";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // useEffect(() => {
+  //   const storedUser = JSON.parse(localStorage.getItem("user"));
+  //   const token = localStorage.getItem("accessToken");
+  //   if (storedUser && token) {
+  //     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  //     setUser(storedUser);
+  //   }
+  //   setIsLoading(false);
+  // }, []);
+
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    const token = localStorage.getItem("accessToken");
-    if (storedUser && token) {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      setUser(storedUser);
-    }
-    setIsLoading(false);
-  }, []);
+  const storedToken = localStorage.getItem("accessToken"); // <--- fix key
+  const storedUser = localStorage.getItem("user");
+  if (storedToken) setToken(storedToken);
+  if (storedUser) setUser(JSON.parse(storedUser));
+  setIsLoading(false); // Don't forget to set loading to false!
+}, []);
 
   // 🧑‍💼 ADMIN AUTH
   const loginAdmin = async ({ employeeCode, password }) => {
@@ -25,6 +34,7 @@ export const AuthProvider = ({ children }) => {
 
       localStorage.setItem("user", JSON.stringify(userData));
       localStorage.setItem("accessToken", accessToken);
+      setToken(accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
       setUser(userData);
@@ -49,6 +59,7 @@ export const AuthProvider = ({ children }) => {
 
       localStorage.setItem("user", JSON.stringify(userData));
       localStorage.setItem("accessToken", accessToken);
+      setToken(accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
       setUser(userData);
@@ -68,6 +79,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
+        token,
         user,
         isLoading,
         loginAdmin,
