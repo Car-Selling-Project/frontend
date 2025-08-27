@@ -279,23 +279,23 @@ const ListCars = () => {
   const totalCars = filteredCars?.length || 0;
 
   return (
-    <div className="flex min-h-screen items-center bg-[#F6F7F9]">
+    <div className="flex min-h-screen items-center bg-[#F6F7F9] dark:bg-gray-800">
       <div className="flex-1 flex flex-col px-8 py-6">
-        <div className="w-full bg-white rounded-2xl shadow p-8">
+        <div className="w-full bg-white dark:bg-gray-700 rounded-2xl shadow p-8">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Car List</h1>
+            <h1 className="text-2xl font-bold text-[#1A202C] dark:text-white">Car List</h1>
             <div className="flex gap-4">
               <div className="flex items-center gap-4 mb-4">
-                <span className="font-semibold">Filter by Car Type:</span>
+                <span className="font-semibold text-[#1A202C] dark:text-white">Filter by Car Type:</span>
                 <select
                   value={carTypeFilter}
                   onChange={e => setCarTypeFilter(e.target.value)}
-                  className="border rounded px-2 py-1"
+                  className="border rounded px-2 py-1 bg-white dark:bg-gray-700"
                   style={{ minWidth: 120 }}
                 >
-                  <option value="">All</option>
+                  <option value="" className="text-[#1A202C] dark:text-white">All</option>
                   {[...new Set(cars.map(car => car.carType).filter(Boolean))].map(type => (
-                    <option key={type} value={type}>{type}</option>
+                    <option key={type} value={type} className="text-[#1A202C] dark:text-white">{type}</option>
                   ))}
                 </select>
               </div>

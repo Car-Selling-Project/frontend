@@ -22,7 +22,6 @@ const Top5CarChart = ({ totalByCarType = [], soldCars = [] }) => {
           '#87CEEB',
           '#B0E0E6',
         ],
-        borderWidth: 8,
       },
     ],
   };
@@ -38,7 +37,7 @@ const Top5CarChart = ({ totalByCarType = [], soldCars = [] }) => {
         position: 'right',
         labels: {
           font: {
-            size: 18,
+            size: 15,
           },
         },
       },
@@ -53,19 +52,21 @@ const Top5CarChart = ({ totalByCarType = [], soldCars = [] }) => {
   };
 
   return (
-    <div style={{ position: 'relative', width: '500px', height: '500px' }}>
-      <Doughnut data={data} options={options} width={500} height={500} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} />
-      <div style={{
+    <div className='relative w-[500px] h-[500px] bg-white dark:bg-gray-800'>
+      <Doughnut data={data} options={options} width={600} height={600} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} />
+      <div 
+        style={{
         position: 'absolute',
         top: '50%',
         left: '50%',
-        transform: 'translate(-145%, -55%)',
-        fontSize: '1.2em',
+        transform: 'translate(-100%, -55%)',
+        fontSize: '1.5em',
         fontWeight: 'bold',
         color: '#000',
         textAlign: 'center',
-      }}>
-        {totalSold || 0}<br />Sold Car
+        }}
+      >
+        <p className='text-[#1A202C] dark:text-white'>{totalSold || 0}<br />Sold Car</p>
       </div>
     </div>
   );

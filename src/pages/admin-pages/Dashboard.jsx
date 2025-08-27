@@ -52,22 +52,22 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="flex h-screen bg-[#F6F7F9]">
-      <div className="flex-1 flex flex-col px-8 py-6">
+    <div className="flex min-h-screen bg-[#F6F7F9] dark:bg-gray-800">
+      <div className="flex-1 flex flex-col px-6 py-6 bg-[#F6F7F9] dark:bg-gray-700">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-[#1A202C]">Dashboard</h1>
+          <h1 className="text-2xl font-bold text-[#1A202C] dark:text-white">Dashboard</h1>
         </div>
 
         {/* Performance Summary */}
-        <div className="bg-white rounded-xl shadow p-6 flex justify-between mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 flex justify-between mb-6">
           <div className="flex items-center gap-4">
             <div className="bg-blue-100 rounded-full p-3">
               <ShoppingCartOutlined className="text-blue-600 text-2xl" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-[#1A202C]">{stats.orders.length}</h3>
-              <p className="text-gray-400">Total Purchases</p>
+              <h3 className="text-xl font-bold text-[#1A202C] dark:text-white">{stats.orders.length}</h3>
+              <p className="text-gray-400 ">Total Purchases</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -75,8 +75,8 @@ const Dashboard = () => {
               <CarOutlined className="text-blue-600 text-2xl" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-[#1A202C]">{stats.totalCarsSold}</h3>
-              <p className="text-gray-400">Cars Sold</p>
+              <h3 className="text-xl font-bold text-[#1A202C] dark:text-white">{stats.totalCarsSold}</h3>
+              <p className="text-gray-400 ">Cars Sold</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -84,8 +84,8 @@ const Dashboard = () => {
               <UserOutlined className="text-blue-600 text-2xl" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-[#1A202C]">{stats.activeCustomers}</h3>
-              <p className="text-gray-400">Active Customers</p>
+              <h3 className="text-xl font-bold text-[#1A202C] dark:text-white">{stats.activeCustomers}</h3>
+              <p className="text-gray-400 ">Active Customers</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -93,19 +93,19 @@ const Dashboard = () => {
               <DollarOutlined className="text-blue-600 text-2xl" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-[#1A202C]">${stats.totalRevenue.toLocaleString()}</h3>
+              <h3 className="text-xl font-bold text-[#1A202C] dark:text-white">${stats.totalRevenue.toLocaleString()}</h3>
               <p className="text-gray-400">Total Revenue</p>
             </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="flex gap-6">
+        <div className="flex gap-6 bg-white dark:bg-gray-700 rounded-xl shadow p-6 flex-1">
           <div className='w-full'>
             {/* Recent Transactions */}
-            <div className="flex-1 h-[435px] flex flex-col bg-white rounded-xl shadow p-6">
+            <div className="flex-1 h-[435px] flex flex-col bg-white dark:bg-gray-800 rounded-xl shadow p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-[#1A202C]">Recent Transaction</h3>
+                <h3 className="text-lg font-bold text-[#1A202C] dark:text-white">Recent Transaction</h3>
                 <a href="/admins/orders" className="text-blue-600 text-sm font-medium">View All</a>
               </div>
               <div>
@@ -114,22 +114,22 @@ const Dashboard = () => {
                     <div className="flex items-center gap-4">
                       <img src={order.carInfo?.images?.[0] || gtr} alt={order.carInfo?.title || "Car"} className="w-14 h-10 rounded object-cover" />
                       <div>
-                        <h3 className="font-semibold text-[#1A202C]">{order.carInfo?.title || "Car"}</h3>
-                        <span className="text-xs text-gray-400">{order.carInfo?.carType || "Type"}</span>
+                        <h3 className="font-semibold text-[#1A202C] dark:text-white">{order.carInfo?.title || "Car"}</h3>
+                        <span className="text-sm text-gray-400">{order.carInfo?.carType || "Type"}</span>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-gray-400">{new Date(order.createdAt).toLocaleDateString()}</p>
-                      <h3 className="font-semibold">${order.totalPrice}</h3>
+                      <h3 className="font-semibold text-black dark:text-white">${order.totalPrice}</h3>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
             {/* Top Seller (Top Sales Admins) */}
-            <div className="flex-1 bg-white rounded-xl shadow p-6 h-[435px] flex flex-col mt-5">
+            <div className="flex-1 bg-white dark:bg-gray-800 rounded-xl shadow p-6 h-[435px] flex flex-col mt-5">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-[#1A202C]">Top Admins Sales</h3>
+                <h3 className="text-lg font-bold text-[#1A202C] dark:text-white">Top Admins Sales</h3>
               </div>
               <div className="flex-1">
                 {stats.topAdmins && stats.topAdmins.length > 0 ? (
@@ -140,12 +140,12 @@ const Dashboard = () => {
                           {admin.name ? admin.name[0].toUpperCase() : "A"}
                         </div>
                         <div>
-                          <h3 className="font-semibold text-[#1A202C]">{admin.name || "Admin"}</h3>
-                          <span className="text-xs text-gray-400">Orders: {admin.count}</span>
+                          <h3 className="font-semibold text-[#1A202C] dark:text-white">{admin.name || "Admin"}</h3>
+                          <span className="text-sm text-gray-400">Orders: {admin.count}</span>
                         </div>
                       </div>
                       <div className="text-right">
-                        <h3 className="font-semibold">${admin.totalRevenue?.toLocaleString() || 0}</h3>
+                        <h3 className="font-semibold text-[#1A202C] dark:text-white">${admin.totalRevenue?.toLocaleString() || 0}</h3>
                       </div>
                     </div>
                   ))
@@ -158,17 +158,17 @@ const Dashboard = () => {
 
           {/* Charts */}
           <div className="flex flex-col gap-6 w-[420px]">
-            <div className="bg-white rounded-xl shadow p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-lg font-bold text-[#1A202C]">Top 5 Car Selling</h3>
-                <EllipsisOutlined className="text-gray-400" />
+                <h3 className="text-lg font-bold text-[#1A202C] dark:text-white">Top 5 Car Selling</h3>
+                <EllipsisOutlined className="text-gray-400 dark:text-gray-100" />
               </div>
               <div className="pie-chart flex justify-center items-center">
                 <Top5CarChart soldCars={stats.soldCars} totalByCarType={stats.totalByCarType} />
               </div>
             </div>
-            <div className="bg-white rounded-xl shadow p-6">
-              <h3 className="text-lg font-bold text-[#1A202C] mb-2">Purchase per Day</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+              <h3 className="text-lg font-bold text-[#1A202C] dark:text-white mb-2">Purchase per Day</h3>
               <div>
                 <RentalPerDayChart orders={stats.orders} />
               </div>

@@ -15,7 +15,7 @@ const AdminSidebar = () => {
 
   // Optionally, you can use <Link> instead of <a> for SPA navigation
   return (
-    <aside className="w-72 min-h-screen bg-white border-r flex flex-col">
+    <aside className="w-72 min-h-screen bg-white border-r flex flex-col dark:bg-gray-800">
       <nav className="flex-1 px-4 flex justify-center py-16">
         <div>
           <p className="text-xs text-gray-400 mb-3 ml-2">ADMIN MENU</p>
@@ -23,7 +23,7 @@ const AdminSidebar = () => {
             <li>
               <Link
     to="/admins/dashboard"
-    className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-50"
+    className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 dark:text-white hover:bg-blue-50"
   >
     <DashboardOutlined />
                 Dashboard
@@ -32,7 +32,7 @@ const AdminSidebar = () => {
             <li>
               <Link
                 to="/admins/cars"
-                className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-50"
+                className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 dark:text-white hover:bg-blue-50"
               >
                 <CarOutlined />
                 Car Management
@@ -41,7 +41,7 @@ const AdminSidebar = () => {
             <li>
               <Link
                 to="/admins/orders"
-                className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-50"
+                className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 dark:text-white hover:bg-blue-50"
               >
                 <ShoppingCartOutlined />
                 Order Management
@@ -50,7 +50,7 @@ const AdminSidebar = () => {
             <li>
               <Link
                 to="/admins/test-drives"
-                className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-50"
+                className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 dark:text-white hover:bg-blue-50"
               >
                 <CarOutlined />
                 Test Drive Management
@@ -59,7 +59,7 @@ const AdminSidebar = () => {
             <li>
               <Link
                 to="/admins/payments"
-                className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-50"
+                className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 dark:text-white hover:bg-blue-50"
               >
                 <BankOutlined />
                 Payment Management
