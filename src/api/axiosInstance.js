@@ -1,11 +1,16 @@
-// api/axiosInstance.js
 import axios from "axios";
 
+// check chạy ở local hay production
+const baseURL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:3001"
+    : "https://becarselling.onrender.com";
+
 const instance = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL,
 });
 
-// Interceptor để thêm token từ localStorage
+// interceptor giữ nguyên
 instance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
