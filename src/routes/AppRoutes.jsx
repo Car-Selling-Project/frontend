@@ -47,6 +47,7 @@ const AppRoutes = () => {
   return (
     <MainLayout>
       <Routes>
+        <Route path="/" element={<Navigate to="/customers" replace />} />
         <Route path="/customers/login" element={<Login />} />
         <Route path="/customers/login" element={<Login />} />
         <Route path="/customers/register" element={<Register />} />
