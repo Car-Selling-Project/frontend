@@ -1,19 +1,20 @@
-###🚗 Car Selling Website — Frontend
-A modern car sales platform with full customer buying flow, car browsing, comparison, checkout, contract signing, and payment integration.
+# 🚗 Car Selling Website — Frontend
 
-⸻
+A modern car sales platform with a complete customer buying flow: browsing cars, comparison, checkout, contract signing, payment, and customer portal.
 
-**📌 Overview
-**
-This is the Frontend of a full-stack Car Selling Web Application.
-The system allows customers to browse cars, compare models, create orders, sign contracts, make payments, and track their order progress.
+---
 
-The frontend is built using React + Vite, powered by Ant Design, TailwindCSS, React Router, Axios, and integrated with the backend API for authentication, orders, and contract/payment flows.
+## 📌 Overview
 
-⸻
+This is the **Frontend** of a full-stack Car Selling Web Application.  
+Customers can browse cars, compare models, create orders, sign contracts, make payments, and track order progress.
 
-**🏗️ Tech Stack
-**
+The frontend is built using **React + Vite**, with Ant Design, TailwindCSS, React Router, and Axios—all fully integrated with backend authentication, order processing, contract signing, and payment logic.
+
+---
+
+## 🏗️ Tech Stack
+
 | Category       | Technologies |
 |----------------|--------------|
 | Framework      | React.js, Vite |
@@ -24,115 +25,116 @@ The frontend is built using React + Vite, powered by Ant Design, TailwindCSS, Re
 | Authentication | JWT-based Auth, HTTP Only Cookies |
 | Build Tools    | Vite |
 
-⸻
+---
 
-**📚 Features
-**
-⭐ 1. Authentication Module
-	•	Customer Login / Register
-	•	Admin Login
-	•	JWT Storage & Auto Redirect
-	•	Role-based protected routes
+## 📚 Features
 
-⸻
+### ⭐ 1. Authentication Module
+- Customer Login / Register  
+- Admin Login  
+- JWT Storage & Auto Redirect  
+- Role-based Protected Routes  
 
-🚘 2. Car Browsing Module
-	•	Full car listing with pagination
-	•	Advanced Filtering (Brand, Car Type, Fuel, Transmission, Price Range, Seat, Year…)
-	•	Car Detail Page
-	•	Car Comparison (2 cars side-by-side) with aligned grid layout
-	•	Cost Estimate calculator
+---
 
-⸻
+### 🚘 2. Car Browsing Module
+- Full car listing with pagination  
+- Advanced filtering (Brand, Type, Fuel, Transmission, Price Range, Seat, Year…)  
+- Car Detail Page  
+- Car Comparison (2 cars side-by-side, aligned grid layout)  
+- Cost Estimate Calculator  
 
-🛒 3. Checkout Flow
-	•	User selects a car → navigates to Info Filling Page
-	•	Customer inputs:
-	•	Personal information
-	•	Payment method
-	•	Deposit amount (must follow business logic 30%+)
-	•	Submit to create Order via backend
-	•	Redirect to Customer Portal
+---
 
-⸻
+### 🛒 3. Checkout Flow
+- User selects a car → navigates to **Info Filling Page**  
+- Customer enters:
+  - Personal information  
+  - Payment method  
+  - Deposit amount (must follow ≥30% business rule)  
+- Submit to backend to create an Order  
+- Redirect to **Customer Portal**
 
-👤 4. Customer Portal (Similar to TripleSeat Customer Portal)
+---
 
-After creating an order, customer can access:
+## 👤 4. Customer Portal (TripleSeat-style)
 
-a. Customer Info
-	•	View (and optionally update) personal profile
+### a. Customer Info  
+- View personal profile  
+- Update profile  
 
-b. Order Tracking
-	•	View all orders
-	•	View order status (pending, confirmed, cancelled)
+### b. Order Tracking  
+- View all orders  
+- Check progress (pending / confirmed / cancelled)
 
-c. Contract Module
-	•	View contract PDF
-	•	Sign electronic signature (buyer side)
-	•	Status auto-updates
+### c. Contract Module  
+- View contract PDF  
+- Sign electronic signature (buyer)  
+- Contract status auto-updates  
 
-d. Payment Module
-	•	Show total price, deposit, remaining amount
-	•	Choose payment method (Cash / Bank Transfer / QR)
-	•	Sync with backend payment status
-	•	Shows payment confirmation
+### d. Payment Module  
+- Show total price, deposit, remaining amount  
+- Choose payment method (Cash / Bank Transfer / QR)  
+- Sync payment status with backend  
+- Shows success status  
 
-⸻
+---
 
-🔧 5. Admin Portal (Partial Frontend Only)
+## 🔧 5. Admin Portal (Partial Frontend)
+*(Handled by another teammate)*  
+- Manage Orders  
+- Manage Cars  
+- Admin contract signing  
+- Payment confirmation  
 
-(Handled by another team member)
-	•	Manage Orders
-	•	Manage Cars
-	•	Admin contract signing
-	•	Confirm payments
+---
 
-⸻
+## 🔗 Backend Connection
 
-**🔗 Backend Connection
-**
-This frontend communicates with a Node.js/Express backend via Axios.
-Backend routes include:
-	•	/customers/login
-	•	/customers/register
-	•	/orders/customers-create
-	•	/orders/:id
-	•	/orders/:id/paymentmethod
-	•	/orders/:id/deposit
-	•	/cars
-	•	/contracts/*
+Frontend communicates with a Node.js/Express backend via Axios.  
+Main API endpoints used include:
 
-⸻
+- `/customers/login`  
+- `/customers/register`  
+- `/orders/customers-create`  
+- `/orders/:id`  
+- `/orders/:id/paymentmethod`  
+- `/orders/:id/deposit`  
+- `/cars`  
+- `/contracts/*`  
 
-**🧪 Key Business Logic Implemented in Frontend
-**
-  •	Auto-redirect based on user role
-	•	Persist user session using localStorage
-	•	Deposit validation (>=30% or 100% of total price)
-	•	Car comparison grid alignment
-	•	Customer portal navigation
-	•	Image gallery + thumbnails
-	•	Payment method logic sync with backend
-	•	Responsive UI for mobile / desktop
+---
 
-⸻
+## 🧪 Key Business Logic Implemented in Frontend
 
-**🚀 Future Improvements
-**
-  •	Real Stripe integration (redirect checkout)
-	•	Live delivery tracking
-	•	Car recommendation using ML model
-	•	Multi-step checkout UX redesign
-	•	Dark mode enhancement
+- Role-based auto redirect  
+- Session persistence via localStorage  
+- Deposit validation (≥30% or 100% full payment)  
+- Car comparison grid alignment  
+- Customer Portal navigation  
+- Payment + contract flow matching backend’s rules  
+- Responsive UI/UX  
 
-⸻
+---
 
-**👥 Team Members
-**
-	•	Frontend Dev (Lead) – [Your Name]
-	•	Frontend Dev – [Member 2]
-	•	Backend Dev – [Member 3]
+## 🚀 Future Improvements
 
-All Rights Reserved — This project is developed for educational purposes only.
-Do not copy, distribute, or reuse without permission from the authors.
+- Real Stripe integration  
+- Delivery tracking  
+- Car recommendation using ML  
+- Multi-step checkout redesign  
+- Improved dark mode  
+
+---
+
+## 👥 Team Members
+
+- **Frontend Developer (Lead)** – Doan Thi Dieu Hang 
+- **Frontend Developer** – Nguyen Huu Anh Duc
+- **Backend Developer** – Vuong Quy Thanh 
+
+---
+
+### © All Rights Reserved  
+This project is developed for **educational purposes only**.  
+Do not copy, distribute, or reuse without permission.
