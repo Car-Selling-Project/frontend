@@ -57,7 +57,7 @@ The frontend is built using **React + Vite**, with Ant Design, TailwindCSS, Reac
 
 ---
 
-## 👤 4. Customer Portal (TripleSeat-style)
+## 👤 4. Customer Portal
 
 ### a. Customer Info  
 - View personal profile  
